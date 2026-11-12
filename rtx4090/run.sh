@@ -26,6 +26,11 @@ fi
 selection="$(python3 "$repo_dir/deployment/detect_gpu.py" --gpu "$ISAAC_GPU" --backend rtx --format shell)"
 eval "$selection"
 export RTX4090_GPU_UUID="$ISAACSIM_GPU_UUID"
+# Physical GPU zero is also CUDA ordinal zero when it is the only visible GPU.
+# Restrict CUDA discovery here so Warp does not allocate contexts on other cards.
+if [[ "$ISAAC_GPU" = 0 ]]; then
+    export CUDA_VISIBLE_DEVICES="$RTX4090_GPU_UUID"
+fi
 export PYTHONPATH="$repo_dir:$repo_dir/a100${PYTHONPATH:+:$PYTHONPATH}"
 export OMNI_KIT_ALLOW_ROOT=1
 export OMNI_KIT_ACCEPT_EULA=YES

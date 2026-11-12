@@ -42,6 +42,7 @@ GPU 识别使用 `nvidia-smi` 的物理编号、UUID 和型号表。`ISAAC_GPU=a
 RTX / L4 / L40 / A10 / A16 / A40 型号进入 RTX 路径，A100/A800 进入 CUDA 路径；
 未知型号会明确报错，可由用户设置 `ISAACSIM_BACKEND=rtx|cuda`，不会自动转为 CPU。
 A100/A800 强制设置 RTX 会被拒绝。请不要同时设置 `CUDA_VISIBLE_DEVICES`，以免 Vulkan 与 CUDA 编号错位。
+选择物理 0 号 RTX 卡时，启动器会在进程内将 CUDA 可见设备限制为该卡，避免在其他卡上创建 CUDA 上下文。
 
 已在真实 4090、A100-SXM4-80GB 和 A800-SXM4-80GB 上确认识别结果。
 4090 已通过统一入口完成原生仿真与 RGB-D/语义请求验收，记录在 `state/main-http-acceptance.json`；

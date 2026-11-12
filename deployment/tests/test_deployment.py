@@ -63,30 +63,33 @@ class LauncherTests(unittest.TestCase):
     def test_rtx_dispatch_preserves_common_gpu_port_and_runtime(self) -> None:
         """Prevent a backend-local configuration from overriding the selected GPU."""
         repo = Path(__file__).resolve().parents[2]
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            tools = root / "bin"
-            tools.mkdir()
-            smi = tools / "nvidia-smi"
-            smi.write_text("#!/bin/sh\ncase \"$*\" in\n*--query-gpu=uuid*) echo GPU-example-2;;\n"
-                           "*) echo '2, GPU-example-2, NVIDIA GeForce RTX 4090, 580.95.05, 24564, 0';;\nesac\n")
-            smi.chmod(0o755)
-            runtime = root / "official"
-            runtime.mkdir()
-            python = runtime / "python.sh"
-            python.write_text('#!/bin/sh\nprintf "GPU=%s PORT=%s ROOT=%s ARGS=%s\\n" '
-                              '"$ISAAC_GPU" "$RTX4090_PORT" "$RTX4090_STATE_ROOT" "$*"\n')
-            python.chmod(0o755)
-            config = root / "common.env"
-            config.write_text(f"ISAAC_GPU=2\nISAACSIM_PORT=18999\nISAAC_SIM_DIR={runtime}\n")
-            environment = {**os.environ, "PATH": str(tools) + os.pathsep + os.environ["PATH"],
-                           "ISAACSIM_CONFIG": str(config), "ISAACSIM_STATE_ROOT": str(root / "state"),
-                           "RTX4090_ASSET_ROOT": str(root / "assets")}
-            environment.pop("CUDA_VISIBLE_DEVICES", None)
-            result = subprocess.run(["bash", str(repo / "deploy.sh"), "serve"], env=environment,
-                                    capture_output=True, text=True, timeout=15, check=True)
-            self.assertIn("GPU=2 PORT=18999", result.stdout)
-            self.assertIn("-m rtx4090.service --output", result.stdout)
+        for gpu in (0, 2):
+            with self.subTest(gpu=gpu), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                tools = root / "bin"
+                tools.mkdir()
+                smi = tools / "nvidia-smi"
+                smi.write_text("#!/bin/sh\necho '"
+                               f"{gpu}, GPU-example-{gpu}, NVIDIA GeForce RTX 4090, 580.95.05, 24564, 0'\n")
+                smi.chmod(0o755)
+                runtime = root / "official"
+                runtime.mkdir()
+                python = runtime / "python.sh"
+                python.write_text('#!/bin/sh\nprintf "GPU=%s PORT=%s ROOT=%s MASK=%s ARGS=%s\\n" '
+                                  '"$ISAAC_GPU" "$RTX4090_PORT" "$RTX4090_STATE_ROOT" '
+                                  '"${CUDA_VISIBLE_DEVICES:-none}" "$*"\n')
+                python.chmod(0o755)
+                config = root / "common.env"
+                config.write_text(f"ISAAC_GPU={gpu}\nISAACSIM_PORT=18999\nISAAC_SIM_DIR={runtime}\n")
+                environment = {**os.environ, "PATH": str(tools) + os.pathsep + os.environ["PATH"],
+                               "ISAACSIM_CONFIG": str(config), "ISAACSIM_STATE_ROOT": str(root / "state"),
+                               "RTX4090_ASSET_ROOT": str(root / "assets")}
+                environment.pop("CUDA_VISIBLE_DEVICES", None)
+                result = subprocess.run(["bash", str(repo / "deploy.sh"), "serve"], env=environment,
+                                        capture_output=True, text=True, timeout=15, check=True)
+                self.assertIn(f"GPU={gpu} PORT=18999", result.stdout)
+                self.assertIn("-m rtx4090.service --output", result.stdout)
+                self.assertIn("MASK=GPU-example-0" if gpu == 0 else "MASK=none", result.stdout)
 
     def test_a800_prepare_reuses_runtime_and_detects_host_driver(self) -> None:
         """Route an RT-free GPU without assuming the original A100 R535 driver."""
