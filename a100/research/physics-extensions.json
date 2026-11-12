@@ -1,0 +1,43 @@
+{
+  "requested": [
+    "omni.kit.usd.layers",
+    "omni.hydra.usdrt_delegate"
+  ],
+  "resolved": [
+    "carb.audio",
+    "omni.activity.core",
+    "omni.assets.plugins",
+    "omni.blobkey",
+    "omni.client",
+    "omni.client.lib",
+    "omni.cubric",
+    "omni.gpu_foundation",
+    "omni.gpu_foundation.shadercache.vulkan",
+    "omni.gpucompute.plugins",
+    "omni.graph.exec",
+    "omni.hsscclient",
+    "omni.hydra.usdrt_delegate",
+    "omni.kit.actions.core",
+    "omni.kit.async_engine",
+    "omni.kit.audiodeviceenum",
+    "omni.kit.commands",
+    "omni.kit.exec.core",
+    "omni.kit.usd.layers",
+    "omni.kit.usd_undo",
+    "omni.stats",
+    "omni.timeline",
+    "omni.usd",
+    "omni.usd.config",
+    "omni.usd.core",
+    "omni.usd.libs",
+    "omni.usd.schema.anim",
+    "omni.usd.schema.audio",
+    "omni.usd_resolver",
+    "usdrt.scenegraph"
+  ],
+  "downloaded_extensions": [
+    "omni.kit.usd.layers"
+  ],
+  "missing": [],
+  "https_bytes_received": 20410394
+}

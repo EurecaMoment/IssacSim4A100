@@ -1,0 +1,5 @@
+# Optional accelerator; the resident service has a stdlib JSON fallback.
+orjson==3.11.3
+
+# Async HTTP dependencies are isolated in http-packages (Python 3.12).
+aiohttp==3.14.5

@@ -1,0 +1,285 @@
+{
+  "captured_at": "2026-11-12",
+  "description": "SHA-256 of the original deployment sources before portability edits; paths are relative to a100/.",
+  "upstream_repository": "https://github.com/isaac-sim/IsaacSim",
+  "upstream_commit": "74a9356b20250dd60337d90b4b4d913c9454d32b",
+  "runtime_python_package": "6.2.0.0",
+  "runtime_build": "6.2.0-rc.14+release.52805.02189a84.gl",
+  "files": [
+    {
+      "path": "GPU2-\u8fd0\u884c\u8bf4\u660e.txt",
+      "sha256": "af91f498145bf8e14137905c606d9da443fb3e52633b66aef71dbb099b330a22",
+      "bytes": 6638
+    },
+    {
+      "path": "a100sim/__init__.py",
+      "sha256": "bed9cd6c95b14033c6326c37be6a67ff350441e652903a1d1c27b7cbb7eed482",
+      "bytes": 96
+    },
+    {
+      "path": "a100sim/app.py",
+      "sha256": "d4a2bd2fc657188ae90494eddd3ce9bc3bbbd71f4663334454699be8b510ea5e",
+      "bytes": 3381
+    },
+    {
+      "path": "a100sim/batch_physics.py",
+      "sha256": "b87c05797911643243b78beda84d8cbf7cf5133870589ee917164de8a6b504b4",
+      "bytes": 10720
+    },
+    {
+      "path": "a100sim/batch_renderer.py",
+      "sha256": "768bad394f1fcae9df83d339abe514f1e463467dc154b6a10a5214e3ae6fe1e5",
+      "bytes": 13367
+    },
+    {
+      "path": "a100sim/diagnose_batch.py",
+      "sha256": "f8aafef164130c8e7af345fafe73ad35a2d3e62fa0aec3c152626ee26239c33d",
+      "bytes": 987
+    },
+    {
+      "path": "a100sim/gaussian.py",
+      "sha256": "17df831ea3487413d3c3a2c85ac3c40a8e477b07bb4f0540f6670fd4c3866feb",
+      "bytes": 6498
+    },
+    {
+      "path": "a100sim/hybrid_integrator.py",
+      "sha256": "cff9dcc7f0e98afdd810be679f1b8fdbfbd983e5b2f4638fa8ad7fde023831fc",
+      "bytes": 5902
+    },
+    {
+      "path": "a100sim/physics_service.py",
+      "sha256": "09f5d9652f148c23a1e1a48e7f3ed3e991dc29ca01130a048a32024a2d379f08",
+      "bytes": 18822
+    },
+    {
+      "path": "a100sim/probe_batch_render.py",
+      "sha256": "6d0a027c75e7d32118ebe00566c92b0474e2c0720b558b24f4ca2266ed78313b",
+      "bytes": 1185
+    },
+    {
+      "path": "a100sim/profile_batch_renderer.py",
+      "sha256": "9a3459fa7f4b9acaedbe2ea270d67ff740f418dc1db9a11b3cf9431ebc0f7092",
+      "bytes": 619
+    },
+    {
+      "path": "a100sim/render_service.py",
+      "sha256": "3715103377ae8dc1e8cfbeaf0b0351c37fe7cad8e5ce64fecea5d64d429f4edd",
+      "bytes": 6247
+    },
+    {
+      "path": "a100sim/renderer.py",
+      "sha256": "293e434b8ae15dc93c42e6b60e993d4d1ff42ab4a81c98ceb43188868aa72423",
+      "bytes": 5604
+    },
+    {
+      "path": "a100sim/resident_service.py",
+      "sha256": "4cd69e1abc75a36595b10f833b90e5b4504c6b993cb36cbb877b60a7d98af9db",
+      "bytes": 30066
+    },
+    {
+      "path": "a100sim/service_queue.py",
+      "sha256": "8492f4702468fbb1b8e3d7fc258d4772b43d2c7a4a41d49ccde7b9785ed08a41",
+      "bytes": 7875
+    },
+    {
+      "path": "a100sim/usd_renderer.py",
+      "sha256": "2361a5d4ff897898cfc06a31be521b7934fd65d0b6d2a6965e5f98ca52259631",
+      "bytes": 10287
+    },
+    {
+      "path": "a100sim/validate_batch_render.py",
+      "sha256": "c63430f98624c66f289bae8ecba1278017999b214bcfb6ab3e8aa555d2e6e9a3",
+      "bytes": 2649
+    },
+    {
+      "path": "a100sim/validate_resident.py",
+      "sha256": "7cce0be676ae32248fbb7eca4f2503d53bf011ac6c66581c146c7304f9674258",
+      "bytes": 3973
+    },
+    {
+      "path": "benchmarks/gpu2_http.py",
+      "sha256": "66f5d87094ff2e41f89aec21135448d862a96a0c5c15d22c01cd089f7ba7802b",
+      "bytes": 7409
+    },
+    {
+      "path": "benchmarks/validate_completion.py",
+      "sha256": "5c9ebd29a73922413ae3986fc1b311f8de47d578926e5673db7262f79aa0d668",
+      "bytes": 3592
+    },
+    {
+      "path": "benchmarks/validate_controls.py",
+      "sha256": "0b3227f3eb5a749f4a9687aa73c252c35d30945e9a17dff0211f5e80f754d206",
+      "bytes": 3303
+    },
+    {
+      "path": "benchmarks/validate_http.py",
+      "sha256": "61d9067e68dba2dbbab2612b3b9b64d56e817b0875619f3f3eab58e67a74df40",
+      "bytes": 2962
+    },
+    {
+      "path": "install-libs.sh",
+      "sha256": "17298133c1069a6c20ca83d032e28fcaf1bbd5bc900bb0559aed4692ef6b235b",
+      "bytes": 735
+    },
+    {
+      "path": "isaac_sam3d_demo.py",
+      "sha256": "aa8d34cb0b6000b1c5c20bf7a4f57ebfc1ce0beb4aaad69dceced53207cd3fc6",
+      "bytes": 7259
+    },
+    {
+      "path": "namespace.sh",
+      "sha256": "171c41c3a95967acf9a3d2511a5ff0380d4cdebdc298f106e8567059266197fd",
+      "bytes": 1952
+    },
+    {
+      "path": "physics_smoke.py",
+      "sha256": "88ca553e4481f251fb85f127c5b9354d522c32d47ed57dee649c1e08eeb6eb08",
+      "bytes": 4015
+    },
+    {
+      "path": "prepare.sh",
+      "sha256": "e871d3ef0d516390e68d68c092bf99afd2a19d6768616bcadcf6e803aa11a87e",
+      "bytes": 1013
+    },
+    {
+      "path": "prepare_mesh.py",
+      "sha256": "c879f9f14dad71d52637ce2db2bd3d657b8b72e559b0125555bb95a8290e3772",
+      "bytes": 1301
+    },
+    {
+      "path": "render_sam3d.py",
+      "sha256": "979c8138c606973612774a23f68b5ef1ac93f0c955ca3151d83ce664d90abe7d",
+      "bytes": 1281
+    },
+    {
+      "path": "requirements-performance.txt",
+      "sha256": "3f9028edc3638ab88ee407a0c6e00cc52fd6d2d35c32bfdeae27d302fdd3f4c3",
+      "bytes": 176
+    },
+    {
+      "path": "research/app_framework.py",
+      "sha256": "06994dee0a77ce2abcd914b56301bc0897472de1a59b810794790bb9c531b803",
+      "bytes": 2714
+    },
+    {
+      "path": "research/combined_render_smoke.py",
+      "sha256": "9e34d8cf373df51a4ecd9193b7cc601c078500d249573e1c33ebbab8984310ad",
+      "bytes": 2354
+    },
+    {
+      "path": "research/extension.toml",
+      "sha256": "93db99f62f92cf6d1ff25fc8c24c781b327bca698f1266239dc54440f2542741",
+      "bytes": 6800
+    },
+    {
+      "path": "research/fetch_physics_extensions.py",
+      "sha256": "dc8ca30c6d304d2509f3977cea0170f08d8a8d76d0839fbfec18db3baa3aec5b",
+      "bytes": 4424
+    },
+    {
+      "path": "research/gaussian_test.py",
+      "sha256": "ff6996ca40965d57017188301e64a84c1f57d22f8cace9747171898ff98d7a6e",
+      "bytes": 1212
+    },
+    {
+      "path": "research/hybrid_probe.py",
+      "sha256": "632386ee54899e4caa1b01d306f5ab1be65a661dc51ab9eaafc285750c8183fa",
+      "bytes": 983
+    },
+    {
+      "path": "research/introspect_mitsuba.py",
+      "sha256": "0646a8f05aad8a204d2d0aedc216e2c5daac91bab4b3ac86976a852ea6ce38b2",
+      "bytes": 760
+    },
+    {
+      "path": "research/isaacsim.exp.base.python.kit",
+      "sha256": "3449b04af9688ed34362264ebc9757eee1b50e0a261dbdd685bb98aee03b434f",
+      "bytes": 830
+    },
+    {
+      "path": "research/optix_probe.py",
+      "sha256": "33e1cb65226ad7be7a7a18889684379e608914b6253715ad290de6dd505de5ec",
+      "bytes": 791
+    },
+    {
+      "path": "research/physics-extensions.json",
+      "sha256": "39a883e07c45b79162ba6702ca53e930b78a19c5e97256b9e87b818a8a1744c5",
+      "bytes": 970
+    },
+    {
+      "path": "research/range_wheel.py",
+      "sha256": "144338e7d9ee5500ad7ce015374d3b124ca7c638ecf41169d3d8820500ad8127",
+      "bytes": 3751
+    },
+    {
+      "path": "research/simulation_app.py",
+      "sha256": "c2a2173be57abac20ef97f81b80d58319c94c9a4017c98709f8d13489ad0b746",
+      "bytes": 51884
+    },
+    {
+      "path": "research/test_headless_no_rendering.py",
+      "sha256": "1304741c190f26ce1471b18481bd09b4764b31da705a845b94dabe56b6fe735f",
+      "bytes": 1557
+    },
+    {
+      "path": "run-isaac-sam3d.sh",
+      "sha256": "743cbe7ce3e5ebc96021421ab112d6f502102de10abacd1c79e79d469dead7c0",
+      "bytes": 952
+    },
+    {
+      "path": "run-physics-fixed.sh",
+      "sha256": "727ad008037ff565f87e943ad5a41d1c4affd39dd37279f4f0fd1beba66e1248",
+      "bytes": 860
+    },
+    {
+      "path": "run-python.sh",
+      "sha256": "9edd76cc4cef0039648d80f7e2d39daeffdb116fdbd5bf33158b49f29267bfd8",
+      "bytes": 614
+    },
+    {
+      "path": "run-render-fixed.sh",
+      "sha256": "dcefe4800221f76e95e98c37624f1867342728c5ad55ff8dff3ab3a3f7f8c827",
+      "bytes": 646
+    },
+    {
+      "path": "run-render.sh",
+      "sha256": "9568f61998062faeee6a58dc60c464f2ec067b5bfdc0d4d94114c08c9c36f5ad",
+      "bytes": 523
+    },
+    {
+      "path": "serve-gpu2.sh",
+      "sha256": "220efb866e3a7a92d9f5f6270b234c638415fb3a311fe17c49c5a7b746fa1e00",
+      "bytes": 1380
+    },
+    {
+      "path": "start-a100-physics.sh",
+      "sha256": "d05f813cb6ad457158184f236f255d20a38194c96ac6141549efe93616b6b715",
+      "bytes": 186
+    },
+    {
+      "path": "start-a100-render.sh",
+      "sha256": "d05f813cb6ad457158184f236f255d20a38194c96ac6141549efe93616b6b715",
+      "bytes": 186
+    },
+    {
+      "path": "start-gpu2.sh",
+      "sha256": "c2ced8b18d8a6ab2fdd378c3c0461d777a228e63fd85c1027025c055f0f97539",
+      "bytes": 1636
+    },
+    {
+      "path": "stop-a100-physics.sh",
+      "sha256": "58f9f5bcd0e849f0da0b0ec016562f34842c12729b033c999366d589381bdb37",
+      "bytes": 121
+    },
+    {
+      "path": "stop-a100-render.sh",
+      "sha256": "6c5c9b657282cf1dc5418f942ef62b2e8a10faf7201f3a5c53e0148a89a79a12",
+      "bytes": 89
+    },
+    {
+      "path": "stop-gpu2.sh",
+      "sha256": "94046be883f42e9ec2ee57bfd61e1c94c446b72230bf21fff0fdb2596f9ea33e",
+      "bytes": 150
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Install in a separate conversion venv, never over the service's Isaac packages.
+numpy==1.26.4
+trimesh==5.2.0
+Pillow==12.1.1

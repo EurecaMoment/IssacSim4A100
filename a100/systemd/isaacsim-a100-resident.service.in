@@ -1,0 +1,22 @@
+[Unit]
+Description=Isaac Sim A100 resident
+Requires=isaacsim-a100-generic.service
+After=isaacsim-a100-generic.service
+StartLimitIntervalSec=180
+StartLimitBurst=5
+
+[Service]
+Type=simple
+WorkingDirectory=@WORKING_DIRECTORY@
+ExecStart=/bin/bash "@CODE_ROOT@/serve.sh" resident
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+KillMode=control-group
+LimitNOFILE=65536
+UMask=0077
+StandardOutput=journal
+StandardError=inherit
+
+[Install]
+WantedBy=default.target
