@@ -2,7 +2,7 @@
 set -euo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/config.sh"
 [[ "${OMNI_KIT_ACCEPT_EULA:-}" = YES ]] || { echo "Accept the NVIDIA terms and set OMNI_KIT_ACCEPT_EULA=YES" >&2; exit 2; }
-[[ -x "$A100SIM_PYTHON" ]] || { echo "Install portable Python 3.12 with uv, or set A100SIM_PYTHON" >&2; exit 2; }
+[[ -x "$A100SIM_PYTHON" ]] || { echo "Activate the Conda environment or set A100SIM_PYTHON" >&2; exit 2; }
 mode="${1:-minimal}"
 [[ "$mode" = minimal || "$mode" = full ]] || { echo "Usage: prepare.sh [minimal|full]" >&2; exit 2; }
 mkdir -p "$A100SIM_ROOT/rootfs" "$A100SIM_ROOT/downloads" "$A100SIM_ROOT/packages"

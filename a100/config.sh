@@ -7,11 +7,15 @@ export A100SIM_CONFIG_LOADED=1
 export A100SIM_CODE_ROOT
 A100SIM_CODE_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 configuration="${A100SIM_CONFIG:-$A100SIM_CODE_ROOT/.env}"
+inherited_eula="${OMNI_KIT_ACCEPT_EULA:-}"
 if [[ -f "$configuration" ]]; then
     set -a
     # shellcheck source=/dev/null
     source "$configuration"
     set +a
+fi
+if [[ -z "${OMNI_KIT_ACCEPT_EULA:-}" && -n "$inherited_eula" ]]; then
+    export OMNI_KIT_ACCEPT_EULA="$inherited_eula"
 fi
 export A100SIM_ROOT="${A100SIM_ROOT:-$A100SIM_CODE_ROOT}"
 export A100SIM_STATE_ROOT="${A100SIM_STATE_ROOT:-$A100SIM_ROOT/state}"
@@ -39,7 +43,9 @@ export A100SIM_GENERIC_PORT="${A100SIM_GENERIC_PORT:-18323}"
 export A100SIM_RENDER_PORT="${A100SIM_RENDER_PORT:-8320}"
 export A100SIM_QUEUE_SIZE="${A100SIM_QUEUE_SIZE:-64}"
 if [[ -z "${A100SIM_PYTHON:-}" ]]; then
-    if command -v uv >/dev/null 2>&1; then
+    if [[ -n "${CONDA_PREFIX:-}" && -x "$CONDA_PREFIX/bin/python" ]]; then
+        A100SIM_PYTHON="$CONDA_PREFIX/bin/python"
+    elif command -v uv >/dev/null 2>&1; then
         A100SIM_PYTHON="$(uv python find 3.12 2>/dev/null || true)"
     fi
 fi

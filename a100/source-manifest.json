@@ -8,8 +8,8 @@
   "files": [
     {
       "path": ".env.example",
-      "sha256": "7139f22246d97357202bfefac96ad1b374feeb55d8e607ff0dad7ebd4611c453",
-      "bytes": 2293
+      "sha256": "069102cf474af12854ba1561450f9d4215ae6c16e44bf8d49eac2b8aa56e6bc2",
+      "bytes": 2290
     },
     {
       "path": ".gitattributes",
@@ -183,13 +183,23 @@
     },
     {
       "path": "config.sh",
-      "sha256": "130374a12e16d63561d3174be532f6938e261d478243640f0fb8180865b921f8",
-      "bytes": 2477
+      "sha256": "4925fc9ee4fe9307fdbf2e31321b84a596bdfe3834f7244719bb85e8f9a2178c",
+      "bytes": 2770
+    },
+    {
+      "path": "deploy.sh",
+      "sha256": "7234f4c8bf45d672525241af9b3c3aab9114915c7a81d74f3ec88eababb79b9c",
+      "bytes": 10500
     },
     {
       "path": "doctor.sh",
-      "sha256": "3cb5bd475db4d3456c5c2f1ec9db5b854793c6357e63fddcf423e26d056a7f78",
-      "bytes": 301
+      "sha256": "6e8fa765c759b40cbcc77d2039cacba6b0c984345c10c79db57055b09fcf287c",
+      "bytes": 304
+    },
+    {
+      "path": "environment.yml",
+      "sha256": "dbdba4ac2d4507185b9b7489330220e51a23bdc3e00139490eb761f85edccca3",
+      "bytes": 155
     },
     {
       "path": "examples/client.py",
@@ -283,8 +293,8 @@
     },
     {
       "path": "namespace.sh",
-      "sha256": "392485719252979e3a7a7f1570f59812fee161f65418f043d5a0797766afb38a",
-      "bytes": 2786
+      "sha256": "8bee7bb93c3c25857e953078ffa35b8b092f8df02efd5b22f8207025888a757b",
+      "bytes": 2799
     },
     {
       "path": "patches/drjit-core-a100.patch",
@@ -298,8 +308,8 @@
     },
     {
       "path": "prepare.sh",
-      "sha256": "39724f6d973af757fab0213985aae8f8747d1432c7ec0e0d81c9fb045f626d8f",
-      "bytes": 2425
+      "sha256": "5675e7d7657206eb44d19379700d2eab473fe9bf91810c0d6c2bb377c13ad933",
+      "bytes": 2418
     },
     {
       "path": "prepare_mesh.py",
@@ -443,8 +453,8 @@
     },
     {
       "path": "resolve-gpu.sh",
-      "sha256": "7c73a188b48aee3b73b7acb30f8eb0091148b7df199684aa900da317077403e0",
-      "bytes": 313
+      "sha256": "2f5c368262152c753387f02de5348cf0e092dacd91863c65d013f9118c8afaaf",
+      "bytes": 316
     },
     {
       "path": "run-assets.sh",

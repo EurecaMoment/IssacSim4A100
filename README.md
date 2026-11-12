@@ -18,7 +18,7 @@
 | GPU | NVIDIA A100；每个服务实例选择一张可用设备，多卡可运行独立实例 |
 | 驱动 | 已正确安装 NVIDIA Linux 驱动，`nvidia-smi` 能访问分配给自己的 A100 |
 | CUDA Toolkit | 安装与驱动兼容的 Toolkit，提供 `nvcc`；自动从 `CUDA_HOME`、`CUDA_PATH`、`nvcc` 或 `/usr/local/cuda` 检测 |
-| Python | 独立 CPython 3.12，建议由 `uv` 安装，避免混用现有 Conda 包 |
+| Python | 仓库提供的 Conda 环境，使用 CPython 3.12 和环境内的 `uv` |
 | 用户权限 | 支持无特权 user/mount namespace：`unshare -Ur -m true` 成功 |
 | 磁盘 | 至少预留 50 GB，另加资产、完整扩展缓存与结果所需空间 |
 | 构建工具 | C/C++ 编译器、CMake ≥ 3.13、Git、curl、tar、dpkg-deb、util-linux、binutils |
@@ -34,20 +34,41 @@ sudo apt-get install -y ca-certificates curl git tar dpkg-dev util-linux \
   build-essential cmake binutils
 ```
 
-其他发行版使用相应包管理器安装等效工具。按 [uv 官方说明](https://docs.astral.sh/uv/getting-started/installation/)安装 `uv`，按 [NVIDIA CUDA 安装指南](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)准备驱动和 Toolkit。`nvidia-smi` 显示的 CUDA 版本表示驱动支持的 API 上限，不表示已经安装相同版本的 Toolkit。
+其他发行版使用相应包管理器安装等效工具。按 [Conda 官方说明](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html)安装 Conda；Python、`uv`、CMake 和 Ninja 由仓库的 `environment.yml` 提供。C/C++ 编译器使用宿主的 `build-essential`。按 [NVIDIA CUDA 安装指南](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)准备驱动和 Toolkit。`nvidia-smi` 显示的 CUDA 版本表示驱动支持的 API 上限，不表示已经安装相同版本的 Toolkit。
 
 本适配的运行包固定为 Isaac Sim `6.2.0.0`、Warp `1.17.0`、Mitsuba `3.9.1`、Dr.Jit `1.5.0`；可选 Newton `1.6.1`、MuJoCo / MuJoCo Warp `3.12.0`。Isaac Python 包版本、运行时内部构建号与源码 tag 是三种信息，诊断时应分别记录。硬件和系统组合的兼容性仍须在部署后验收。
 
 ## 从零安装
 
-以下命令均在能访问已分配 A100 的 Linux 会话中执行。普通单机不需要调度器；使用调度系统时，先取得 GPU，再在该资源会话中执行安装检查和启动命令。
+以下命令在能访问 A100 的普通 Linux Shell 中执行；GPU 驱动和 Toolkit 仍需预先安装。
 
-### 1. 获取代码与 Python
+### 一键部署
+
+安装 Conda、NVIDIA 驱动和 CUDA Toolkit，并确认 Linux 允许无特权 user/mount namespace 后，运行：
 
 ```bash
 GIT_LFS_SKIP_SMUDGE=1 git clone --branch A100 https://github.com/EurecaMoment/IssacSim4A100.git
 cd IssacSim4A100/a100
-uv python install 3.12
+bash deploy.sh
+```
+
+脚本会创建或更新仓库 Conda 环境，在该环境中准备 Isaac Sim 运行时、执行 GPU smoke，再启动基础服务和机器人、传感器、ROS 2、Newton 等可选功能。首次运行会询问 NVIDIA 许可确认；服务以本地后台进程运行，日志写入 `logs/`。
+
+```bash
+cd IssacSim4A100/a100
+bash deploy.sh status
+bash deploy.sh stop
+```
+
+只部署基础仿真服务时运行 `A100SIM_DEPLOY_FEATURES=none bash deploy.sh`。目标机器必须能直接访问 A100。
+
+### 1. 获取代码并创建 Conda 环境
+
+```bash
+GIT_LFS_SKIP_SMUDGE=1 git clone --branch A100 https://github.com/EurecaMoment/IssacSim4A100.git
+cd IssacSim4A100/a100
+conda env create -f environment.yml
+conda activate isaacsim-a100
 cp .env.example .env
 ```
 
@@ -69,13 +90,13 @@ A100SIM_DRIVER_VERSION=
 
 `ISAAC_GPU=auto` 在继承的 `CUDA_VISIBLE_DEVICES` 范围内选择 A100；若没有该环境变量，则从可访问设备中选择。也可填写部署者自己的物理设备编号或完整 UUID。显式配置同样不能越过继承的设备范围。需要固定设备身份时设置 `A100SIM_EXPECTED_GPU_UUID`。单卡隔离后程序内部使用 `cuda:0`，这是进程内逻辑编号。
 
-Python 默认通过 `uv python find 3.12` 查找。非标准安装可将 `A100SIM_PYTHON`、`A100SIM_CUDA_ROOT` 设置为本机实际绝对路径；`A100SIM_DRIVER_VERSION` 通常留空。运行时目录默认就是 `a100/`，可用 `A100SIM_ROOT` 放到其他磁盘，代码与运行数据可以分开。
+激活环境后，启动器会自动使用 `$CONDA_PREFIX/bin/python`；无需填写 `A100SIM_PYTHON`。如使用自建环境，可将 `A100SIM_PYTHON` 设置为其中的 Python 3.12 绝对路径。`A100SIM_CUDA_ROOT` 通常自动检测，`A100SIM_DRIVER_VERSION` 留空即可。运行时目录默认就是 `a100/`，可用 `A100SIM_ROOT` 放到其他磁盘，代码与运行数据可以分开。
 
 ```bash
 bash doctor.sh
 ```
 
-只有报告 `success: true` 才继续。它会检查 Linux、Python、工具、GPU 可见范围、CUDA Toolkit 与用户命名空间，并报告是否可用条件图节点。用户命名空间被系统策略禁用时，需要管理员启用，或自行提供等效容器环境；本仓库启动器使用前述 rootfs 路径。
+只有报告 `success: true` 才继续。它会检查 Linux、Conda Python、工具、GPU 可见范围、CUDA Toolkit 与用户命名空间，并报告是否可用条件图节点。用户命名空间被系统策略禁用时，需要管理员启用，或自行提供等效容器环境；隔离运行使用前述 rootfs 路径。
 
 ### 3. 安装基础运行环境
 
@@ -168,14 +189,14 @@ systemctl --user status 'isaacsim-a100-*'
 journalctl --user -u 'isaacsim-a100-*' -f
 ```
 
-`start.sh` 启动并等待基础服务就绪，配置了渲染资产时还会启动预加载渲染。可选功能使用单独的 `start-features.sh` / `stop-features.sh`：
+`start.sh` 启动并等待基础服务就绪，配置了渲染资产时还会启动预加载渲染。systemd 是可选的后台托管方式；日常单机运行可直接在已激活的 Conda 环境中使用前台 Bash 命令。可选功能使用单独的 `start-features.sh` / `stop-features.sh`：
 
 ```bash
 bash stop-features.sh
 bash stop.sh
 ```
 
-后台方式需要可用的 systemd 用户会话；退出登录后继续运行还需管理员为部署用户启用 linger。没有 systemd 时保持前台会话，或接入自己的服务管理器。调度集群的进程应由已获分配的资源会话启动；通用 systemd 模板不申请 GPU，也不配置集群任务。端口、缓存与结果目录全部可通过 `.env` 调整。
+后台方式需要可用的 systemd 用户会话；退出登录后继续运行还需管理员为部署用户启用 linger。systemd 不会继承当前终端的 Conda 激活状态；使用该可选方式时，在 `.env` 显式填写 `A100SIM_PYTHON` 为该 Conda 环境的绝对 Python 路径。端口、缓存与结果目录全部可通过 `.env` 调整。
 
 ## 功能范围
 
@@ -317,7 +338,7 @@ python3 examples/client.py examples/cube.json --url http://127.0.0.1:18323 --wai
 
 ```bash
 # 无 GPU 的接口边界与配置测试
-uv run --python 3.12 --no-project python -m unittest discover -s tests -v
+python -m unittest discover -s tests -v
 # 启动服务后的功能验收；需能够读取服务端结果文件
 mkdir -p results/performance
 python3 benchmarks/validate_features.py --report results/performance/features.json
@@ -336,7 +357,7 @@ python3 benchmarks/benchmark_http.py --url http://127.0.0.1:8321 \
 | 现象 | 处理 |
 | --- | --- |
 | 找不到 A100 或分配范围内无匹配设备 | 核对 `CUDA_VISIBLE_DEVICES`、本机设备列表与 `ISAAC_GPU` |
-| 找不到 Toolkit / Python | 设置自己安装位置对应的 `A100SIM_CUDA_ROOT` / `A100SIM_PYTHON` |
+| 找不到 Toolkit / Python | 激活 `isaacsim-a100` 环境；非标准安装时设置 `A100SIM_CUDA_ROOT` / `A100SIM_PYTHON` |
 | glibc / GLIBCXX 错误 | 完成 `install-libs.sh`，通过仓库启动器运行；必要时配置 `A100SIM_CXX_LIB_DIR` |
 | 找不到 OptiX 库 | 执行 `get-driver-libs.sh`；核对归档版本与实际驱动是否匹配 |
 | OptiX PTX / copysign 错误 | 检查固定 Dr.Jit 版本与补丁，重新运行 `build-drjit.sh` |

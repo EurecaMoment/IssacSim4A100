@@ -1,0 +1,13 @@
+name: isaacsim-a100
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - uv
+  - cmake>=3.13
+  - ninja
+  - git
+  - curl
+  - tar
+  - binutils

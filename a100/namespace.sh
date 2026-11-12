@@ -6,7 +6,7 @@ workdir="$PWD"
 [[ -x "$rootfs/bin/bash" ]] || { echo "Run prepare.sh first: missing Ubuntu rootfs" >&2; exit 2; }
 python_prefix="$("$A100SIM_PYTHON" -c 'import sys; print(sys.base_prefix)')"
 case "$python_prefix" in
-    /|/usr|/usr/local) echo "Use an independent Python 3.12 installation, for example uv python install 3.12" >&2; exit 2 ;;
+    /|/usr|/usr/local) echo "Activate the Isaac Sim Conda environment or set A100SIM_PYTHON to an independent Python 3.12" >&2; exit 2 ;;
 esac
 mount --make-rprivate /
 mkdir -p "$rootfs/dev" "$rootfs/proc" "$rootfs/sys" "$rootfs/opt/host-nvidia" "$rootfs/usr/share/nvidia"
