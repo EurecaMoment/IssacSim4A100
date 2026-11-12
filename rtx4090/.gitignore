@@ -1,0 +1,5 @@
+.env
+assets/
+results/
+state/
+__pycache__/

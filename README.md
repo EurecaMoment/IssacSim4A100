@@ -1,5 +1,60 @@
 # IssacSim4A100
 
+## RTX 4090 分支
+
+`4090` 分支新增 [rtx4090/](rtx4090/)，复用下述 A100 服务的请求校验、场景构建、CUDA PhysX、
+持久化任务队列与客户端，使用**官方原生 RTX / Replicator** 输出 RGB、米制相机深度、语义 ID 和 USD。
+目标机器上的现有官方运行时为 **6.0.1**；仓库保留的官方源代码基线仍为 **6.2.0**，
+启动器直接使用已有运行时，不会把 6.2 源码扩展混装进 6.0.1。
+
+2026-11-12 已在 `infini` 的物理 1 号 RTX 4090（24 GB、驱动 580.95.05、Ubuntu 22.04）
+完成实际验证：CUDA 自由落体、方块/球体地面碰撞、512px RGB-D/语义捕获，以及连续 HTTP
+primitive 与 mesh 请求。两个 HTTP 任务均为 `succeeded`，产物包含有效的语义像素；
+导出的 USD 位姿与仿真状态一致。验证记录位于 `rtx4090/results/smoke-fixed/acceptance.json`
+和 `rtx4090/results/http-acceptance.json`，本机结果不随源码提交。
+
+```bash
+cd /mnt/data/jby/IssacSim4A100
+cp rtx4090/.env.example rtx4090/.env
+# 根据机器情况编辑 ISAAC_SIM_DIR、ISAAC_GPU；默认选择物理 1 号卡。
+bash rtx4090/run.sh --smoke --output rtx4090/results/smoke
+bash rtx4090/run.sh
+```
+
+默认统一接口为 `http://127.0.0.1:18409`，支持 `GET /health`、`POST /simulate`、`GET /jobs/<id>`：
+
+```bash
+python3 a100/examples/client.py a100/examples/cube.json \
+  --url http://127.0.0.1:18409 --wait-ms 0
+# 在服务所在机器验证一次 primitive + mesh 的实际完成产物：
+/mnt/data/zhouwei/isaacsim/python.sh rtx4090/validate_http.py
+```
+
+只有任务返回 `state=succeeded` 才完成。每个渲染任务写入 `render.png`、`depth_m.npy`、
+`semantic_ids.npy`、`semantic_labels.json`、`state.npz`、`simulation.json`、`scene.usdc`。
+`depth_m.npy` 是相机平面的轴向距离，单位米；背景可以为无穷大。语义类别使用请求的 body ID。
+物理、深度、RGB 和语义图来自同一仿真后场景；捕获时不额外推进物理时间。
+
+Kit/Vulkan 与 PhysX 使用相同的 `ISAAC_GPU` **物理编号**，不要同时设置 `CUDA_VISIBLE_DEVICES`。
+启动器记录 GPU UUID；CUDA tensor 设备必须与所选编号相符，否则报错。
+4090 支持立方体、球体和准备好的 `mesh.npz`，不支持 A100 自定义 Gaussian 渲染。
+沿用的 `render.spp` 在实时 RTX 下控制子帧数，结果明确记录此差异，不等同于 Mitsuba 路径追踪采样数；
+`render.seed` 保留在 `request.json` 中，但原生 RTX 的时序采样目前不按该种子控制。
+输入光照强度转换为原生 USD 光度单位，因此两个后端的图像并不保证像素一致。
+本分支没有为 HTTP 接口新增关节控制、LiDAR、ROS2 或 Isaac Lab；官方运行时保留其原有扩展。
+
+前台运行时使用 Ctrl+C 退出；常驻运行可保存日志：
+
+```bash
+mkdir -p rtx4090/state
+nohup bash rtx4090/run.sh > rtx4090/state/service.log 2>&1 < /dev/null &
+curl --fail http://127.0.0.1:18409/health
+# 就绪后的 Python 进程 PID：rtx4090/state/service.pid
+kill -TERM "$(cat rtx4090/state/service.pid)"
+```
+
+以下为保留的 A100 部署说明。
+
 在 NVIDIA A100 上运行 **Isaac Sim 6.2 GPU PhysX 仿真 + Mitsuba/Dr.Jit CUDA 渲染**。
 
 本仓库 fork 自 [isaac-sim/IsaacSim](https://github.com/isaac-sim/IsaacSim)，A100 分支基于官方 `v6.2.0` / `release/6.2`（`74a9356b20250dd60337d90b4b4d913c9454d32b`）。官方源代码和历史保留，原版说明见 [README.upstream.md](README.upstream.md)；当前部署的自定义代码、补丁、启动器、验证和资产处理示例集中在 [a100/](a100/)。

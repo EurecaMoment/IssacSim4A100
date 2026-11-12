@@ -9,6 +9,7 @@ import argparse
 import json
 import time
 from pathlib import Path
+from typing import Any
 
 from .service_queue import JobQueue, asset_directory, finite, integer, persist, start_http
 
@@ -20,6 +21,24 @@ def vector(value, name, length=3, low=-10000, high=10000):
 
 
 class PhysicsQueue(JobQueue):
+    runtime_version = "6.2.0"
+    native_rtx = False
+    close_physics_before_capture = False
+
+    def create_physics(self, stage: Any) -> Any:
+        """Create the default A100 CUDA physics implementation."""
+        from .app import Physics
+
+        return Physics(stage)
+
+    def capture_scene(self, stage: Any, capture: dict, image: Path) -> dict:
+        """Render with the default A100 Mitsuba backend."""
+        from .usd_renderer import render_stage
+
+        return render_stage(stage, "/World/Camera", capture["kind"], image,
+                            size=capture["size"], spp=capture["spp"], seed=capture["seed"],
+                            gaussian_gain=float(capture.get("gaussian_gain", 1.0)))
+
     def prepare(self, value):
         unknown = set(value) - {"bodies", "steps", "dt", "gravity", "ground", "render"}
         if unknown:
@@ -145,7 +164,6 @@ class PhysicsQueue(JobQueue):
         import numpy as np
         import omni.usd
         from pxr import Gf, Usd, UsdGeom, UsdPhysics, UsdLux, Vt, Sdf
-        from .app import Physics
 
         started = time.perf_counter()
         context = omni.usd.get_context()
@@ -206,7 +224,7 @@ class PhysicsQueue(JobQueue):
             UsdPhysics.CollisionAPI.Apply(visual.GetPrim())
         physics = None
         try:
-            physics = Physics(stage)
+            physics = self.create_physics(stage)
             rigids = physics.view.create_rigid_body_view("/World/Bodies/B*")
             if rigids.count != len(paths):
                 raise RuntimeError(f"Expected {len(paths)} GPU rigid bodies; found {rigids.count}")
@@ -230,8 +248,8 @@ class PhysicsQueue(JobQueue):
                 bodies.append({"id": by_path[path]["id"], "prim_path": path,
                                "pose_xyzw": pose.tolist(), "velocity": velocity.tolist()})
             np.savez(directory / "state.npz", poses_xyzw=poses, velocities=velocities)
-            result = {"isaac_sim": "6.2.0", "physics_device": str(physics.view.device),
-                      "physical_gpu": self.health()["physical_gpu"], "native_rtx": False,
+            result = {"isaac_sim": self.runtime_version, "physics_device": str(physics.view.device),
+                      "physical_gpu": self.health()["physical_gpu"], "native_rtx": self.native_rtx,
                       "cpu_fallback": False, "bodies": bodies, "rigid_bodies": len(bodies),
                       "steps": request["steps"], "dt": request["dt"],
                       "simulation_seconds": request["steps"] * request["dt"],
@@ -239,6 +257,9 @@ class PhysicsQueue(JobQueue):
                       "state_npz": str(directory / "state.npz"),
                       "collision": "PhysX primitives; convexHull for dynamic mesh",
                       "scene": str(directory / "scene.usdc")}
+            if self.close_physics_before_capture:
+                physics.close()
+                physics = None
             capture = request["render"]
             if capture:
                 import math
@@ -281,11 +302,8 @@ class PhysicsQueue(JobQueue):
                         wash.CreateExposureAttr(float(fill["exposure"]))
                     orient(wash.GetPrim(), fill.get("origin", [0, 0, 3]),
                            fill.get("target", [0, 0, 0]))
-                from .usd_renderer import render_stage
                 image = directory / "render.png"
-                result["render"] = render_stage(stage, "/World/Camera", capture["kind"], image,
-                                                size=capture["size"], spp=capture["spp"], seed=capture["seed"],
-                                                gaussian_gain=float(capture.get("gaussian_gain", 1.0)))
+                result["render"] = self.capture_scene(stage, capture, image)
                 result["image"] = str(image)
             stage.GetRootLayer().Export(str(directory / "scene.usdc"))
             persist(directory / "simulation.json", result)
