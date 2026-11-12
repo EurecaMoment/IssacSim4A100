@@ -8,8 +8,8 @@
   "files": [
     {
       "path": ".env.example",
-      "sha256": "9f99837ef04fc7d5d1757f700df5275b5ed4fdff11bd1905a9ceb83990fcd093",
-      "bytes": 2240
+      "sha256": "7139f22246d97357202bfefac96ad1b374feeb55d8e607ff0dad7ebd4611c453",
+      "bytes": 2293
     },
     {
       "path": ".gitattributes",
@@ -258,8 +258,8 @@
     },
     {
       "path": "get-driver-libs.sh",
-      "sha256": "86b77ee5e5c40a944e5400eb93cc8cee182344efaf7525642d2ab260c5c083a9",
-      "bytes": 2444
+      "sha256": "410e89dfa5bce05ae7194c125d13321c9fadaa3d317036c7a8a8e507a614457d",
+      "bytes": 3102
     },
     {
       "path": "install-features.sh",

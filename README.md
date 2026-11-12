@@ -91,7 +91,7 @@ bash doctor.sh --runtime
 
 1. `prepare.sh minimal` 下载 Ubuntu Noble rootfs、固定版本 Isaac / Python 包，并从 Kit cache 提取物理扩展依赖。下载计划保存在 `downloads/`。需要完整 Kit 扩展缓存时改用 `bash prepare.sh full`，下载量明显增加。
 2. `install-libs.sh` 将 Linux 用户态依赖解压到 rootfs。
-3. `get-driver-libs.sh` 自动读取宿主驱动版本，优先复用已安装且版本匹配的 OptiX 库；缺少时下载对应 NVIDIA Linux 驱动归档，**只解包** `libnvoptix` / `libnvidia-rtcore`。支持 `A100SIM_NVIDIA_RUN_URL` 或 `A100SIM_NVIDIA_DEB_URL` 镜像覆盖，归档内库必须与检测到的驱动版本匹配。
+3. `get-driver-libs.sh` 自动读取宿主驱动版本，优先复用已安装且版本匹配的 OptiX 库；缺少时依次尝试 NVIDIA 官方 Tesla 数据中心驱动与 XFree86 Linux 驱动归档，**只解包** `libnvoptix` / `libnvidia-rtcore`。支持 `A100SIM_NVIDIA_RUN_URL` 或 `A100SIM_NVIDIA_DEB_URL` 镜像覆盖；配置镜像后仅使用指定地址，归档内库必须与检测到的驱动版本匹配。
 4. `build-drjit.sh` 从固定提交 `3b96411288b9938889045308654ba37d4ef24b71` 编译 Dr.Jit core，并应用 [兼容补丁](a100/patches/drjit-core-a100.patch)。原库保存为 `.original`；重新安装 Dr.Jit 后需要重新应用。构建使用 `-march=native`，应在部署机器上运行。
 
 rootfs 默认镜像 URL 可通过 `A100SIM_ROOTFS_URL` 覆盖；需要固定快照时同时设置 `A100SIM_ROOTFS_SHA256`。HTTP 代理使用标准 `HTTP_PROXY` / `HTTPS_PROXY` 环境变量。离线部署需提前准备相同版本的下载内容；仓库不包含运行时二进制。

@@ -33,8 +33,27 @@ if [[ ! -f "$destination/libnvoptix.so.$actual" || ! -f "$destination/libnvidia-
         dpkg-deb -x "$archive" "$extracted"
     else
         archive="$A100SIM_ROOT/downloads/NVIDIA-Linux-x86_64-$actual.run"
-        url="${A100SIM_NVIDIA_RUN_URL:-https://us.download.nvidia.com/XFree86/Linux-x86_64/$actual/NVIDIA-Linux-x86_64-$actual.run}"
-        curl --fail --location --retry 3 --connect-timeout 20 "$url" -o "$archive"
+        if [[ -n "${A100SIM_NVIDIA_RUN_URL:-}" ]]; then
+            urls=("$A100SIM_NVIDIA_RUN_URL")
+        else
+            urls=(
+                "https://us.download.nvidia.com/tesla/$actual/NVIDIA-Linux-x86_64-$actual.run"
+                "https://us.download.nvidia.com/XFree86/Linux-x86_64/$actual/NVIDIA-Linux-x86_64-$actual.run"
+            )
+        fi
+        downloaded=0
+        for url in "${urls[@]}"; do
+            if curl --fail --location --retry 3 --connect-timeout 20 "$url" -o "$archive.part"; then
+                mv -- "$archive.part" "$archive"
+                downloaded=1
+                break
+            fi
+        done
+        if [[ "$downloaded" != 1 ]]; then
+            rm -f -- "$archive.part"
+            echo "Matching NVIDIA driver archive could not be downloaded; configure an official archive mirror" >&2
+            exit 2
+        fi
         # Extraction only: never invokes the driver installer or loads kernel modules.
         [[ -d "$extracted" ]] || /bin/sh "$archive" --extract-only --target "$extracted"
     fi
