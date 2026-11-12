@@ -1,0 +1,3728 @@
+{
+  "scope": "Installed manifest directories plus enabled IDs from an independent robotics probe",
+  "enabled_in_probe": [
+    "carb.audio-0.1.0",
+    "carb.windowing.plugins-1.0.1",
+    "isaacsim.common-6.2.0",
+    "isaacsim.core.cloner-1.7.6",
+    "isaacsim.core.deprecation_manager-0.4.5",
+    "isaacsim.core.experimental.materials-0.11.1",
+    "isaacsim.core.experimental.objects-0.9.1",
+    "isaacsim.core.experimental.primdata-0.3.6",
+    "isaacsim.core.experimental.prims-1.12.1",
+    "isaacsim.core.experimental.utils-0.23.3",
+    "isaacsim.core.simulation_manager-1.17.4",
+    "isaacsim.robot.schema-7.0.2",
+    "isaacsim.robot.surface_gripper-3.7.1",
+    "isaacsim.robot_motion.controllers-0.4.0",
+    "isaacsim.robot_motion.experimental.motion_generation-7.2.0",
+    "isaacsim.robot_motion.schema-0.2.2",
+    "isaacsim.robot_setup.gain_tuner-3.11.0",
+    "isaacsim.sensors.experimental.physics-4.0.0",
+    "isaacsim.test.docstring-1.3.2",
+    "omni.activity.core-1.0.4",
+    "omni.appwindow-1.2.2",
+    "omni.assets.plugins-0.0.0",
+    "omni.blobkey-1.1.2",
+    "omni.client-1.3.0",
+    "omni.client.lib-1.1.1",
+    "omni.convexdecomposition-110.4.4",
+    "omni.cubric-0.1.0",
+    "omni.datastore-0.0.0",
+    "omni.gpu_foundation-0.0.0",
+    "omni.gpu_foundation.shadercache.vulkan-1.0.0",
+    "omni.gpucompute.plugins-0.0.0",
+    "omni.graph-1.142.6",
+    "omni.graph.core-3.1.8",
+    "omni.graph.exec-0.9.6",
+    "omni.graph.tools-1.81.0",
+    "omni.grpc.lib-1.0.1",
+    "omni.hsscclient-1.1.4",
+    "omni.hydra.usdrt_delegate-7.5.2",
+    "omni.inspect-1.0.2",
+    "omni.iray.libs-0.0.1",
+    "omni.kit.actions.core-1.2.1",
+    "omni.kit.async_engine-0.0.5",
+    "omni.kit.audiodeviceenum-1.0.2",
+    "omni.kit.commands-1.6.2",
+    "omni.kit.exec.core-0.13.6",
+    "omni.kit.loop-isaac-1.6.2",
+    "omni.kit.material.library-3.1.8",
+    "omni.kit.primitive.mesh-1.1.1",
+    "omni.kit.renderer.capture-2.0.2",
+    "omni.kit.renderer.core-1.3.2",
+    "omni.kit.renderer.imgui-2.2.1",
+    "omni.kit.renderer.init-1.0.1",
+    "omni.kit.stage_template.core-1.1.23",
+    "omni.kit.stage_templates-2.0.3",
+    "omni.kit.test-2.2.3",
+    "omni.kit.usd.layers-2.7.9",
+    "omni.kit.usd.mdl-1.1.12",
+    "omni.kit.usd_undo-0.1.8",
+    "omni.materialx.libs-1.0.9",
+    "omni.mdl-57.0.6",
+    "omni.mdl.neuraylib-0.2.23",
+    "omni.metrics.core-0.0.3",
+    "omni.physics-110.4.4",
+    "omni.physics.physx-110.4.4",
+    "omni.physics.stageupdate-110.4.4",
+    "omni.physics.tensors-110.4.4",
+    "omni.physx-110.4.4",
+    "omni.physx.cooking-110.4.4",
+    "omni.physx.fabric-110.4.4",
+    "omni.physx.foundation-110.4.4",
+    "omni.physx.gpu-110.4.4",
+    "omni.physx.tensors-110.4.4",
+    "omni.protobuf.lib-1.0.1",
+    "omni.stats-1.0.1",
+    "omni.timeline-1.1.2",
+    "omni.ui-3.3.10",
+    "omni.ujitso.default-1.0.0",
+    "omni.usd-1.19.11",
+    "omni.usd.config-1.0.8",
+    "omni.usd.core-1.10.42",
+    "omni.usd.libs-1.0.3",
+    "omni.usd.metrics.assembler-110.1.2",
+    "omni.usd.schema.anim-0.0.1",
+    "omni.usd.schema.audio-0.0.1",
+    "omni.usd.schema.metrics.assembler-110.1.1",
+    "omni.usd.schema.mujoco-1.1.4",
+    "omni.usd.schema.newton-1.5.0",
+    "omni.usd.schema.omnigraph-1.0.1",
+    "omni.usd.schema.physx-110.4.4",
+    "omni.usd.schema.semantics-0.0.0",
+    "omni.usd_resolver-1.0.0",
+    "omni.usdex.libs-3.0.0",
+    "omni.usdphysics-110.4.4",
+    "omni.warp.core-1.17.0",
+    "usdrt.scenegraph-7.6.3"
+  ],
+  "installed": {
+    "carb.audio-0.1.0+187cf21b.lx64.r.cp312": {
+      "version": "0.1.0",
+      "title": "Core Audio",
+      "dependencies": [
+        "omni.assets.plugins"
+      ],
+      "location": "base"
+    },
+    "carb.windowing.plugins-1.0.1+187cf21b.lx64.r": {
+      "version": "1.0.1",
+      "title": "Core Windowing",
+      "dependencies": [],
+      "location": "features"
+    },
+    "isaacsim.app.about": {
+      "version": "2.3.2",
+      "title": "Isaac Sim About Window",
+      "dependencies": [
+        "isaacsim.core.version",
+        "omni.client",
+        "omni.kit.menu.utils",
+        "omni.kit.uiapp"
+      ],
+      "location": "base"
+    },
+    "isaacsim.app.compatibility_check-1.1.6+110.4.0.lx64.r.cp312": {
+      "version": "1.1.6",
+      "title": "Isaac Sim compatibility check",
+      "dependencies": [
+        "omni.gpu_foundation",
+        "omni.kit.renderer.core",
+        "omni.kit.uiapp",
+        "omni.ui"
+      ],
+      "location": "base"
+    },
+    "isaacsim.app.setup": {
+      "version": "1.12.0",
+      "title": "Isaac Sim Setup",
+      "dependencies": [
+        "isaacsim.core.version",
+        "omni.client",
+        "omni.kit.menu.common",
+        "omni.kit.quicklayout",
+        "omni.kit.stage_templates",
+        "omni.kit.viewport.utility",
+        "omni.kit.window.property",
+        "omni.kit.window.title",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "base"
+    },
+    "isaacsim.asset.exporter.urdf": {
+      "version": "2.2.10",
+      "title": "Isaac Sim USD to URDF exporter",
+      "dependencies": [
+        "isaacsim.asset.importer.utils",
+        "isaacsim.robot.schema",
+        "omni.physics.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.exporter.urdf.ui": {
+      "version": "1.0.6",
+      "title": "Isaac Sim USD to URDF Exporter UI",
+      "dependencies": [
+        "isaacsim.asset.exporter.urdf",
+        "isaacsim.gui.components",
+        "omni.kit.menu.utils",
+        "omni.kit.uiapp",
+        "omni.kit.window.file_exporter"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.gen.conveyor": {
+      "version": "1.2.4",
+      "title": "Isaac Sim Conveyor belt utility",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "omni.graph",
+        "omni.graph.action",
+        "omni.graph.core",
+        "omni.graph.nodes",
+        "omni.physx",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.gen.conveyor.ui": {
+      "version": "2.3.3",
+      "title": "Isaac Sim Conveyor belt utility UI",
+      "dependencies": [
+        "isaacsim.asset.gen.conveyor",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.storage.native",
+        "omni.kit.uiapp",
+        "omni.kit.widget.filebrowser",
+        "omni.kit.window.preferences",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.gen.omap": {
+      "version": "2.3.5",
+      "title": "Isaac Sim Occupancy Map",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.util.debug_draw",
+        "omni.physics.physx",
+        "omni.physics.stageupdate",
+        "omni.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.gen.omap.ui": {
+      "version": "2.6.5",
+      "title": "UI components for the Isaac Sim Occupancy Map",
+      "dependencies": [
+        "isaacsim.asset.gen.omap",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.importer.heightmap": {
+      "version": "2.4.0",
+      "title": "Heightmap extension for Isaac Sim Occupancy Map",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components",
+        "omni.kit.uiapp",
+        "omni.kit.viewport.window"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.importer.mjcf": {
+      "version": "3.13.0",
+      "title": "MJCF Importer",
+      "dependencies": [
+        "isaacsim.asset.importer.utils",
+        "isaacsim.asset.transformer.rules",
+        "omni.usd.schema.mujoco",
+        "omni.usdex.libs"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.importer.mjcf.ui": {
+      "version": "1.4.7",
+      "title": "Omniverse MJCF Importer UI",
+      "dependencies": [
+        "isaacsim.asset.importer.mjcf",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components",
+        "omni.kit.helper.file_utils",
+        "omni.kit.notification_manager",
+        "omni.kit.tool.asset_importer",
+        "omni.kit.uiapp",
+        "omni.kit.viewport.utility",
+        "omni.kit.window.content_browser",
+        "omni.kit.window.extensions",
+        "omni.kit.window.filepicker",
+        "omni.kit.window.property"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.importer.urdf": {
+      "version": "3.11.12",
+      "title": "Omniverse URDF Importer Core",
+      "dependencies": [
+        "isaacsim.asset.importer.utils",
+        "isaacsim.asset.transformer.rules",
+        "isaacsim.core.experimental.utils",
+        "omni.usdex.libs"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.importer.urdf.ui": {
+      "version": "1.4.6",
+      "title": "URDF Importer UI Extension",
+      "dependencies": [
+        "isaacsim.asset.importer.urdf",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components",
+        "omni.kit.helper.file_utils",
+        "omni.kit.notification_manager",
+        "omni.kit.tool.asset_importer",
+        "omni.kit.uiapp",
+        "omni.kit.viewport.utility",
+        "omni.kit.window.content_browser",
+        "omni.kit.window.extensions",
+        "omni.kit.window.filepicker",
+        "omni.kit.window.property"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.importer.utils": {
+      "version": "1.9.1",
+      "title": "Isaac Sim Asset Importer Utils",
+      "dependencies": [
+        "isaacsim.asset.transformer",
+        "isaacsim.robot.schema",
+        "omni.scene.optimizer.core",
+        "omni.usd.schema.mujoco",
+        "omni.usd.schema.newton",
+        "omni.usd.schema.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.transformer": {
+      "version": "6.2.1",
+      "title": "Isaac Sim Asset Transformer",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.transformer.rules": {
+      "version": "1.7.25",
+      "title": "Isaac Sim Asset Transformer Rules",
+      "dependencies": [
+        "isaacsim.asset.importer.utils",
+        "isaacsim.asset.transformer",
+        "isaacsim.robot.schema",
+        "omni.kit.material.library",
+        "omni.usdphysics"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.transformer.ui": {
+      "version": "1.1.5",
+      "title": "Isaac Sim Asset Transformer",
+      "dependencies": [
+        "isaacsim.asset.transformer",
+        "isaacsim.asset.transformer.rules",
+        "omni.kit.menu.utils",
+        "omni.kit.window.file",
+        "omni.kit.window.filepicker",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.validation": {
+      "version": "2.3.0",
+      "title": "Isaac Sim Asset Validation Rules",
+      "dependencies": [
+        "isaacsim.robot.schema",
+        "omni.asset_validator.core",
+        "omni.hydra.usdrt_delegate",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.physx",
+        "omni.usd",
+        "omni.usd.schema.omni_lens_distortion",
+        "omni.usd.schema.omni_sensors",
+        "omni.usd.schema.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.asset.validation.ui": {
+      "version": "1.0.2",
+      "title": "SimReady Profile Validation UI",
+      "dependencies": [
+        "isaacsim.asset.validation",
+        "isaacsim.gui.components",
+        "omni.kit.clipboard",
+        "omni.kit.menu.utils",
+        "omni.kit.notification_manager",
+        "omni.kit.window.filepicker",
+        "omni.kit.window.popup_dialog",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.common": {
+      "version": "6.2.0",
+      "title": "Isaac Sim Common Libraries",
+      "dependencies": [],
+      "location": "base"
+    },
+    "isaacsim.core.api": {
+      "version": "5.3.2",
+      "title": "Isaac Sim Core",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.prims",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.core.utils",
+        "isaacsim.core.version",
+        "isaacsim.storage.native",
+        "omni.hydra.usdrt_delegate",
+        "omni.kit.material.library",
+        "omni.kit.stage_templates",
+        "omni.kit.usd.layers",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.physics.stageupdate",
+        "omni.physx.tensors",
+        "omni.usd.schema.semantics",
+        "omni.warp.core"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.cloner": {
+      "version": "1.7.6",
+      "title": "Isaac Sim Cloner",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.simulation_manager",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.physx",
+        "omni.usd",
+        "omni.usd.libs"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.deprecation_manager": {
+      "version": "0.4.5",
+      "title": "Deprecation manager",
+      "dependencies": [
+        "omni.graph.core",
+        "omni.kit.notification_manager",
+        "omni.usd"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.experimental.actuators": {
+      "version": "0.2.1",
+      "title": "Isaac Sim Core (Actuators)",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "omni.graph",
+        "omni.graph.core",
+        "omni.usd",
+        "omni.warp.core"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.experimental.materials": {
+      "version": "0.11.1",
+      "title": "Isaac Sim Core (Materials)",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "omni.kit.material.library",
+        "omni.kit.usd.mdl",
+        "omni.warp.core"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.experimental.objects": {
+      "version": "0.9.1",
+      "title": "Isaac Sim Core (Objects)",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.materials",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "omni.warp.core"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.experimental.primdata": {
+      "version": "0.3.6",
+      "title": "Isaac Sim Core Experimental Prim Data",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.simulation_manager",
+        "omni.hydra.usdrt_delegate",
+        "omni.physics",
+        "omni.physics.tensors"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.experimental.prims": {
+      "version": "1.12.1",
+      "title": "Isaac Sim Core (Prims)",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.mega.sim_state.client",
+        "isaacsim.test.docstring",
+        "omni.hydra.usdrt_delegate",
+        "omni.physics",
+        "omni.physx.tensors",
+        "omni.usd.schema.semantics",
+        "omni.warp.core"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.experimental.utils": {
+      "version": "0.23.3",
+      "title": "Isaac Sim Core (Utils)",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "omni.hydra.usdrt_delegate",
+        "omni.kit.stage_templates",
+        "omni.usd",
+        "omni.usd.metrics.assembler",
+        "omni.usd.schema.physx",
+        "omni.warp.core"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.includes": {
+      "version": "2.9.5",
+      "title": "Isaac Sim Common Includes",
+      "dependencies": [],
+      "location": "base"
+    },
+    "isaacsim.core.nodes": {
+      "version": "5.10.15",
+      "title": "Isaac Sim Core OmniGraph Nodes",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.storage.native",
+        "omni.graph",
+        "omni.kit.viewport.utility",
+        "omni.kit.viewport.window",
+        "omni.replicator.core"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.prims": {
+      "version": "0.11.7",
+      "title": "Isaac Sim Core API (Prims)",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.core.utils",
+        "omni.physx.tensors",
+        "omni.usd.schema.semantics",
+        "omni.warp.core"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.rendering_manager": {
+      "version": "0.5.3",
+      "title": "Isaac Sim Core Rendering Manager",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.utils",
+        "omni.hydra.rtx",
+        "omni.kit.viewport.utility",
+        "omni.kit.viewport.window"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.simulation_manager": {
+      "version": "1.17.4",
+      "title": "Isaac Sim Core Simulation Manager",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.physics.stageupdate",
+        "omni.physx.tensors",
+        "omni.usd.schema.mujoco",
+        "omni.usd.schema.newton",
+        "omni.usdex.libs"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.throttling": {
+      "version": "2.3.7",
+      "title": "Isaac Sim Throttling",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "omni.kit.window.preferences",
+        "omni.timeline"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.utils": {
+      "version": "4.1.9",
+      "title": "Isaac Sim Utilities",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.storage.native",
+        "omni.kit.usd.layers",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.physics.tensors",
+        "omni.physx",
+        "omni.usd.metrics.assembler",
+        "omni.usd.metrics.assembler.physics",
+        "omni.usd.schema.semantics",
+        "omni.usdphysics",
+        "omni.warp.core"
+      ],
+      "location": "base"
+    },
+    "isaacsim.core.version": {
+      "version": "2.2.1",
+      "title": "Isaac Sim Version",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager"
+      ],
+      "location": "features"
+    },
+    "isaacsim.gui.components": {
+      "version": "1.8.9",
+      "title": "Isaac Sim UI Utilities",
+      "dependencies": [
+        "omni.graph",
+        "omni.graph.action",
+        "omni.graph.visualization.nodes",
+        "omni.kit.menu.utils",
+        "omni.kit.property.usd",
+        "omni.kit.uiapp",
+        "omni.kit.window.extensions",
+        "omni.kit.window.filepicker",
+        "omni.kit.window.property",
+        "omni.physics"
+      ],
+      "location": "features"
+    },
+    "isaacsim.gui.content_browser": {
+      "version": "0.5.1",
+      "title": "Content Browser",
+      "dependencies": [
+        "isaacsim.storage.native",
+        "omni.kit.widget.filebrowser",
+        "omni.kit.window.content_browser",
+        "omni.kit.window.file_importer",
+        "omni.kit.window.filepicker",
+        "omni.simready.content.browser",
+        "omni.usd.core"
+      ],
+      "location": "features"
+    },
+    "isaacsim.gui.menu": {
+      "version": "2.10.12",
+      "title": "Isaac Sim Menus",
+      "dependencies": [
+        "isaacsim.core.rendering_manager",
+        "isaacsim.gui.components",
+        "isaacsim.robot.schema",
+        "isaacsim.storage.native",
+        "omni.kit.context_menu",
+        "omni.kit.menu.utils",
+        "omni.kit.selection",
+        "omni.kit.window.file"
+      ],
+      "location": "features"
+    },
+    "isaacsim.gui.property": {
+      "version": "1.6.4",
+      "title": "Isaac Sim Property Extensions",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.gui.components",
+        "isaacsim.robot.schema",
+        "isaacsim.robot_motion.schema",
+        "omni.kit.actions.core",
+        "omni.kit.menu.utils",
+        "omni.kit.property.usd",
+        "omni.kit.uiapp",
+        "omni.kit.window.property",
+        "omni.physics.physx",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.gui.sensors.icon": {
+      "version": "2.2.4",
+      "title": "Sensor Icon",
+      "dependencies": [
+        "omni.appwindow",
+        "omni.kit.viewport.menubar.core",
+        "omni.kit.viewport.menubar.display",
+        "omni.kit.viewport.registry",
+        "omni.kit.viewport.utility",
+        "omni.kit.widget.stage",
+        "omni.ui",
+        "omni.ui.scene",
+        "omni.usd",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "isaacsim.physics.newton": {
+      "version": "1.1.1",
+      "title": "Isaac Sim Newton Physics",
+      "dependencies": [
+        "isaacsim.core.simulation_manager",
+        "isaacsim.test.utils",
+        "omni.physics",
+        "omni.warp.core",
+        "usdrt.scenegraph"
+      ],
+      "location": "base"
+    },
+    "isaacsim.physics.newton.tensors": {
+      "version": "0.8.1",
+      "title": "Isaac Sim Newton Physics Tensor Backend",
+      "dependencies": [
+        "isaacsim.physics.newton",
+        "omni.physics.tensors"
+      ],
+      "location": "base"
+    },
+    "isaacsim.physics.newton.ui": {
+      "version": "1.7.0",
+      "title": "Isaac Sim Newton Physics UI",
+      "dependencies": [
+        "isaacsim.physics.newton",
+        "omni.kit.property.physics",
+        "omni.physics.isaacsimready",
+        "omni.physics.ui",
+        "omni.usd.schema.mujoco",
+        "omni.usd.schema.newton"
+      ],
+      "location": "base"
+    },
+    "isaacsim.replicator.behavior": {
+      "version": "1.6.2",
+      "title": "Isaac Sim Replicator Behavior Scripts",
+      "dependencies": [
+        "isaacsim.core.experimental.materials",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.storage.native",
+        "omni.behavior.scripting.core",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.physx",
+        "omni.replicator.core",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.behavior.ui": {
+      "version": "1.2.3",
+      "title": "Isaac Sim Replicator Behavior Scripts UI",
+      "dependencies": [
+        "isaacsim.replicator.behavior",
+        "omni.kit.property.usd",
+        "omni.kit.window.property",
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.domain_randomization": {
+      "version": "1.2.4",
+      "title": "Isaac Sim Replicator Domain Randomization",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.prims",
+        "isaacsim.replicator.experimental.domain_randomization",
+        "omni.graph",
+        "omni.graph.core",
+        "omni.replicator.core"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.episode_recorder": {
+      "version": "0.1.6",
+      "title": "Isaac Sim Episode Recorder",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.simulation_manager",
+        "omni.timeline",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.episode_recorder.ui": {
+      "version": "0.1.5",
+      "title": "Isaac Sim Episode Recorder UI",
+      "dependencies": [
+        "isaacsim.gui.components",
+        "isaacsim.replicator.episode_recorder",
+        "omni.kit.menu.utils",
+        "omni.kit.window.extensions",
+        "omni.kit.window.filepicker",
+        "omni.timeline",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.examples": {
+      "version": "1.12.4",
+      "title": "Isaac Sim Replicator Examples",
+      "dependencies": [
+        "isaacsim.replicator.writers",
+        "omni.graph.core",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.replicator.core"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.experimental.domain_randomization": {
+      "version": "1.2.12",
+      "title": "Isaac Sim Replicator Domain Randomization",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.simulation_manager",
+        "omni.graph",
+        "omni.graph.core",
+        "omni.replicator.core"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.experimental.mobility_gen": {
+      "version": "0.5.0",
+      "title": "MobilityGen",
+      "dependencies": [
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.nodes",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.replicator.nurec_utils",
+        "omni.kit.usd.collect",
+        "omni.replicator.core"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.grasping": {
+      "version": "1.1.7",
+      "title": "Replicator Grasping Workflow",
+      "dependencies": [
+        "omni.hydra.usdrt_delegate",
+        "omni.physx",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.grasping.ui": {
+      "version": "1.1.4",
+      "title": "Replicator Grasping Pipeline UI",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components",
+        "isaacsim.replicator.grasping",
+        "isaacsim.util.debug_draw",
+        "omni.hydra.usdrt_delegate",
+        "omni.kit.menu.utils",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.mobility_gen.examples": {
+      "version": "0.4.1",
+      "title": "MobilityGen Examples",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.replicator.experimental.mobility_gen",
+        "isaacsim.robot.experimental.wheeled_robots",
+        "isaacsim.robot.policy.examples",
+        "omni.kit.uiapp"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.mobility_gen.ui": {
+      "version": "0.4.8",
+      "title": "MobilityGen UI",
+      "dependencies": [
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.examples.browser",
+        "isaacsim.gui.components",
+        "isaacsim.replicator.experimental.mobility_gen",
+        "isaacsim.replicator.mobility_gen.examples",
+        "isaacsim.replicator.nurec_utils",
+        "omni.kit.uiapp",
+        "omni.kit.usdz_export"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.nurec_utils": {
+      "version": "0.1.3",
+      "title": "Isaac Sim Replicator NuRec Utils",
+      "dependencies": [
+        "omni.replicator.core",
+        "omni.rtx.spg",
+        "omni.timeline",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.synthetic_recorder": {
+      "version": "2.4.7",
+      "title": "Isaac Sim Replicator Synthetic Data Recorder",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components",
+        "omni.kit.menu.utils",
+        "omni.kit.viewport.utility",
+        "omni.kit.window.extensions",
+        "omni.replicator.core",
+        "omni.timeline"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.teleop": {
+      "version": "0.5.0",
+      "title": "Replicator Teleop",
+      "dependencies": [
+        "filter:platform",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.replicator.episode_recorder",
+        "isaacsim.storage.native",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.teleop.ui": {
+      "version": "0.4.5",
+      "title": "Replicator Teleop UI",
+      "dependencies": [
+        "isaacsim.core.simulation_manager",
+        "isaacsim.gui.components",
+        "isaacsim.replicator.teleop",
+        "omni.kit.menu.utils",
+        "omni.kit.window.filepicker",
+        "omni.kit.window.popup_dialog",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.replicator.writers": {
+      "version": "1.5.7",
+      "title": "Isaac Sim Replicator Writers",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "omni.graph",
+        "omni.graph.core",
+        "omni.replicator.core"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.experimental.manipulators.examples": {
+      "version": "1.0.0",
+      "title": "Manipulators Examples (Experimental, Deprecated)",
+      "dependencies": [
+        "isaacsim.robot_motion.examples"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.experimental.wheeled_robots": {
+      "version": "0.2.17",
+      "title": "Wheeled Robots (Experimental)",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.manipulators": {
+      "version": "3.4.5",
+      "title": "Isaac Sim Manipulators",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.nodes",
+        "isaacsim.robot.surface_gripper"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.manipulators.examples": {
+      "version": "2.0.4",
+      "title": "Manipulators Examples (Deprecated)",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.robot.manipulators",
+        "isaacsim.robot_motion.motion_generation",
+        "isaacsim.storage.native"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.manipulators.ui": {
+      "version": "2.2.2",
+      "title": "Isaac Sim Manipulators UI",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.gui.components",
+        "isaacsim.robot.manipulators",
+        "omni.kit.menu.utils"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.policy.examples": {
+      "version": "7.2.3",
+      "title": "Reinforcement Learning Inference Example for Robots in Isaac Sim",
+      "dependencies": [
+        "isaacsim.core.experimental.actuators",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.examples.base",
+        "isaacsim.examples.browser",
+        "isaacsim.robot_motion.experimental.motion_generation",
+        "isaacsim.storage.native"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.poser": {
+      "version": "2.0.1",
+      "title": "Isaac Sim Robot Poser",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "isaacsim.gui.components",
+        "isaacsim.robot.schema",
+        "omni.kit.menu.utils"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.poser.ui": {
+      "version": "1.1.5",
+      "title": "Robot Poser",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components",
+        "isaacsim.robot.poser",
+        "isaacsim.robot.schema",
+        "omni.kit.property.usd",
+        "omni.kit.uiapp",
+        "omni.kit.widget.stage",
+        "omni.kit.window.property"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.schema": {
+      "version": "7.0.2",
+      "title": "Isaac USD schema",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.schema.ui": {
+      "version": "0.4.1",
+      "title": "Isaac Sim Schema UI",
+      "dependencies": [
+        "isaacsim.robot.schema",
+        "omni.kit.context_menu",
+        "omni.kit.menu.utils",
+        "omni.kit.viewport.registry",
+        "omni.kit.viewport.utility",
+        "omni.kit.widget.context_menu",
+        "omni.kit.widget.stage",
+        "omni.timeline",
+        "omni.ui",
+        "omni.ui.scene",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.surface_gripper": {
+      "version": "3.7.1",
+      "title": "Isaac Sim Surface Gripper",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.robot.schema",
+        "omni.graph"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.surface_gripper.ui": {
+      "version": "3.1.5",
+      "title": "Isaac Sim Surface Gripper UI Components",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.gui.components",
+        "isaacsim.gui.menu",
+        "isaacsim.robot.surface_gripper"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.wheeled_robots": {
+      "version": "5.2.5",
+      "title": "Wheeled Robots",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.deprecation_manager",
+        "omni.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.wheeled_robots.nodes": {
+      "version": "0.1.14",
+      "title": "Wheeled Robots Nodes",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.nodes",
+        "isaacsim.robot.experimental.wheeled_robots",
+        "omni.graph",
+        "omni.graph.tools"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot.wheeled_robots.ui": {
+      "version": "2.3.5",
+      "title": "Wheeled Robots UI",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.gui.components",
+        "isaacsim.robot.wheeled_robots.nodes",
+        "omni.graph",
+        "omni.graph.tools",
+        "omni.kit.menu.utils"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.controllers": {
+      "version": "0.4.0",
+      "title": "controllers",
+      "dependencies": [
+        "isaacsim.common",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.robot_motion.experimental.motion_generation",
+        "isaacsim.robot_motion.schema"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.cumotion": {
+      "version": "1.5.0",
+      "title": "cumotion",
+      "dependencies": [
+        "isaacsim.common",
+        "isaacsim.core.experimental.materials",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.robot_motion.experimental.motion_generation",
+        "isaacsim.robot_motion.schema"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.cumotion.examples": {
+      "version": "0.5.2",
+      "title": "cuMotion Examples",
+      "dependencies": [
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.examples.browser",
+        "isaacsim.gui.components",
+        "isaacsim.robot_motion.cumotion",
+        "isaacsim.robot_motion.experimental.motion_generation",
+        "isaacsim.storage.native",
+        "omni.kit.context_menu",
+        "omni.timeline",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.examples": {
+      "version": "0.2.6",
+      "title": "Robot Motion Examples",
+      "dependencies": [
+        "isaacsim.asset.gen.conveyor",
+        "isaacsim.core.experimental.materials",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.examples.base",
+        "isaacsim.examples.browser",
+        "isaacsim.gui.components",
+        "isaacsim.robot.surface_gripper",
+        "isaacsim.robot_motion.cumotion",
+        "isaacsim.robot_motion.experimental.motion_generation",
+        "isaacsim.robot_motion.schema",
+        "isaacsim.storage.native",
+        "omni.behavior.tree.core",
+        "omni.kit.uiapp",
+        "omni.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.experimental.motion_generation": {
+      "version": "7.2.0",
+      "title": "motion_generation",
+      "dependencies": [
+        "isaacsim.common",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.robot_motion.schema"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.lula": {
+      "version": "4.1.4",
+      "title": "Isaac Sim Lula",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.lula_test_widget": {
+      "version": "1.2.3",
+      "title": "Lula Test Widget",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.gui.components",
+        "isaacsim.robot_motion.lula",
+        "isaacsim.robot_motion.motion_generation",
+        "omni.kit.uiapp",
+        "omni.physics",
+        "omni.physics.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.motion_generation": {
+      "version": "9.0.0",
+      "title": "Isaac Sim Motion Generation",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.gui.components",
+        "isaacsim.robot_motion.lula"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.motion_generation.examples": {
+      "version": "0.3.4",
+      "title": "Motion Generation Examples",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.prims",
+        "isaacsim.core.utils",
+        "isaacsim.gui.components",
+        "isaacsim.robot_motion.lula",
+        "isaacsim.robot_motion.motion_generation",
+        "isaacsim.storage.native",
+        "omni.physx",
+        "omni.timeline",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.pink": {
+      "version": "0.1.7",
+      "title": "pink",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "isaacsim.robot_motion.experimental.motion_generation"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.pink.examples": {
+      "version": "0.2.0",
+      "title": "PINK Examples",
+      "dependencies": [
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.examples.browser",
+        "isaacsim.gui.components",
+        "isaacsim.robot_motion.experimental.motion_generation",
+        "isaacsim.robot_motion.pink",
+        "isaacsim.storage.native",
+        "omni.kit.context_menu",
+        "omni.timeline",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_motion.schema": {
+      "version": "0.2.2",
+      "title": "Isaac Sim Robot Motion Schema",
+      "dependencies": [
+        "omni.usd",
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.assembler": {
+      "version": "3.3.9",
+      "title": "Robot Assembler",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components",
+        "isaacsim.robot.schema",
+        "omni.kit.uiapp",
+        "omni.physics",
+        "omni.physics.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.collision_detector": {
+      "version": "0.2.3",
+      "title": "Robot Self Collision Detector",
+      "dependencies": [
+        "isaacsim.robot.schema",
+        "omni.kit.menu.utils",
+        "omni.kit.widget.filter",
+        "omni.kit.widget.options_button",
+        "omni.kit.widget.searchfield",
+        "omni.physx",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.gain_tuner": {
+      "version": "3.11.0",
+      "title": "Gain Tuner",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.robot.schema",
+        "omni.physics",
+        "omni.usd.schema.newton",
+        "omni.usd.schema.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.gain_tuner.ui": {
+      "version": "2.2.1",
+      "title": "Gain Tuner UI",
+      "dependencies": [
+        "isaacsim.core.simulation_manager",
+        "isaacsim.gui.components",
+        "isaacsim.robot.schema",
+        "isaacsim.robot_setup.gain_tuner",
+        "omni.appwindow",
+        "omni.kit.actions.core",
+        "omni.kit.commands",
+        "omni.kit.menu.utils",
+        "omni.kit.notification_manager",
+        "omni.kit.property.usd",
+        "omni.kit.uiapp",
+        "omni.kit.window.file",
+        "omni.kit.window.property",
+        "omni.physics"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.grasp_editor": {
+      "version": "2.3.5",
+      "title": "Grasp Editor",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.gui.components",
+        "omni.kit.uiapp",
+        "omni.physics",
+        "omni.physics.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.sysid": {
+      "version": "3.2.0",
+      "title": "System Identification Backend (Beta)",
+      "dependencies": [
+        "isaacsim.core.cloner",
+        "isaacsim.core.experimental.actuators",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.physics.newton",
+        "isaacsim.physics.newton.tensors",
+        "omni.physics",
+        "omni.timeline",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.sysid.ui": {
+      "version": "1.5.0",
+      "title": "System Identification UI (Beta)",
+      "dependencies": [
+        "isaacsim.gui.components",
+        "isaacsim.robot_setup.sysid",
+        "omni.kit.actions.core",
+        "omni.kit.menu.utils",
+        "omni.kit.uiapp",
+        "omni.kit.viewport.utility",
+        "omni.kit.window.file",
+        "omni.timeline",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.virtual_gantry": {
+      "version": "0.3.1",
+      "title": "Virtual Gantry",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "isaacsim.robot_setup.virtual_gantry_schema",
+        "isaacsim.util.debug_draw",
+        "omni.physics",
+        "omni.timeline",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.virtual_gantry.ui": {
+      "version": "1.0.0",
+      "title": "Virtual Gantry UI",
+      "dependencies": [
+        "isaacsim.gui.menu",
+        "isaacsim.robot_setup.virtual_gantry",
+        "isaacsim.robot_setup.virtual_gantry_schema",
+        "omni.kit.actions.core",
+        "omni.kit.menu.utils",
+        "omni.kit.property.usd",
+        "omni.kit.window.property",
+        "omni.ui",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.virtual_gantry_schema": {
+      "version": "1.0.1",
+      "title": "Isaac Sim Virtual Gantry Schema",
+      "dependencies": [
+        "omni.usd",
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.wizard": {
+      "version": "0.3.1",
+      "title": "Isaac Sim Robot Wizard [Deprecated]",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.gui.components",
+        "isaacsim.robot.schema"
+      ],
+      "location": "features"
+    },
+    "isaacsim.robot_setup.xrdf_editor": {
+      "version": "3.7.0",
+      "title": "Robot Description Editor",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.gui.components",
+        "isaacsim.robot_motion.lula",
+        "omni.kit.notification_manager",
+        "omni.kit.uiapp",
+        "omni.physics",
+        "omni.physics.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.ros2.bridge": {
+      "version": "5.1.4",
+      "title": "ROS 2 Bridge",
+      "dependencies": [
+        "isaacsim.ros2.core",
+        "isaacsim.ros2.examples",
+        "isaacsim.ros2.nodes",
+        "isaacsim.ros2.ui"
+      ],
+      "location": "features"
+    },
+    "isaacsim.ros2.control": {
+      "version": "0.1.6",
+      "title": "Isaac Sim ROS 2 Control",
+      "dependencies": [
+        "isaacsim.asset.exporter.urdf",
+        "isaacsim.core.includes",
+        "isaacsim.ros2.core",
+        "isaacsim.sensors.experimental.physics",
+        "omni.physics",
+        "omni.physics.tensors",
+        "omni.physx",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.ros2.core": {
+      "version": "1.11.2",
+      "title": "ROS 2 Core",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.nodes",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.robot.schema",
+        "isaacsim.sensors.experimental.rtx",
+        "isaacsim.sensors.rtx.nodes",
+        "isaacsim.storage.native",
+        "omni.replicator.core",
+        "omni.syntheticdata",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "isaacsim.ros2.examples": {
+      "version": "1.2.9",
+      "title": "ROS 2 Examples",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.nodes",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.examples.browser",
+        "isaacsim.gui.components",
+        "isaacsim.ros2.nodes",
+        "isaacsim.storage.native",
+        "omni.graph",
+        "omni.graph.tools",
+        "omni.replicator.core",
+        "omni.timeline",
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "isaacsim.ros2.nodes": {
+      "version": "1.22.9",
+      "title": "ROS 2 Nodes",
+      "dependencies": [
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.nodes",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.robot.schema",
+        "isaacsim.ros2.control",
+        "isaacsim.ros2.core",
+        "isaacsim.sensors.experimental.physics",
+        "isaacsim.sensors.physics.nodes",
+        "isaacsim.sensors.rtx.nodes",
+        "isaacsim.storage.native",
+        "omni.graph",
+        "omni.graph.tools",
+        "omni.replicator.core",
+        "omni.syntheticdata",
+        "omni.timeline",
+        "omni.usd",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "isaacsim.ros2.sim_control": {
+      "version": "1.6.12",
+      "title": "ROS 2 Simulation Control",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.ros2.bridge"
+      ],
+      "location": "features"
+    },
+    "isaacsim.ros2.tf_viewer": {
+      "version": "2.3.8",
+      "title": "TF Viewer",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.ros2.bridge",
+        "omni.kit.viewport.utility",
+        "omni.ui.scene"
+      ],
+      "location": "features"
+    },
+    "isaacsim.ros2.ui": {
+      "version": "1.9.3",
+      "title": "ROS 2 UI Components",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.nodes",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.gui.components",
+        "isaacsim.robot.schema",
+        "isaacsim.ros2.nodes",
+        "isaacsim.storage.native",
+        "omni.graph",
+        "omni.graph.tools",
+        "omni.kit.menu.utils",
+        "omni.kit.notification_manager",
+        "omni.kit.window.extensions",
+        "omni.timeline",
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "isaacsim.ros2.urdf": {
+      "version": "2.3.11",
+      "title": "Ros2 Robot Description URDF Importer",
+      "dependencies": [
+        "isaacsim.asset.importer.urdf.ui",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.gui.components",
+        "isaacsim.ros2.bridge",
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.camera": {
+      "version": "1.7.13",
+      "title": "Isaac Sim Camera Simulation",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.nodes",
+        "isaacsim.robot.schema",
+        "omni.graph",
+        "omni.kit.numpy.common",
+        "omni.replicator.core",
+        "omni.sensors.nv.camera",
+        "omni.syntheticdata",
+        "omni.timeline",
+        "omni.usd",
+        "omni.usd.schema.omni_lens_distortion",
+        "omni.usd.schema.render_settings.rtx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.camera.ui": {
+      "version": "0.7.4",
+      "title": "Isaac Sim Camera Simulation UI Components",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components",
+        "isaacsim.sensors.experimental.rtx",
+        "omni.kit.actions.core",
+        "omni.kit.context_menu"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.experimental.physics": {
+      "version": "4.0.0",
+      "title": "Isaac Sim Physics Sensor Simulation",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.physics.newton.tensors",
+        "isaacsim.robot.schema",
+        "omni.physics",
+        "omni.physx.tensors",
+        "omni.timeline",
+        "omni.usd",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.experimental.rtx": {
+      "version": "2.0.1",
+      "title": "Isaac Sim RTX Sensor Simulation",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.materials",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.storage.native",
+        "omni.kit.hydra_texture",
+        "omni.replicator.core",
+        "omni.sensors.nv.acoustic",
+        "omni.sensors.nv.camera",
+        "omni.sensors.nv.common",
+        "omni.sensors.nv.ids",
+        "omni.sensors.nv.lidar",
+        "omni.sensors.nv.radar",
+        "omni.usd.schema.omni_lens_distortion",
+        "omni.usd.schema.omni_sensors",
+        "omni.usd.schema.render_settings.rtx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.physics": {
+      "version": "1.1.10",
+      "title": "Isaac Sim Physics Sensor Simulation",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.nodes",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.robot.schema",
+        "isaacsim.storage.native",
+        "omni.graph",
+        "omni.kit.numpy.common",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.physx",
+        "omni.replicator.core",
+        "omni.timeline",
+        "omni.usd",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.physics.examples": {
+      "version": "1.2.7",
+      "title": "Isaac Sim Physics Sensor Simulation Examples",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.examples.browser",
+        "isaacsim.gui.components",
+        "isaacsim.sensors.experimental.physics",
+        "isaacsim.sensors.physics.nodes",
+        "isaacsim.storage.native",
+        "isaacsim.util.debug_draw"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.physics.nodes": {
+      "version": "1.6.2",
+      "title": "Isaac Sim Physics Sensor OmniGraph Nodes",
+      "dependencies": [
+        "isaacsim.core.nodes",
+        "isaacsim.sensors.experimental.physics",
+        "omni.graph",
+        "omni.timeline",
+        "omni.usd",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.physics.ui": {
+      "version": "1.2.2",
+      "title": "Isaac Sim Physics Sensor Simulation UI Components",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "isaacsim.gui.components",
+        "isaacsim.sensors.experimental.physics",
+        "omni.kit.actions.core",
+        "omni.kit.context_menu"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.physx": {
+      "version": "2.5.7",
+      "title": "Isaac Sim PhysX Sensors",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.robot.schema",
+        "isaacsim.util.debug_draw",
+        "omni.graph",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.physx",
+        "omni.syntheticdata",
+        "omni.timeline",
+        "omni.usd",
+        "omni.usdphysics",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.physx.examples": {
+      "version": "2.4.4",
+      "title": "Isaac Sim PhysX Sensor Examples",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.examples.browser",
+        "isaacsim.gui.components",
+        "isaacsim.sensors.physx"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.physx.ui": {
+      "version": "2.5.1",
+      "title": "Isaac Sim PhysX Sensor UI components",
+      "dependencies": [
+        "isaacsim.gui.components",
+        "isaacsim.sensors.physx",
+        "omni.kit.actions.core",
+        "omni.kit.context_menu"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.rtx": {
+      "version": "15.17.5",
+      "title": "Isaac Sim Isaac Sensor Simulation",
+      "dependencies": [
+        "isaacsim.core.api",
+        "isaacsim.core.deprecation_manager",
+        "isaacsim.core.nodes",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.gui.components",
+        "isaacsim.robot.schema",
+        "isaacsim.sensors.experimental.rtx",
+        "isaacsim.storage.native",
+        "isaacsim.util.debug_draw",
+        "omni.graph",
+        "omni.graph.action",
+        "omni.kit.numpy.common",
+        "omni.replicator.core",
+        "omni.sensors.nv.common",
+        "omni.sensors.nv.ids",
+        "omni.sensors.nv.lidar",
+        "omni.sensors.nv.radar",
+        "omni.syntheticdata",
+        "omni.timeline",
+        "omni.usd",
+        "omni.usd.schema.omni_sensors",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.rtx.nodes": {
+      "version": "0.1.7",
+      "title": "Isaac Sim RTX Sensor Nodes",
+      "dependencies": [
+        "isaacsim.core.nodes",
+        "isaacsim.sensors.experimental.rtx",
+        "isaacsim.util.debug_draw",
+        "omni.graph",
+        "omni.graph.tools",
+        "omni.replicator.core",
+        "omni.syntheticdata"
+      ],
+      "location": "features"
+    },
+    "isaacsim.sensors.rtx.ui": {
+      "version": "1.5.3",
+      "title": "Isaac Sim RTX Sensor Simulation UI Components",
+      "dependencies": [
+        "isaacsim.core.experimental.utils",
+        "isaacsim.gui.components",
+        "isaacsim.sensors.experimental.rtx",
+        "omni.kit.actions.core",
+        "omni.kit.context_menu"
+      ],
+      "location": "features"
+    },
+    "isaacsim.simulation_app": {
+      "version": "2.19.0",
+      "title": "Isaac Sim Kit Helpers",
+      "dependencies": [
+        "omni.usd"
+      ],
+      "location": "base"
+    },
+    "isaacsim.storage.native": {
+      "version": "1.12.2",
+      "title": "Isaac Sim Native Storage",
+      "dependencies": [
+        "isaacsim.core.version",
+        "omni.client"
+      ],
+      "location": "features"
+    },
+    "isaacsim.test.action_event_sdg": {
+      "version": "1.0.1",
+      "title": "Isaac Sim Action and Event Data Generation Tests",
+      "dependencies": [
+        "isaacsim.replicator.agent.core",
+        "omni.metropolis.utils",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "isaacsim.test.collection": {
+      "version": "2.6.13",
+      "title": "Isaac Sim Tests",
+      "dependencies": [
+        "isaacsim.core.experimental.materials",
+        "isaacsim.core.experimental.objects",
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.core.nodes",
+        "isaacsim.core.rendering_manager",
+        "isaacsim.core.simulation_manager",
+        "isaacsim.core.utils",
+        "isaacsim.robot.wheeled_robots.nodes",
+        "isaacsim.storage.native",
+        "omni.graph.core",
+        "omni.kit.asset_converter",
+        "omni.kit.primitive.mesh",
+        "omni.kit.uiapp",
+        "omni.kit.viewport.window",
+        "omni.physics",
+        "omni.physics.physx",
+        "omni.physx",
+        "omni.replicator.core",
+        "omni.syntheticdata",
+        "omni.timeline"
+      ],
+      "location": "features"
+    },
+    "isaacsim.test.docstring": {
+      "version": "1.3.2",
+      "title": "Isaac Sim DocTest",
+      "dependencies": [
+        "isaacsim.core.deprecation_manager",
+        "omni.kit.test"
+      ],
+      "location": "features"
+    },
+    "isaacsim.test.utils": {
+      "version": "0.15.0",
+      "title": "Isaac Sim Test Utils",
+      "dependencies": [
+        "isaacsim.core.experimental.prims",
+        "isaacsim.core.experimental.utils",
+        "isaacsim.storage.native",
+        "omni.kit.material.library",
+        "omni.kit.test",
+        "omni.kit.ui_test",
+        "omni.kit.viewport.window",
+        "omni.replicator.core",
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.activity.core-1.0.4+187cf21b.lx64.r.cp312": {
+      "version": "1.0.4",
+      "title": "Activity Core",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.appwindow-1.2.2+187cf21b.lx64.r.cp312": {
+      "version": "1.2.2",
+      "title": "App Window",
+      "dependencies": [
+        "omni.kit.loop",
+        "carb.windowing.plugins"
+      ],
+      "location": "features"
+    },
+    "omni.assets.plugins-0.0.0+187cf21b.lx64.r": {
+      "version": null,
+      "title": "Assets plugins bundle",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.blobkey-1.1.2+187cf21b.lx64.r": {
+      "version": "1.1.2",
+      "title": "Blobkey Unified Key Generating/handling system",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.client-1.3.0+187cf21b.lx64.r": {
+      "version": "1.3.0",
+      "title": "Omniverse Client Library Wrapper",
+      "dependencies": [
+        "omni.client.lib"
+      ],
+      "location": "base"
+    },
+    "omni.client.lib": {
+      "version": "1.1.1",
+      "title": "Omniverse Client Library Core",
+      "dependencies": [
+        "omni.kit.async_engine"
+      ],
+      "location": "base"
+    },
+    "omni.convexdecomposition-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "V-HACD Convex Decompostion",
+      "dependencies": [
+        "omni.assets.plugins",
+        "omni.usd.libs",
+        "omni.usd.schema.physx",
+        "omni.kit.commands"
+      ],
+      "location": "base"
+    },
+    "omni.cubric-0.1.0+187cf21b.lx64.r": {
+      "version": "0.1.0",
+      "title": "The cuBric GPU runtime for Kit",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.datastore-0.0.0+187cf21b.lx64.r": {
+      "version": null,
+      "title": "Datastore caches",
+      "dependencies": [
+        "omni.blobkey",
+        "omni.kit.trace",
+        "omni.metrics.core",
+        "omni.grpc.lib"
+      ],
+      "location": "base"
+    },
+    "omni.debugdraw-0.1.4+187cf21b.lx64.r.cp312": {
+      "version": "0.1.4",
+      "title": "debug draw",
+      "dependencies": [
+        "omni.usd",
+        "omni.hydra.rtx"
+      ],
+      "location": "features"
+    },
+    "omni.gpu_foundation-0.0.0+187cf21b.lx64.r.cp312": {
+      "version": null,
+      "title": "GPU Foundation",
+      "dependencies": [
+        "omni.stats",
+        "omni.assets.plugins",
+        "carb.graphics_optional",
+        "omni.ujitso.default",
+        "omni.activity.profiler",
+        "omni.client",
+        "omni.kit.trace",
+        "filter:os"
+      ],
+      "location": "base"
+    },
+    "omni.gpu_foundation.shadercache.vulkan-1.0.0+187cf21b.lx64.r": {
+      "version": "1.0.0",
+      "title": null,
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.gpucompute.plugins-0.0.0+187cf21b.lx64.r": {
+      "version": null,
+      "title": "GPU Compute plugins bundle",
+      "dependencies": [
+        "omni.gpu_foundation"
+      ],
+      "location": "base"
+    },
+    "omni.graph-1.142.6+187cf21b.lx64.r.cp312": {
+      "version": "1.142.6",
+      "title": "OmniGraph Python",
+      "dependencies": [
+        "omni.graph.core",
+        "omni.graph.tools",
+        "omni.kit.commands",
+        "omni.kit.usd_undo",
+        "omni.usd",
+        "omni.client",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "omni.graph.action-2.10.2+110.0.0": {
+      "version": "2.10.2",
+      "title": "OmniGraph Action Graph",
+      "dependencies": [
+        "omni.graph.action_nodes"
+      ],
+      "location": "features"
+    },
+    "omni.graph.action_core-1.1.9+187cf21b.lx64.r.cp312": {
+      "version": "1.1.9",
+      "title": "OmniGraph Action Graph Core",
+      "dependencies": [
+        "omni.graph.core"
+      ],
+      "location": "features"
+    },
+    "omni.graph.action_nodes-2.11.0+110.0.0.lx64.r.cp312.u7f4": {
+      "version": "2.11.0",
+      "title": "OmniGraph Action Graph Nodes",
+      "dependencies": [
+        "omni.graph.core",
+        "omni.graph",
+        "omni.graph.tools",
+        "omni.graph.action_core",
+        "omni.graph.action_nodes_core",
+        "omni.graph.ui",
+        "omni.kit.commands",
+        "omni.kit.window.filepicker",
+        "omni.timeline",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.graph.action_nodes_core-2.11.0+110.0.0.lx64.r.cp312.u7f4": {
+      "version": "2.11.0",
+      "title": "OmniGraph Action Core Nodes",
+      "dependencies": [
+        "omni.graph",
+        "omni.graph.core",
+        "omni.kit.exec.core",
+        "omni.graph.ui",
+        "omni.graph.action_core"
+      ],
+      "location": "features"
+    },
+    "omni.graph.core-3.1.8+187cf21b.lx64.r": {
+      "version": "3.1.8",
+      "title": "OmniGraph",
+      "dependencies": [
+        "omni.usd",
+        "omni.inspect",
+        "omni.gpucompute.plugins",
+        "omni.kit.exec.core",
+        "usdrt.scenegraph",
+        "omni.usd.schema.omnigraph",
+        "omni.kit.renderer.core"
+      ],
+      "location": "features"
+    },
+    "omni.graph.exec-0.9.6+187cf21b.lx64.r": {
+      "version": "0.9.6",
+      "title": "OmniGraph Execution Framework Core",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.graph.tools-1.81.0+187cf21b": {
+      "version": "1.81.0",
+      "title": "OmniGraph Tools",
+      "dependencies": [
+        "omni.inspect",
+        "omni.usd.libs",
+        "omni.kit.test"
+      ],
+      "location": "features"
+    },
+    "omni.graph.visualization.nodes-2.1.4": {
+      "version": "2.1.4",
+      "title": "OmniGraph Visualization Nodes",
+      "dependencies": [
+        "omni.graph",
+        "omni.ui",
+        "omni.ui.scene",
+        "omni.kit.manipulator.viewport",
+        "omni.kit.viewport.registry",
+        "omni.kit.viewport.utility"
+      ],
+      "location": "features"
+    },
+    "omni.grpc.lib-1.0.1+187cf21b.lx64.r": {
+      "version": "1.0.1",
+      "title": "gRPC Library",
+      "dependencies": [
+        "omni.protobuf.lib"
+      ],
+      "location": "base"
+    },
+    "omni.hsscclient-1.1.4+187cf21b.lx64.r.cp312": {
+      "version": "1.1.4",
+      "title": "HSSC Client",
+      "dependencies": [
+        "omni.blobkey"
+      ],
+      "location": "base"
+    },
+    "omni.hydra.usdrt_delegate-7.5.2+187cf21b.lx64.r.cp312": {
+      "version": "7.5.2",
+      "title": "Hydra USDRT Scene Delegates",
+      "dependencies": [
+        "omni.client",
+        "omni.gpu_foundation",
+        "omni.usd.core",
+        "omni.usd.schema.semantics",
+        "omni.usd.schema.audio",
+        "omni.usd.schema.anim",
+        "omni.usd.schema.omni_nurec_types",
+        "omni.gpucompute.plugins",
+        "omni.activity.core",
+        "usdrt.scenegraph"
+      ],
+      "location": "base"
+    },
+    "omni.inspect-1.0.2+187cf21b.lx64.r.cp312": {
+      "version": "1.0.2",
+      "title": "Object Inspection Capabilities",
+      "dependencies": [],
+      "location": "features"
+    },
+    "omni.iray.libs-0.0.1+187cf21b.lx64.r": {
+      "version": "0.0.1",
+      "title": "Iray Renderer and MDL material binaries",
+      "dependencies": [],
+      "location": "features"
+    },
+    "omni.kit.actions.core-1.2.1+187cf21b.lx64.r.cp312": {
+      "version": "1.2.1",
+      "title": "Actions Core",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.kit.async_engine": {
+      "version": "0.0.5",
+      "title": "Asyncio Runner",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.kit.audiodeviceenum-1.0.2+187cf21b.lx64.r.cp312": {
+      "version": "1.0.2",
+      "title": "Audio Device Enumerator",
+      "dependencies": [
+        "carb.audio"
+      ],
+      "location": "base"
+    },
+    "omni.kit.clipboard-1.1.1+187cf21b.lx64.r.cp312": {
+      "version": "1.1.1",
+      "title": "Clipboard Utilities",
+      "dependencies": [
+        "omni.appwindow"
+      ],
+      "location": "features"
+    },
+    "omni.kit.commands-1.6.2+187cf21b.lx64.r.cp312": {
+      "version": "1.6.2",
+      "title": "Commands",
+      "dependencies": [
+        "omni.kit.actions.core"
+      ],
+      "location": "base"
+    },
+    "omni.kit.context_menu-1.10.0+187cf21b": {
+      "version": "1.10.0",
+      "title": "Context Menu Libraries",
+      "dependencies": [
+        "omni.usd",
+        "omni.kit.widget.context_menu",
+        "omni.kit.usd.layers",
+        "omni.usd.schema.audio"
+      ],
+      "location": "features"
+    },
+    "omni.kit.exec.core-0.13.6+187cf21b.lx64.r.cp312": {
+      "version": "0.13.6",
+      "title": "Orchestration and Execution Framework",
+      "dependencies": [
+        "omni.graph.exec",
+        "omni.usd.libs"
+      ],
+      "location": "base"
+    },
+    "omni.kit.helper.file_utils-0.1.10+187cf21b": {
+      "version": "0.1.10",
+      "title": "Utilities for common file operations",
+      "dependencies": [
+        "omni.client",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.kit.hotkeys.core-1.6.1+187cf21b": {
+      "version": "1.6.1",
+      "title": "Hotkey Core APIs",
+      "dependencies": [
+        "omni.kit.actions.core",
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.hydra_texture-1.6.2+187cf21b.lx64.r.cp312": {
+      "version": "1.6.2",
+      "title": "Omniverse Kit Hydra Texture",
+      "dependencies": [
+        "omni.usd",
+        "omni.gpu_foundation",
+        "omni.kit.renderer.core",
+        "omni.hydra.rtx",
+        "omni.hydra.iray",
+        "omni.hydra.pxr",
+        "omni.hydra.index"
+      ],
+      "location": "features"
+    },
+    "omni.kit.loop-isaac": {
+      "version": "1.6.2",
+      "title": "Isaac Loop Runner",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.kit.mainwindow-1.0.4+187cf21b": {
+      "version": "1.0.4",
+      "title": "The Kit Main Window setup",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.manipulator.prim-108.0.0+187cf21b": {
+      "version": "108.0.0",
+      "title": "Prim Manipulator Bundle",
+      "dependencies": [
+        "omni.kit.manipulator.prim.core",
+        "omni.kit.manipulator.prim.usd"
+      ],
+      "location": "features"
+    },
+    "omni.kit.manipulator.prim.core-108.0.2+187cf21b": {
+      "version": "108.0.2",
+      "title": "Prim Manipulator Core",
+      "dependencies": [
+        "omni.kit.context_menu",
+        "omni.kit.manipulator.selector",
+        "omni.kit.manipulator.tool.snap",
+        "omni.kit.manipulator.transform",
+        "omni.kit.viewport.manipulator.transform",
+        "omni.kit.manipulator.viewport",
+        "omni.kit.viewport.registry",
+        "omni.kit.widget.toolbar",
+        "omni.timeline",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.kit.manipulator.prim.usd-107.0.3+187cf21b": {
+      "version": "107.0.3",
+      "title": "Prim Manipulator USD Data Accessor",
+      "dependencies": [
+        "omni.kit.manipulator.prim.core",
+        "omni.kit.viewport.manipulator.transform",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.kit.manipulator.selection-110.1.0+187cf21b": {
+      "version": "110.1.0",
+      "title": "Selection Shape/Box Manipulator",
+      "dependencies": [
+        "omni.ui",
+        "omni.ui.scene",
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "omni.kit.manipulator.selector-1.1.4+187cf21b": {
+      "version": "1.1.4",
+      "title": "Prim Manipulator Selector",
+      "dependencies": [
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.kit.manipulator.tool.snap-1.5.15+187cf21b": {
+      "version": "1.5.15",
+      "title": "Manipulator Snap Tool",
+      "dependencies": [
+        "omni.kit.actions.core",
+        "omni.kit.context_menu",
+        "omni.kit.manipulator.transform",
+        "omni.kit.raycast.query",
+        "omni.kit.viewport.utility",
+        "omni.kit.widget.context_menu",
+        "omni.kit.widget.toolbar",
+        "omni.kit.widget.options_menu",
+        "omni.ui.scene",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.kit.manipulator.transform-107.0.1+187cf21b": {
+      "version": "107.0.1",
+      "title": "Transform Manipulator",
+      "dependencies": [
+        "omni.kit.window.preferences",
+        "omni.ui",
+        "omni.ui.scene",
+        "omni.kit.context_menu",
+        "omni.kit.widget.context_menu"
+      ],
+      "location": "features"
+    },
+    "omni.kit.manipulator.viewport-107.0.1+187cf21b": {
+      "version": "107.0.1",
+      "title": "Viewport Manipulator Manager",
+      "dependencies": [
+        "omni.ui.scene"
+      ],
+      "location": "features"
+    },
+    "omni.kit.material.library-3.1.8+187cf21b": {
+      "version": "3.1.8",
+      "title": "Material Library",
+      "dependencies": [
+        "omni.usd",
+        "omni.kit.commands",
+        "omni.kit.context_menu",
+        "omni.kit.menu.utils",
+        "omni.kit.notification_manager",
+        "omni.kit.window.file_importer",
+        "omni.kit.usd.layers",
+        "omni.mdl.neuraylib",
+        "omni.mdl",
+        "omni.materialx.libs",
+        "omni.kit.actions.core",
+        "omni.client",
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.menu.core-1.3.0+187cf21b": {
+      "version": "1.3.0",
+      "title": "Menu Core",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.menu.utils-2.2.8+187cf21b": {
+      "version": "2.2.8",
+      "title": "Menu Utils",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.menu.core",
+        "omni.kit.actions.core"
+      ],
+      "location": "features"
+    },
+    "omni.kit.notification_manager-1.0.17+187cf21b": {
+      "version": "1.0.17",
+      "title": "Notification Manager",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.pipapi-0.0.0+187cf21b": {
+      "version": null,
+      "title": "API to install pip modules",
+      "dependencies": [],
+      "location": "features"
+    },
+    "omni.kit.primitive.mesh-1.1.1+187cf21b": {
+      "version": "1.1.1",
+      "title": "Mesh Primitives Generator",
+      "dependencies": [
+        "omni.kit.commands",
+        "omni.usd",
+        "omni.ui",
+        "omni.kit.menu.utils",
+        "omni.kit.usd.layers",
+        "omni.kit.actions.core"
+      ],
+      "location": "features"
+    },
+    "omni.kit.property.adapter.core-1.1.1+187cf21b": {
+      "version": "1.1.1",
+      "title": "Core Property Adapter",
+      "dependencies": [
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.kit.property.adapter.usd-1.0.6+187cf21b": {
+      "version": "1.0.6",
+      "title": "USD Property Adapter",
+      "dependencies": [
+        "omni.usd",
+        "omni.kit.property.adapter.core",
+        "usdrt.scenegraph"
+      ],
+      "location": "features"
+    },
+    "omni.kit.property.material-1.15.1+187cf21b": {
+      "version": "1.15.1",
+      "title": "Material Property Widget",
+      "dependencies": [
+        "omni.kit.async_engine",
+        "omni.usd",
+        "omni.ui",
+        "omni.kit.commands",
+        "omni.kit.window.property",
+        "omni.kit.material.library",
+        "omni.kit.property.usd",
+        "omni.client",
+        "omni.client.lib",
+        "omni.kit.window.quicksearch",
+        "omni.kit.usd.mdl",
+        "omni.kit.window.preferences",
+        "omni.usd.schema.playback"
+      ],
+      "location": "features"
+    },
+    "omni.kit.property.physics-110.4.4+110.4.0.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physics Property Widget",
+      "dependencies": [
+        "omni.usd",
+        "omni.ui",
+        "omni.kit.window.property",
+        "omni.kit.property.usd",
+        "omni.kit.property.material",
+        "omni.kit.material.library",
+        "omni.kit.usd_undo",
+        "omni.physx",
+        "omni.physx.ui",
+        "omni.physx.commands"
+      ],
+      "location": "features"
+    },
+    "omni.kit.property.usd-4.9.18+187cf21b": {
+      "version": "4.9.18",
+      "title": "USD Property Window Widgets",
+      "dependencies": [
+        "omni.kit.async_engine",
+        "omni.client",
+        "omni.kit.commands",
+        "omni.timeline",
+        "omni.usd",
+        "omni.ui",
+        "omni.kit.window.property",
+        "omni.kit.widget.stage",
+        "omni.kit.clipboard",
+        "omni.kit.widget.context_menu",
+        "omni.kit.window.file_importer",
+        "omni.kit.window.content_browser",
+        "omni.kit.widget.versioning",
+        "omni.kit.widget.live_session_management",
+        "omni.kit.usd.layers",
+        "omni.kit.notification_manager",
+        "usdrt.scenegraph",
+        "omni.kit.property.adapter.core",
+        "omni.kit.property.adapter.usd",
+        "omni.usd.schema.playback"
+      ],
+      "location": "features"
+    },
+    "omni.kit.raycast.query-1.2.0+187cf21b.lx64.r.cp312": {
+      "version": "1.2.0",
+      "title": "RTX Raycast Query",
+      "dependencies": [
+        "omni.usd",
+        "omni.hydra.rtx"
+      ],
+      "location": "features"
+    },
+    "omni.kit.registry.nucleus": {
+      "version": null,
+      "title": "Nucleus Registry for Extensions",
+      "dependencies": [
+        "omni.client.lib"
+      ],
+      "location": "base"
+    },
+    "omni.kit.renderer.capture-2.0.2+187cf21b.lx64.r.cp312": {
+      "version": "2.0.2",
+      "title": "Rendering Capture",
+      "dependencies": [
+        "omni.kit.renderer.core"
+      ],
+      "location": "features"
+    },
+    "omni.kit.renderer.core-1.3.2+187cf21b.lx64.r.cp312": {
+      "version": "1.3.2",
+      "title": "Rendering Core",
+      "dependencies": [
+        "omni.appwindow",
+        "omni.client",
+        "omni.kit.renderer.init"
+      ],
+      "location": "features"
+    },
+    "omni.kit.renderer.imgui-2.2.1+187cf21b.lx64.r.cp312": {
+      "version": "2.2.1",
+      "title": "Rendering Imgui",
+      "dependencies": [
+        "omni.appwindow",
+        "omni.kit.renderer.core",
+        "omni.kit.renderer.capture"
+      ],
+      "location": "features"
+    },
+    "omni.kit.renderer.init-1.0.1+187cf21b.lx64.r": {
+      "version": "1.0.1",
+      "title": "Rendering Core Init",
+      "dependencies": [
+        "carb.windowing.plugins",
+        "omni.gpu_foundation",
+        "omni.assets.plugins"
+      ],
+      "location": "features"
+    },
+    "omni.kit.stage_template.core-1.1.23+187cf21b": {
+      "version": "1.1.23",
+      "title": "Stage Template Core",
+      "dependencies": [
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.kit.stage_templates-2.0.3+187cf21b": {
+      "version": "2.0.3",
+      "title": "Stage Templates",
+      "dependencies": [
+        "omni.kit.stage_template.core",
+        "omni.kit.commands",
+        "omni.usd",
+        "omni.kit.actions.core",
+        "omni.kit.primitive.mesh"
+      ],
+      "location": "features"
+    },
+    "omni.kit.test-2.2.3+187cf21b.lx64.r.cp312": {
+      "version": "2.2.3",
+      "title": "Testing System",
+      "dependencies": [
+        "omni.kit.async_engine",
+        "omni.kit.loop"
+      ],
+      "location": "features"
+    },
+    "omni.kit.uiapp-0.0.0+187cf21b": {
+      "version": null,
+      "title": "UI App",
+      "dependencies": [
+        "omni.kit.renderer.core",
+        "omni.kit.mainwindow",
+        "omni.uiaudio"
+      ],
+      "location": "features"
+    },
+    "omni.kit.usd.layers-2.7.9+187cf21b.lx64.r.cp312": {
+      "version": "2.7.9",
+      "title": "Layers Core",
+      "dependencies": [
+        "omni.usd",
+        "omni.usd.libs",
+        "omni.client",
+        "omni.kit.commands",
+        "omni.kit.collaboration.channel_manager",
+        "omni.activity.ui",
+        "omni.kit.widget.connection_manager"
+      ],
+      "location": "base"
+    },
+    "omni.kit.usd.mdl-1.1.12+187cf21b.lx64.r.cp312": {
+      "version": "1.1.12",
+      "title": "USD MDL plugins",
+      "dependencies": [
+        "omni.mdl.neuraylib",
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "omni.kit.usd_undo-0.1.8+187cf21b": {
+      "version": "0.1.8",
+      "title": "USD Undo",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "base"
+    },
+    "omni.kit.viewport.manipulator.transform-107.0.4+187cf21b": {
+      "version": "107.0.4",
+      "title": "Viewport Transform Manipulator",
+      "dependencies": [
+        "omni.kit.window.preferences",
+        "omni.ui",
+        "omni.ui.scene",
+        "usdrt.scenegraph",
+        "omni.kit.context_menu",
+        "omni.kit.manipulator.selector",
+        "omni.kit.manipulator.tool.snap",
+        "omni.kit.manipulator.transform",
+        "omni.kit.viewport.registry",
+        "omni.kit.widget.toolbar",
+        "omni.timeline"
+      ],
+      "location": "features"
+    },
+    "omni.kit.viewport.registry-104.0.6+187cf21b": {
+      "version": "104.0.6",
+      "title": "Viewport Registry",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.viewport.utility-2.1.2+187cf21b": {
+      "version": "2.1.2",
+      "title": "Viewport Utility",
+      "dependencies": [
+        "omni.usd.libs",
+        "omni.kit.viewport.window"
+      ],
+      "location": "features"
+    },
+    "omni.kit.viewport.window-110.0.5+187cf21b": {
+      "version": "110.0.5",
+      "title": "Viewport Window",
+      "dependencies": [
+        "omni.ui",
+        "omni.usd",
+        "omni.ui.scene",
+        "omni.timeline",
+        "omni.kit.viewport.registry",
+        "omni.kit.widget.viewport",
+        "omni.hydra.engine.stats",
+        "omni.kit.viewport.legacy_gizmos",
+        "omni.kit.window.drop_support",
+        "omni.kit.menu.utils",
+        "omni.kit.actions.core",
+        "omni.kit.material.library",
+        "omni.kit.raycast.query",
+        "omni.kit.usd.layers"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.browser_bar-2.0.11+187cf21b": {
+      "version": "2.0.11",
+      "title": "Browser Bar Widget",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.widget.path_field"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.connection_manager-1.0.4+187cf21b": {
+      "version": "1.0.4",
+      "title": "Connection Manager",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.window.popup_dialog",
+        "omni.client"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.context_menu-1.5.0+187cf21b": {
+      "version": "1.5.0",
+      "title": "Context Menu Widget",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.async_engine",
+        "omni.kit.menu.core"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.filebrowser-2.14.5+187cf21b": {
+      "version": "2.14.5",
+      "title": "FileBrowser Widget",
+      "dependencies": [
+        "omni.ui",
+        "omni.client",
+        "omni.kit.helper.file_utils"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.filter-1.1.9+187cf21b": {
+      "version": "1.1.9",
+      "title": "Filter button",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.widget.options_menu"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.highlight_label-1.0.3+187cf21b": {
+      "version": "1.0.3",
+      "title": "Highlight widgets",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.layers-1.9.3+187cf21b": {
+      "version": "1.9.3",
+      "title": "Layer View",
+      "dependencies": [
+        "omni.activity.core",
+        "omni.usd",
+        "omni.kit.clipboard",
+        "omni.kit.context_menu",
+        "omni.client",
+        "omni.ui",
+        "omni.kit.window.filepicker",
+        "omni.kit.window.content_browser",
+        "omni.kit.notification_manager",
+        "omni.kit.window.drop_support",
+        "omni.kit.widget.stage",
+        "omni.kit.widget.prompt",
+        "omni.kit.window.file",
+        "omni.kit.menu.utils",
+        "omni.kit.usd.layers",
+        "omni.kit.widget.live_session_management",
+        "omni.kit.actions.core",
+        "omni.kit.hotkeys.core",
+        "omni.kit.widget.options_button",
+        "omni.kit.window.file_importer",
+        "omni.kit.window.file_exporter",
+        "omni.kit.async_engine"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.nucleus_connector-2.4.0+187cf21b": {
+      "version": "2.4.0",
+      "title": "Nucleus Connector (Deprecated)",
+      "dependencies": [
+        "omni.kit.widget.connection_manager"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.options_button-1.0.3+187cf21b": {
+      "version": "1.0.3",
+      "title": "Option button",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.widget.options_menu"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.options_menu-1.1.7+187cf21b": {
+      "version": "1.1.7",
+      "title": "Options Menu",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.path_field-2.0.14+187cf21b": {
+      "version": "2.0.14",
+      "title": "Path Field Widget",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.prompt-1.0.7+187cf21b": {
+      "version": "1.0.7",
+      "title": "Prompt dialog for omni.ui widgets",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.searchfield-1.1.8+187cf21b": {
+      "version": "1.1.8",
+      "title": "SearchField widgets",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.widget.examples"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.settings-2.0.1+187cf21b": {
+      "version": "2.0.1",
+      "title": "Settings Widget",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.commands",
+        "omni.kit.widget.searchable_combobox"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.stage-4.7.2+187cf21b": {
+      "version": "4.7.2",
+      "title": "Stage Widget",
+      "dependencies": [
+        "omni.activity.core",
+        "omni.kit.context_menu",
+        "omni.ui",
+        "usdrt.scenegraph",
+        "omni.usd",
+        "omni.kit.usd.layers",
+        "omni.kit.window.file_exporter",
+        "omni.client",
+        "omni.kit.actions.core",
+        "omni.kit.hotkeys.core",
+        "omni.kit.helper.file_utils",
+        "omni.kit.widget.filter",
+        "omni.kit.widget.options_button",
+        "omni.kit.widget.searchfield",
+        "omni.usd.schema.audio",
+        "omni.usd.schema.usd_particle_field",
+        "omni.kit.notification_manager"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.text_editor-1.1.1+187cf21b.lx64.r.cp312": {
+      "version": "1.1.1",
+      "title": "Text Editor",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.toolbar-2.1.0+187cf21b": {
+      "version": "2.1.0",
+      "title": "Toolbar Widget",
+      "dependencies": [
+        "omni.kit.actions.core",
+        "omni.kit.commands",
+        "omni.kit.context_menu",
+        "omni.kit.menu.utils",
+        "omni.timeline",
+        "omni.ui",
+        "omni.kit.widget.options_menu"
+      ],
+      "location": "features"
+    },
+    "omni.kit.widget.viewport-110.0.1+187cf21b": {
+      "version": "110.0.1",
+      "title": "Viewport Widget",
+      "dependencies": [
+        "omni.activity.core",
+        "omni.ui",
+        "omni.kit.hydra_texture",
+        "omni.kit.commands",
+        "omni.kit.viewport.scene_camera_model"
+      ],
+      "location": "features"
+    },
+    "omni.kit.window.extensions-1.7.0+187cf21b": {
+      "version": "1.7.0",
+      "title": "Extensions Manager Window",
+      "dependencies": [
+        "omni.kit.async_engine",
+        "omni.kit.clipboard",
+        "omni.kit.commands",
+        "omni.ui",
+        "omni.client",
+        "omni.kit.menu.utils",
+        "omni.kit.widget.filter",
+        "omni.kit.widget.searchfield",
+        "omni.kit.pipapi",
+        "omni.kit.widget.text_editor"
+      ],
+      "location": "features"
+    },
+    "omni.kit.window.file-2.0.17+187cf21b": {
+      "version": "2.0.17",
+      "title": "USD File UI",
+      "dependencies": [
+        "omni.client",
+        "omni.usd",
+        "omni.kit.stage_template.core",
+        "omni.ui",
+        "omni.kit.helper.file_utils",
+        "omni.kit.window.file_importer",
+        "omni.kit.window.file_exporter",
+        "omni.kit.widget.versioning",
+        "omni.kit.widget.connection_manager",
+        "omni.kit.actions.core"
+      ],
+      "location": "features"
+    },
+    "omni.kit.window.file_exporter-1.0.38+187cf21b": {
+      "version": "1.0.38",
+      "title": "File Exporter",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.window.filepicker",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.kit.window.file_importer-1.1.22+187cf21b": {
+      "version": "1.1.22",
+      "title": "File Importer",
+      "dependencies": [
+        "omni.ui",
+        "omni.usd",
+        "omni.kit.window.filepicker",
+        "omni.kit.async_engine"
+      ],
+      "location": "features"
+    },
+    "omni.kit.window.filepicker-3.0.18+187cf21b": {
+      "version": "3.0.18",
+      "title": "Filepicker Window",
+      "dependencies": [
+        "omni.ui",
+        "omni.ui.scene",
+        "omni.usd.core",
+        "omni.client",
+        "omni.kit.notification_manager",
+        "omni.kit.helper.file_utils",
+        "omni.kit.widget.filebrowser",
+        "omni.kit.widget.browser_bar",
+        "omni.kit.window.popup_dialog",
+        "omni.kit.widget.versioning",
+        "omni.kit.widget.search_delegate",
+        "omni.kit.widget.connection_manager",
+        "omni.kit.widget.nucleus_connector",
+        "omni.kit.clipboard",
+        "omni.kit.widget.options_button",
+        "omni.kit.widget.context_menu"
+      ],
+      "location": "features"
+    },
+    "omni.kit.window.popup_dialog-2.0.26+187cf21b": {
+      "version": "2.0.26",
+      "title": "Simple Popup Dialogs with Input Fields",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.kit.window.preferences-1.8.5+187cf21b": {
+      "version": "1.8.5",
+      "title": "Preferences Window",
+      "dependencies": [
+        "omni.usd",
+        "omni.ui",
+        "omni.kit.menu.utils",
+        "omni.kit.widget.settings",
+        "omni.kit.actions.core",
+        "omni.kit.window.popup_dialog"
+      ],
+      "location": "features"
+    },
+    "omni.kit.window.property-1.15.2+187cf21b": {
+      "version": "1.15.2",
+      "title": "Property Window",
+      "dependencies": [
+        "omni.kit.async_engine",
+        "omni.ui",
+        "omni.client",
+        "omni.kit.menu.utils",
+        "omni.kit.widget.context_menu",
+        "omni.kit.widget.highlight_label",
+        "omni.kit.widget.searchfield"
+      ],
+      "location": "features"
+    },
+    "omni.materialx.libs-1.0.9+187cf21b.lx64.r.cp312": {
+      "version": "1.0.9",
+      "title": "MaterialX",
+      "dependencies": [],
+      "location": "features"
+    },
+    "omni.mdl-57.0.6+187cf21b.lx64.r.cp312": {
+      "version": "57.0.6",
+      "title": "MDL Python Bindings",
+      "dependencies": [
+        "omni.client"
+      ],
+      "location": "features"
+    },
+    "omni.mdl.neuraylib-0.2.23+187cf21b.lx64.r.cp312": {
+      "version": "0.2.23",
+      "title": "MDL Material Backend Python Bindings",
+      "dependencies": [
+        "omni.iray.libs",
+        "omni.mdl"
+      ],
+      "location": "features"
+    },
+    "omni.metrics.core-0.0.3+187cf21b.lx64.r": {
+      "version": "0.0.3",
+      "title": "Metrics Core",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.physics-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physics Umbrella (omni.physics)",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.physics.isaacsimready-110.4.4+110.4.0.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physics IsaacSim ready extension",
+      "dependencies": [
+        "omni.usd",
+        "omni.ui",
+        "usdrt.scenegraph",
+        "omni.usdphysics.ui",
+        "omni.kit.window.preferences",
+        "omni.kit.widget.settings",
+        "omni.kit.notification_manager",
+        "omni.physics",
+        "omni.kit.property.physics"
+      ],
+      "location": "base"
+    },
+    "omni.physics.physx-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physics PhysX Backend",
+      "dependencies": [
+        "omni.physics",
+        "omni.physx"
+      ],
+      "location": "base"
+    },
+    "omni.physics.physx.ui-110.4.4+110.4.0.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physics Umbrella PhysX UI Extension",
+      "dependencies": [
+        "omni.usd",
+        "omni.physics.isaacsimready",
+        "omni.physics.physx",
+        "omni.usd.schema.physx",
+        "omni.usd.schema.newton",
+        "omni.physx",
+        "omni.physx.ui",
+        "omni.kit.property.physics"
+      ],
+      "location": "base"
+    },
+    "omni.physics.stageupdate-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "OmniPhysics StageUpdate",
+      "dependencies": [
+        "omni.physics",
+        "omni.usd",
+        "omni.timeline.live_session",
+        "omni.kit.usd.layers",
+        "omni.ui"
+      ],
+      "location": "base"
+    },
+    "omni.physics.tensors-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Tensor Interface for Physics Simulations",
+      "dependencies": [
+        "omni.usd.libs",
+        "omni.usd.schema.physx"
+      ],
+      "location": "base"
+    },
+    "omni.physics.ui-110.4.4+110.4.0.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physics UI extension",
+      "dependencies": [
+        "omni.ui",
+        "omni.physics",
+        "omni.usdphysics.ui",
+        "omni.kit.viewport.menubar.core",
+        "omni.kit.clipboard",
+        "omni.kit.notification_manager"
+      ],
+      "location": "base"
+    },
+    "omni.physx-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Core",
+      "dependencies": [
+        "omni.usd.libs",
+        "omni.usd.schema.physx",
+        "omni.usdphysics",
+        "usdrt.scenegraph",
+        "omni.gpucompute.plugins",
+        "omni.physx.cooking",
+        "omni.physx.foundation",
+        "omni.usd.schema.newton"
+      ],
+      "location": "base"
+    },
+    "omni.physx.asset_validator-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Omni PhysX Asset Validator",
+      "dependencies": [
+        "omni.physx",
+        "omni.usd.libs",
+        "omni.asset_validator.core",
+        "omni.asset_validator.ui",
+        "omni.timeline"
+      ],
+      "location": "base"
+    },
+    "omni.physx.bundle-110.4.4+110.4.0.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physics Bundle",
+      "dependencies": [
+        "omni.physx",
+        "omni.physics.physx",
+        "omni.physics.stageupdate",
+        "omni.physics.physx.ui",
+        "omni.physx.ui",
+        "omni.physx.vehicle",
+        "omni.physx.demos",
+        "omni.usdphysics",
+        "omni.usdphysics.ui",
+        "omni.physx.cct",
+        "omni.physx.commands",
+        "omni.physx.camera",
+        "omni.physx.supportui",
+        "omni.physx.graph",
+        "omni.physx.asset_validator",
+        "omni.physics.ui"
+      ],
+      "location": "base"
+    },
+    "omni.physx.camera-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physx Camera",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.window.property",
+        "omni.physx",
+        "omni.kit.property.physics",
+        "omni.physx.demos",
+        "omni.kit.viewport.utility",
+        "omni.physx.ui",
+        "omni.physx.vehicle",
+        "omni.physx.tests"
+      ],
+      "location": "base"
+    },
+    "omni.physx.cct-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Character Controller",
+      "dependencies": [
+        "omni.physx",
+        "omni.physx.ui",
+        "omni.physx.demos",
+        "omni.appwindow",
+        "omni.kit.viewport.utility",
+        "omni.physx.tests",
+        "omni.kit.ui_test",
+        "omni.graph",
+        "omni.graph.core",
+        "omni.graph.tools",
+        "omni.usd",
+        "omni.kit.commands"
+      ],
+      "location": "base"
+    },
+    "omni.physx.commands-110.4.4+110.4.0.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Commands",
+      "dependencies": [
+        "omni.physx",
+        "omni.kit.commands",
+        "omni.kit.usd_undo",
+        "omni.usd"
+      ],
+      "location": "base"
+    },
+    "omni.physx.cooking-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Cooking",
+      "dependencies": [
+        "omni.convexdecomposition",
+        "omni.usd.libs",
+        "omni.usd.schema.physx",
+        "omni.usdphysics",
+        "omni.physx.foundation",
+        "omni.ujitso.default"
+      ],
+      "location": "base"
+    },
+    "omni.physx.demos-110.4.4+110.4.0.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Demos",
+      "dependencies": [
+        "omni.usd",
+        "usdrt.scenegraph",
+        "omni.ui",
+        "omni.physx",
+        "omni.physx.ui",
+        "omni.debugdraw",
+        "omni.kit.stage_templates",
+        "omni.kit.window.file",
+        "omni.kit.widget.text_editor",
+        "omni.kit.viewport.utility",
+        "omni.kit.primitive.mesh",
+        "omni.kit.material.library",
+        "omni.physx.tests",
+        "omni.physx.tests.visual"
+      ],
+      "location": "base"
+    },
+    "omni.physx.fabric-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Fabric",
+      "dependencies": [
+        "omni.physx",
+        "usdrt.scenegraph",
+        "omni.graph.core",
+        "omni.ui",
+        "omni.kit.window.preferences",
+        "omni.kit.widget.settings"
+      ],
+      "location": "base"
+    },
+    "omni.physx.foundation-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Foundation",
+      "dependencies": [
+        "omni.gpu_foundation",
+        "omni.physx.gpu"
+      ],
+      "location": "base"
+    },
+    "omni.physx.gpu-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX GPU",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.physx.graph-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Graph",
+      "dependencies": [
+        "omni.physx",
+        "omni.physx.demos",
+        "omni.graph",
+        "omni.graph.core",
+        "omni.graph.tools"
+      ],
+      "location": "base"
+    },
+    "omni.physx.pvd-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Omniverse PhysX PVD plugin",
+      "dependencies": [
+        "omni.ui",
+        "omni.timeline",
+        "omni.physx",
+        "omni.physx.ui",
+        "omni.debugdraw",
+        "omni.kit.menu.utils",
+        "omni.kit.window.toolbar",
+        "omni.kit.widget.stage",
+        "omni.kit.widget.settings",
+        "omni.kit.window.property",
+        "omni.kit.property.physics",
+        "omni.kit.tool.asset_importer",
+        "omni.physx.tests"
+      ],
+      "location": "base"
+    },
+    "omni.physx.supportui-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX SupportUI",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.renderer.imgui",
+        "omni.physx",
+        "omni.physx.ui",
+        "omni.physx.commands",
+        "omni.physx.tests",
+        "omni.debugdraw",
+        "omni.kit.viewport.utility",
+        "omni.kit.viewport.registry",
+        "omni.kit.window.preferences",
+        "omni.kit.widget.toolbar",
+        "omni.kit.widget.stage",
+        "omni.kit.widget.layers",
+        "omni.kit.context_menu",
+        "omni.kit.widget.settings",
+        "omni.kit.window.popup_dialog",
+        "omni.usd",
+        "omni.kit.commands",
+        "omni.kit.notification_manager",
+        "omni.kit.manipulator.prim",
+        "omni.kit.manipulator.prim.fabric",
+        "omni.kit.manipulator.selector",
+        "omni.kit.manipulator.selection",
+        "omni.kit.actions.core",
+        "usdrt.scenegraph"
+      ],
+      "location": "base"
+    },
+    "omni.physx.tensors-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Tensor API Implementation",
+      "dependencies": [
+        "omni.physics.tensors",
+        "omni.physx"
+      ],
+      "location": "base"
+    },
+    "omni.physx.tests-110.4.4+110.4.0.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Tests",
+      "dependencies": [
+        "omni.physx",
+        "omni.physx.foundation",
+        "omni.physics.physx",
+        "omni.physics.stageupdate",
+        "omni.physx.ui",
+        "omni.physx.commands",
+        "omni.kit.test",
+        "omni.ui",
+        "omni.ui.scene",
+        "omni.kit.stage_templates",
+        "omni.kit.window.toolbar",
+        "omni.usd",
+        "usdrt.scenegraph",
+        "omni.kit.ui_test"
+      ],
+      "location": "base"
+    },
+    "omni.physx.tests.visual-110.4.4+110.4.0.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Visual Tests",
+      "dependencies": [
+        "omni.physx.tests",
+        "omni.physx.ui",
+        "omni.physics.ui",
+        "omni.physics.physx.ui",
+        "omni.kit.property.physics",
+        "omni.usd.schema.physx",
+        "omni.kit.ui_test",
+        "omni.kit.viewport.utility"
+      ],
+      "location": "base"
+    },
+    "omni.physx.ui-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX UI",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.renderer.imgui",
+        "omni.usdphysics.ui",
+        "omni.physx",
+        "omni.timeline",
+        "omni.debugdraw",
+        "omni.kit.window.property",
+        "omni.kit.viewport.utility",
+        "omni.kit.window.preferences",
+        "omni.kit.context_menu",
+        "omni.kit.widget.settings",
+        "omni.kit.window.popup_dialog",
+        "omni.kit.property.usd",
+        "omni.usd",
+        "omni.kit.commands",
+        "omni.physx.commands",
+        "omni.physics.stageupdate",
+        "omni.kit.notification_manager",
+        "omni.client",
+        "omni.ui.scene",
+        "omni.kit.actions.core",
+        "omni.kit.manipulator.tool.snap",
+        "omni.kit.manipulator.transform",
+        "usdrt.scenegraph",
+        "omni.kit.hotkeys.core",
+        "omni.kit.viewport.window",
+        "omni.kit.menu.utils"
+      ],
+      "location": "base"
+    },
+    "omni.physx.vehicle-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "PhysX Vehicle",
+      "dependencies": [
+        "omni.ui",
+        "omni.kit.window.property",
+        "omni.physx",
+        "omni.kit.property.physics",
+        "omni.physx.demos",
+        "omni.physx.ui"
+      ],
+      "location": "base"
+    },
+    "omni.protobuf.lib-1.0.1+187cf21b.lx64.r": {
+      "version": "1.0.1",
+      "title": "protocol buffers (protobuf) shared libraries",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.scene.optimizer.core-110.3.1+110.2.0.lx64.r.cp312.u7f4": {
+      "version": "110.3.1",
+      "title": "Scene Optimizer Core",
+      "dependencies": [
+        "omni.kit.commands",
+        "omni.usd"
+      ],
+      "location": "features"
+    },
+    "omni.stats-1.0.1+187cf21b.lx64.r.cp312": {
+      "version": "1.0.1",
+      "title": "Statistics",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.timeline-1.1.2+187cf21b.lx64.r.cp312": {
+      "version": "1.1.2",
+      "title": "Timeline",
+      "dependencies": [],
+      "location": "base"
+    },
+    "omni.ui-3.3.10+187cf21b.lx64.r.cp312": {
+      "version": "3.3.10",
+      "title": "UI Framework",
+      "dependencies": [
+        "omni.appwindow",
+        "omni.kit.renderer.imgui"
+      ],
+      "location": "features"
+    },
+    "omni.ui.scene-2.1.1+187cf21b.lx64.r.cp312": {
+      "version": "2.1.1",
+      "title": "3D UI Framework",
+      "dependencies": [
+        "omni.ui"
+      ],
+      "location": "features"
+    },
+    "omni.uiaudio-1.0.0+187cf21b.lx64.r.cp312": {
+      "version": "1.0.0",
+      "title": "UI Audio",
+      "dependencies": [
+        "carb.audio"
+      ],
+      "location": "features"
+    },
+    "omni.ujitso.default-1.0.0+187cf21b.lx64.r.cp312": {
+      "version": "1.0.0",
+      "title": "Omniverse UJITSO default instances",
+      "dependencies": [
+        "omni.stats",
+        "omni.taskagent",
+        "omni.datastore",
+        "omni.blobkey",
+        "omni.client",
+        "omni.kit.trace",
+        "omni.hsscclient"
+      ],
+      "location": "base"
+    },
+    "omni.usd-1.19.11+187cf21b.lx64.r.cp312": {
+      "version": "1.19.11",
+      "title": "Omni USD",
+      "dependencies": [
+        "omni.usd.core",
+        "omni.timeline",
+        "omni.assets.plugins",
+        "omni.kit.audiodeviceenum",
+        "omni.kit.commands",
+        "omni.hydra.scene_delegate",
+        "omni.hydra.usdrt_delegate",
+        "carb.audio",
+        "omni.kit.widget.connection_manager",
+        "omni.kit.exec.core",
+        "omni.kit.usd_undo",
+        "omni.client",
+        "omni.kit.async_engine"
+      ],
+      "location": "base"
+    },
+    "omni.usd.config-1.0.8+187cf21b": {
+      "version": "1.0.8",
+      "title": "Omni USD Config",
+      "dependencies": [
+        "omni.client",
+        "omni.materialx.libs"
+      ],
+      "location": "base"
+    },
+    "omni.usd.core-1.10.42+187cf21b.lx64.r": {
+      "version": "1.10.42",
+      "title": "Omni USD Core",
+      "dependencies": [
+        "omni.usd.libs",
+        "omni.usd.schema.audio",
+        "omni.client",
+        "omni.usd_resolver",
+        "omni.sensorscheduling"
+      ],
+      "location": "base"
+    },
+    "omni.usd.libs-1.0.3+187cf21b.lx64.r.cp312": {
+      "version": "1.0.3",
+      "title": "Omni USD Libraries",
+      "dependencies": [
+        "omni.usd.config",
+        "omni.gpucompute.plugins"
+      ],
+      "location": "base"
+    },
+    "omni.usd.metrics.assembler-110.1.2+110.1.0.lx64.r.cp312.u7f4": {
+      "version": "110.1.2",
+      "title": "Metrics Assembler",
+      "dependencies": [
+        "omni.usd.libs",
+        "omni.usd.schema.metrics.assembler"
+      ],
+      "location": "features"
+    },
+    "omni.usd.schema.anim-0.0.1+187cf21b.lx64.r.cp312": {
+      "version": "0.0.1",
+      "title": "USD Animation schema",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "base"
+    },
+    "omni.usd.schema.audio-0.0.1+187cf21b.lx64.r.cp312": {
+      "version": "0.0.1",
+      "title": "USD audio schema",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "base"
+    },
+    "omni.usd.schema.metrics.assembler-110.1.1+110.1.0.lx64.r.cp312.u7f4": {
+      "version": "110.1.1",
+      "title": "USD Schema For Metrics Assembler",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "omni.usd.schema.mujoco": {
+      "version": "1.1.4",
+      "title": "Omni USD Mujoco Schema",
+      "dependencies": [
+        "omni.usd.libs",
+        "omni.usd.schema.newton"
+      ],
+      "location": "base"
+    },
+    "omni.usd.schema.newton": {
+      "version": "1.5.0",
+      "title": "Omni USD Newton Schema",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "base"
+    },
+    "omni.usd.schema.omnigraph-1.0.1+187cf21b.lx64.r.cp312": {
+      "version": "1.0.1",
+      "title": "USD OmniGraph Schema",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "omni.usd.schema.physx-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "USD PhysX schema",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "base"
+    },
+    "omni.usd.schema.playback-1.1.0+187cf21b": {
+      "version": "1.1.0",
+      "title": "USD Omni Playback schema",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "omni.usd.schema.semantics-0.0.0+187cf21b.lx64.r.cp312": {
+      "version": null,
+      "title": "USD semantics schema",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "omni.usd_resolver-1.0.0+187cf21b.lx64.r.cp312": {
+      "version": "1.0.0",
+      "title": "Omni USD Resolver",
+      "dependencies": [
+        "omni.client",
+        "omni.usd.libs"
+      ],
+      "location": "base"
+    },
+    "omni.usdex.libs-3.0.0+110.0.0.lx64.r.cp312.u7f4": {
+      "version": "3.0.0",
+      "title": "OpenUSD Exchange Libraries",
+      "dependencies": [
+        "omni.usd.libs"
+      ],
+      "location": "features"
+    },
+    "omni.usdphysics-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physics Schema Plugin",
+      "dependencies": [
+        "omni.usd.libs",
+        "omni.usd.schema.physx"
+      ],
+      "location": "base"
+    },
+    "omni.usdphysics.ui-110.4.4+110.4.0.lx64.r.cp312.u7f4": {
+      "version": "110.4.4",
+      "title": "Physics UI",
+      "dependencies": [
+        "omni.usdphysics",
+        "omni.debugdraw",
+        "omni.ui",
+        "omni.kit.renderer.imgui",
+        "usdrt.scenegraph",
+        "omni.ui.scene",
+        "omni.kit.viewport.registry",
+        "omni.kit.viewport.utility",
+        "omni.kit.commands",
+        "omni.kit.viewport.menubar.display",
+        "omni.kit.widget.stage",
+        "omni.kit.widget.layers",
+        "omni.kit.widget.settings",
+        "omni.kit.property.usd",
+        "omni.kit.notification_manager",
+        "omni.kit.manipulator.prim",
+        "omni.kit.manipulator.selector",
+        "omni.kit.manipulator.selection"
+      ],
+      "location": "features"
+    },
+    "omni.warp.core-1.17.0+lx64": {
+      "version": "1.17.0",
+      "title": "Warp Core",
+      "dependencies": [],
+      "location": "base"
+    },
+    "usdrt.scenegraph-7.6.3+187cf21b.lx64.r.cp312": {
+      "version": "7.6.3",
+      "title": "USDRT Scenegraph API",
+      "dependencies": [
+        "omni.usd.core",
+        "omni.gpucompute.plugins",
+        "omni.cubric"
+      ],
+      "location": "base"
+    }
+  }
+}

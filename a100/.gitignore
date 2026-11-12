@@ -3,6 +3,7 @@
 /packages/
 /render-packages/
 /http-packages/
+/features/
 /state/
 /logs/
 /results/
@@ -28,3 +29,4 @@ __pycache__/
 *.tar*
 !patches/*.patch
 !examples/scene-preview.jpg
+!examples/features-preview.jpg

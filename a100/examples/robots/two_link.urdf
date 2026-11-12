@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="two_link">
+  <link name="base">
+    <inertial><mass value="1"/><inertia ixx="0.1" iyy="0.1" izz="0.1" ixy="0" ixz="0" iyz="0"/></inertial>
+    <visual><geometry><box size="0.1 0.1 0.2"/></geometry></visual>
+    <collision><geometry><box size="0.1 0.1 0.2"/></geometry></collision>
+  </link>
+  <link name="link">
+    <inertial><origin xyz="0.3 0 0"/><mass value="0.5"/><inertia ixx="0.02" iyy="0.04" izz="0.04" ixy="0" ixz="0" iyz="0"/></inertial>
+    <visual><origin xyz="0.3 0 0"/><geometry><box size="0.6 0.08 0.08"/></geometry></visual>
+    <collision><origin xyz="0.3 0 0"/><geometry><box size="0.6 0.08 0.08"/></geometry></collision>
+  </link>
+  <joint name="hinge" type="revolute">
+    <parent link="base"/><child link="link"/><origin xyz="0 0 0.1"/><axis xyz="0 0 1"/>
+    <limit lower="-1.5" upper="1.5" effort="20" velocity="2"/>
+  </joint>
+</robot>

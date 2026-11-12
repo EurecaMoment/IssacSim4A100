@@ -6,13 +6,14 @@ constant dome lights and rectangular lights. A mesh may provide a standard
 instead of silently dropping them. This is an external renderer adapter, not
 a replacement implementation of Isaac Replicator or RTX sensor extensions.
 """
+
 import math
 import time
 from pathlib import Path
 
-import numpy as np
 import drjit as dr
 import mitsuba as mi
+import numpy as np
 from pxr import Usd, UsdGeom, UsdLux, UsdShade
 
 mi.set_variant("cuda_ad_rgb")
@@ -24,13 +25,14 @@ def world_matrix(prim, cache):
     return np.asarray(cache.GetLocalToWorldTransform(prim), dtype=np.float64).T.copy()
 
 
-def surface_material(prim, default=(.32, .34, .37), vertex_color=False):
+def surface_material(prim, default=(0.32, 0.34, 0.37), vertex_color=False):
     display = UsdGeom.Gprim(prim).GetDisplayColorAttr().Get() if prim.IsA(UsdGeom.Gprim) else None
     if display and not vertex_color:
         default = tuple(display[0])
-    color = {"type": "mesh_attribute", "name": "vertex_color"} if vertex_color else {
-        "type": "rgb", "value": list(default)}
-    roughness, metallic = .85, 0.
+    color = (
+        {"type": "mesh_attribute", "name": "vertex_color"} if vertex_color else {"type": "rgb", "value": list(default)}
+    )
+    roughness, metallic = 0.85, 0.0
     material, _ = UsdShade.MaterialBindingAPI(prim).ComputeBoundMaterial()
     if material:
         shader = material.ComputeSurfaceSource()[0]
@@ -47,8 +49,12 @@ def surface_material(prim, default=(.32, .34, .37), vertex_color=False):
                     roughness = float(value.Get())
                 elif name == "metallic":
                     metallic = float(value.Get())
-    return mi.load_dict({"type": "twosided", "material": {"type": "principled",
-        "roughness": roughness, "metallic": metallic, "base_color": color}})
+    return mi.load_dict(
+        {
+            "type": "twosided",
+            "material": {"type": "principled", "roughness": roughness, "metallic": metallic, "base_color": color},
+        }
+    )
 
 
 def mesh_shape(prim, matrix):
@@ -73,8 +79,13 @@ def mesh_shape(prim, matrix):
             raise ValueError(f"USD displayColor must have vertex interpolation: {prim.GetPath()}")
     props = mi.Properties()
     props["bsdf"] = surface_material(prim, vertex_color=rgb is not None)
-    shape = mi.Mesh(str(prim.GetPath()), vertex_count=len(points), face_count=len(counts),
-                    props=props, has_vertex_normals=normals is not None)
+    shape = mi.Mesh(
+        str(prim.GetPath()),
+        vertex_count=len(points),
+        face_count=len(counts),
+        props=props,
+        has_vertex_normals=normals is not None,
+    )
     if rgb is not None:
         shape.add_attribute("vertex_color", 3, rgb.reshape(-1))
     params = mi.traverse(shape)
@@ -88,11 +99,13 @@ def mesh_shape(prim, matrix):
     return shape
 
 
-def render_stage(stage, camera_path, mode, output, size=512, spp=64, seed=42, gaussian_gain=1.0):
+def render_stage(stage, camera_path, mode, output, size=512, spp=64, seed=42, gaussian_gain=1.0, annotations=False):
     if mi.variant() != "cuda_ad_rgb" or not dr.has_backend(dr.JitBackend.CUDA):
         raise RuntimeError("A100 CUDA backend is required")
     if mode not in ("mesh", "gaussian"):
         raise ValueError("mode must be mesh or gaussian")
+    if annotations and mode != "mesh":
+        raise ValueError("Primary-surface annotations currently require mesh mode")
     started = time.perf_counter()
     cache = UsdGeom.XformCache(Usd.TimeCode.Default())
     camera = UsdGeom.Camera.Get(stage, camera_path)
@@ -100,15 +113,28 @@ def render_stage(stage, camera_path, mode, output, size=512, spp=64, seed=42, ga
         raise ValueError("a perspective USD camera is required")
     camera_world = world_matrix(camera.GetPrim(), cache)
     origin = camera_world[:3, 3]
-    fov = math.degrees(2 * math.atan(float(camera.GetHorizontalApertureAttr().Get()) /
-                                   (2 * float(camera.GetFocalLengthAttr().Get()))))
-    scene = {"type": "scene", "integrator": {"type": "a100_hybrid_path" if mode == "gaussian"
-             else "path", "max_depth": 6}, "sensor": {
-        "type": "perspective", "fov": fov, "fov_axis": "x", "to_world":
-        mi.ScalarTransform4f.look_at(origin=origin, target=origin - camera_world[:3, 2],
-                                    up=camera_world[:3, 1]), "film": {
-            "type": "hdrfilm", "width": size, "height": size, "pixel_format": "rgb",
-            "rfilter": {"type": "box"}}}}
+    fov = math.degrees(
+        2 * math.atan(float(camera.GetHorizontalApertureAttr().Get()) / (2 * float(camera.GetFocalLengthAttr().Get())))
+    )
+    scene = {
+        "type": "scene",
+        "integrator": {"type": "a100_hybrid_path" if mode == "gaussian" else "path", "max_depth": 6},
+        "sensor": {
+            "type": "perspective",
+            "fov": fov,
+            "fov_axis": "x",
+            "to_world": mi.ScalarTransform4f.look_at(
+                origin=origin, target=origin - camera_world[:3, 2], up=camera_world[:3, 1]
+            ),
+            "film": {
+                "type": "hdrfilm",
+                "width": size,
+                "height": size,
+                "pixel_format": "rgb",
+                "rfilter": {"type": "box"},
+            },
+        },
+    }
     if mode == "gaussian":
         scene["integrator"]["max_events"] = 512
         scene["integrator"]["gaussian_gain"] = float(gaussian_gain)
@@ -128,23 +154,37 @@ def render_stage(stage, camera_path, mode, output, size=512, spp=64, seed=42, ga
                 path = value.resolvedPath or value.path
                 data = load_gaussians(path)
                 scene[key] = shape_dict(data, matrix=matrix)
-                source = {"prim": str(prim.GetPath()), "kind": "gaussian", "asset": path,
-                          "gaussians": len(data["means"]), "world_matrix": matrix.tolist()}
+                source = {
+                    "prim": str(prim.GetPath()),
+                    "kind": "gaussian",
+                    "asset": path,
+                    "gaussians": len(data["means"]),
+                    "world_matrix": matrix.tolist(),
+                }
             else:
                 scene[key] = mesh_shape(prim, matrix)
-                source = {"prim": str(prim.GetPath()), "kind": "mesh",
-                          "triangles": len(UsdGeom.Mesh(prim).GetFaceVertexCountsAttr().Get()),
-                          "world_matrix": matrix.tolist()}
+                source = {
+                    "prim": str(prim.GetPath()),
+                    "kind": "mesh",
+                    "triangles": len(UsdGeom.Mesh(prim).GetFaceVertexCountsAttr().Get()),
+                    "world_matrix": matrix.tolist(),
+                }
             sources.append(source)
         elif prim.IsA(UsdGeom.Sphere):
             radius = float(UsdGeom.Sphere(prim).GetRadiusAttr().Get())
-            scene[key] = {"type": "sphere", "to_world": mi.ScalarTransform4f(matrix)
-                          @ mi.ScalarTransform4f.scale(radius), "bsdf": surface_material(prim)}
+            scene[key] = {
+                "type": "sphere",
+                "to_world": mi.ScalarTransform4f(matrix) @ mi.ScalarTransform4f.scale(radius),
+                "bsdf": surface_material(prim),
+            }
             sources.append({"prim": str(prim.GetPath()), "kind": "sphere", "world_matrix": matrix.tolist()})
         elif prim.IsA(UsdGeom.Cube):
             size_value = float(UsdGeom.Cube(prim).GetSizeAttr().Get())
-            scene[key] = {"type": "cube", "to_world": mi.ScalarTransform4f(matrix)
-                          @ mi.ScalarTransform4f.scale(size_value / 2), "bsdf": surface_material(prim)}
+            scene[key] = {
+                "type": "cube",
+                "to_world": mi.ScalarTransform4f(matrix) @ mi.ScalarTransform4f.scale(size_value / 2),
+                "bsdf": surface_material(prim),
+            }
             sources.append({"prim": str(prim.GetPath()), "kind": "cube", "world_matrix": matrix.tolist()})
         elif prim.IsA(UsdLux.DomeLight) or prim.IsA(UsdLux.RectLight):
             light = UsdLux.LightAPI(prim)
@@ -157,10 +197,14 @@ def render_stage(stage, camera_path, mode, output, size=512, spp=64, seed=42, ga
                 scene[key] = {"type": "constant", "radiance": {"type": "rgb", "value": rgb.tolist()}}
             else:
                 rect = UsdLux.RectLight(prim)
-                transform = matrix @ np.diag([float(rect.GetWidthAttr().Get()) / 2,
-                                              -float(rect.GetHeightAttr().Get()) / 2, -1, 1])
-                scene[key] = {"type": "rectangle", "to_world": mi.ScalarTransform4f(transform),
-                    "emitter": {"type": "area", "radiance": {"type": "rgb", "value": rgb.tolist()}}}
+                transform = matrix @ np.diag(
+                    [float(rect.GetWidthAttr().Get()) / 2, -float(rect.GetHeightAttr().Get()) / 2, -1, 1]
+                )
+                scene[key] = {
+                    "type": "rectangle",
+                    "to_world": mi.ScalarTransform4f(transform),
+                    "emitter": {"type": "area", "radiance": {"type": "rgb", "value": rgb.tolist()}},
+                }
             sources.append({"prim": str(prim.GetPath()), "kind": prim.GetTypeName(), "radiance": rgb.tolist()})
         elif prim.IsA(UsdGeom.Gprim) or prim.HasAPI(UsdLux.LightAPI):
             unsupported.append(f"{prim.GetPath()} ({prim.GetTypeName()})")
@@ -176,9 +220,25 @@ def render_stage(stage, camera_path, mode, output, size=512, spp=64, seed=42, ga
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     mi.util.write_bitmap(str(output), image, write_async=False)
-    return {"mode": mode, "renderer": "A100 CUDA USD adapter", "native_rtx": False,
-            "cpu_fallback": False, "resolution": [size, size], "spp": spp,
-            "gaussian_gain": float(gaussian_gain) if mode == "gaussian" else None,
-            "setup_seconds": setup_seconds, "render_seconds": render_seconds,
-            "image": output.name, "camera": camera_path, "camera_world": camera_world.tolist(),
-            "fov_degrees": fov, "usd_sources": sources}
+    annotation_result = None
+    if annotations:
+        from .annotations import capture_primary_surfaces
+
+        annotation_result = capture_primary_surfaces(scene, stage, sources, camera_world, output.with_suffix(""))
+    return {
+        "mode": mode,
+        "renderer": "A100 CUDA USD adapter",
+        "native_rtx": False,
+        "cpu_fallback": False,
+        "resolution": [size, size],
+        "spp": spp,
+        "gaussian_gain": float(gaussian_gain) if mode == "gaussian" else None,
+        "setup_seconds": setup_seconds,
+        "render_seconds": render_seconds,
+        "image": output.name,
+        "camera": camera_path,
+        "camera_world": camera_world.tolist(),
+        "fov_degrees": fov,
+        "usd_sources": sources,
+        **({"annotations": annotation_result} if annotation_result else {}),
+    }

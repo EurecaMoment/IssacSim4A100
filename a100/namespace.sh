@@ -9,7 +9,8 @@ mkdir -p "$rootfs/dev" "$rootfs/proc" "$rootfs/sys" "$rootfs/opt/host-nvidia" "$
 # Bind paths at their original absolute names so USD references and job paths agree.
 # Non-recursive binds avoid importing this namespace's child mounts again.
 for directory in "$A100SIM_HOST_HOME" "$A100SIM_ROOT" "$A100SIM_CODE_ROOT" "$A100SIM_NVIDIA_ROOT" \
-                 "$A100SIM_LOCAL_STATE" "$A100SIM_ASSET_ROOT" "$A100SIM_STATE_ROOT"; do
+                 "$A100SIM_LOCAL_STATE" "$A100SIM_ASSET_ROOT" "$A100SIM_STATE_ROOT" \
+                 "${A100SIM_FEATURES_ROOT:-$A100SIM_ROOT/features}"; do
     [[ "$directory" = /* && "$directory" != / ]] || { echo "Expected absolute directory: $directory" >&2; exit 2; }
     mkdir -p "$directory" "$rootfs$directory"
     mount --bind "$directory" "$rootfs$directory"
@@ -36,5 +37,6 @@ if [[ -d "$A100SIM_NVIDIA_ROOT/usr/share/nvidia" ]]; then
 fi
 cp -L /etc/resolv.conf "$rootfs/etc/resolv.conf"
 libraries="/opt/host-nvidia:$A100SIM_NVIDIA_ROOT/usr/lib/x86_64-linux-gnu:$A100SIM_CUDA_ROOT/targets/x86_64-linux/lib:/usr/lib/x86_64-linux-gnu"
+libraries+="${A100SIM_EXTRA_LD_LIBRARY_PATH:+:$A100SIM_EXTRA_LD_LIBRARY_PATH}"
 exec chroot "$rootfs" /usr/bin/env LD_LIBRARY_PATH="$libraries" \
     HOME="$A100SIM_STATE_ROOT/home" /bin/bash -c 'cd "$1"; shift; exec "$@"' bash "$workdir" "$@"

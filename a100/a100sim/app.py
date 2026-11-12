@@ -1,6 +1,7 @@
 """Keep the Isaac runtime and its GPU physics independent of the RTX renderer."""
-from pathlib import Path
+
 import os
+from pathlib import Path
 
 
 def create_app():
@@ -9,38 +10,61 @@ def create_app():
     base = Path(os.environ.get("A100SIM_ROOT", Path(__file__).resolve().parents[1]))
     root = base / "packages/isaacsim"
     extensions = [
-        "omni.physx", "omni.physx.tensors", "omni.physx.fabric",
-        "omni.warp.core", "usdrt.scenegraph", "omni.kit.loop",
-        "omni.usd", "omni.kit.usd.layers", "omni.hydra.usdrt_delegate",
+        "omni.physx",
+        "omni.physx.tensors",
+        "omni.physx.fabric",
+        "omni.warp.core",
+        "usdrt.scenegraph",
+        "omni.kit.loop",
+        "omni.usd",
+        "omni.kit.usd.layers",
+        "omni.hydra.usdrt_delegate",
     ]
+    extensions += [name.strip() for name in os.environ.get("A100SIM_ENABLE_EXTENSIONS", "").split(",") if name.strip()]
     args = [
         "--/app/extensions/registryEnabled=false",
-        "--/app/renderer/enabled=false", "--/app/window/enabled=false",
-        "--/app/audio/enabled=false", "--/telemetry/enableAnonymousData=false",
+        "--/app/renderer/enabled=false",
+        "--/app/window/enabled=false",
+        "--/app/audio/enabled=false",
+        "--/telemetry/enableAnonymousData=false",
         "--/exts/omni.kit.renderer.core/compatibilityMode=true",
         "--/exts/omni.kit.renderer.core/raytracingEnabled=false",
-        "--/physics/cudaDevice=0", "--/physics/suppressReadback=true",
+        "--/physics/cudaDevice=0",
+        "--/physics/suppressReadback=true",
         "--/plugins/carb.memorytracking.plugin/memoryScope/trackAddress/enabled=false",
-        "--portable-root", os.environ.get("A100SIM_KIT_ROOT", str(base / "state/kit")),
+        "--portable-root",
+        os.environ.get("A100SIM_KIT_ROOT", str(base / "state/kit")),
     ]
     for folder in ("exts", "extscache", "extsDeprecated"):
         args += ["--ext-folder", str(root / folder)]
+    for folder in os.environ.get("A100SIM_EXT_FOLDERS", "").split(os.pathsep):
+        if folder:
+            args += ["--ext-folder", folder]
+    excluded = [name.strip() for name in os.environ.get("A100SIM_EXCLUDE_EXTENSIONS", "").split(",") if name.strip()]
+    for index, name in enumerate(excluded):
+        args += [f"--/app/extensions/excluded/{index}={name}"]
     for name in extensions:
         args += ["--enable", name]
-    return SimulationApp({
-        "headless": True, "multi_gpu": False, "limit_cpu_threads": 8,
-        "extra_args": args, "enable_crashreporter": False,
-        "fast_shutdown": False,
-    }, experience=None)
+    return SimulationApp(
+        {
+            "headless": True,
+            "multi_gpu": False,
+            "limit_cpu_threads": 8,
+            "extra_args": args,
+            "enable_crashreporter": False,
+            "fast_shutdown": os.environ.get("A100SIM_FAST_SHUTDOWN", "0") == "1",
+        },
+        experience=None,
+    )
 
 
 class Physics:
     def __init__(self, stage):
         import carb
-        import omni.usd
-        import omni.physx
         import omni.physics.tensors as tensors
-        from pxr import UsdPhysics, PhysxSchema, Gf
+        import omni.physx
+        import omni.usd
+        from pxr import Gf, PhysxSchema, UsdPhysics
 
         self.stage = stage
         scenes = [p for p in stage.Traverse() if p.IsA(UsdPhysics.Scene)]

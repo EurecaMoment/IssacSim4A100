@@ -2,7 +2,7 @@
 
 在 NVIDIA A100 上运行 **Isaac Sim 6.2 GPU PhysX 仿真 + Mitsuba/Dr.Jit CUDA 渲染**。
 
-本仓库 fork 自 [isaac-sim/IsaacSim](https://github.com/isaac-sim/IsaacSim)，A100 分支基于官方 `v6.2.0` / `release/6.2`（`74a9356b20250dd60337d90b4b4d913c9454d32b`）。官方源代码和历史保留，原版说明见 [README.upstream.md](README.upstream.md)；当前部署的自定义代码、补丁、启动器、验证和资产处理示例集中在 [a100/](a100/)。
+本仓库 fork 自 [isaac-sim/IsaacSim](https://github.com/isaac-sim/IsaacSim)，部署功能维护在 [`A100` 分支](https://github.com/EurecaMoment/IssacSim4A100/tree/A100)，基于官方 `v6.2.0` / `release/6.2`（`74a9356b20250dd60337d90b4b4d913c9454d32b`）。官方源代码和历史保留，原版说明见 [README.upstream.md](README.upstream.md)；当前部署的自定义代码、补丁、启动器、验证和资产处理示例集中在 [a100/](a100/)。
 
 **A100 没有 RT Core，不满足官方完整 RTX 渲染器的硬件要求。** 本适配关闭 Kit 原生 RTX，保留 CUDA PhysX，以 Mitsuba/Dr.Jit 的 CUDA/OptiX 路径追踪渲染实时 USD 场景。它是已部署的服务适配，不代表完整 Isaac Sim 的所有功能均已移植到 A100。
 
@@ -42,20 +42,47 @@ unshare -Ur -m true
 
 ## 功能范围
 
-| 能力 | 当前服务状态 |
+2026-11-12 已扩展并实测以下功能。**“服务”表示已接入独立常驻接口；“脚本”表示已在当前 A100 上运行验证，但没有对应 HTTP 动作；安装了扩展不等于功能已经通过。** 原有三个服务保持运行，新增服务默认在 `127.0.0.1:8322`。
+
+| 能力 | 当前 A100 部署的实际状态 |
 | --- | --- |
-| CUDA 刚体物理、GPU broadphase | 已实现，强制 GPU 执行 |
-| 方块、球体、mesh 刚体 | 已实现；动态 mesh 使用 convex hull 碰撞 |
-| 场景输入 | 位姿、尺寸、质量、重力、步长、步数、地面 |
-| USD 场景与结果导出 | 已实现，包含仿真后位姿和图像 |
-| RGB 渲染 | CUDA/OptiX，mesh 和自定义 Gaussian 路径 |
-| 相机和统一布光 | 轨道相机、dome、矩形主光及最多 8 个补光 |
-| 多资产组合 | 支持；提供 GLB 转换、带种子的随机陈列和三视角示例 |
-| 常驻队列、批量仿真 | 已实现，前端按条件分流到快速路径或通用后端 |
-| 官方原生 RTX / Replicator 传感器 | 此 A100 后端不提供 |
-| 深度、语义标注、LiDAR | 尚未在现有服务中实现 |
-| 机器人关节控制、ROS2、Isaac Lab | 尚未集成到现有服务；需要对应扩展、资产及额外接口 |
-| 完整 PBR 纹理网络、软体 | 不在当前适配接口范围内 |
+| CUDA 刚体物理、GPU broadphase、TGS | 服务；强制 CUDA，支持方块、球和 mesh 刚体 |
+| 动态 mesh 碰撞 | 服务；使用 convex hull，不等同于任意动态凹网格 |
+| USD 场景编辑、引用与导出 | 服务 / 脚本；可保存物理状态、机器人和动画 |
+| RGB、统一布光、多资产场景 | 服务；Mitsuba/Dr.Jit CUDA/OptiX，mesh 和自定义 Gaussian 路径 |
+| 深度、距离、表面法向 | 服务；自定义 CUDA 主射线标注，米制 Z-depth / range、世界坐标法向 |
+| 实例 ID、语义 ID、有效像素 mask | 服务；显式 USD 标签和形状到 prim 的映射；不做自动语义识别 |
+| 机器人位置 / 速度 / 力矩控制 | 服务；真实 PhysX articulation，4 个双关节机械臂分别控制 |
+| 多环境 / 多机器人克隆 | 服务；官方 GridCloner，支持 1–16 个演示机械臂，当前 4 个 |
+| Jacobian、质量矩阵、关节作用力 | 服务；从真实 CUDA articulation tensors 读取 |
+| IMU、接触、JointState、Effort | 服务；官方物理传感器，已核对重力与支撑力 |
+| 物理 RaycastSensor | 服务；三束已知距离测量及 180 束平面扫描 |
+| 抓取、抬升、释放 | 服务；自定义 PhysX fixed-joint 吸附演示，先查询实际碰撞表面 |
+| 官方 Surface Gripper | 扩展已加载；close 调用成功但尚未抓住测试物体，未判定根因 |
+| 关节轨迹生成与执行 | 服务；官方最短时间轨迹生成器，已检查实际机器人到达终点 |
+| 差速控制器 | 服务；官方控制器输出已验证；该动作只计算轮速，没有生成轮式机器人 |
+| ROS 2 Jazzy / FastDDS | 服务；官方 bundled rclpy + 自定义数据桥，收发及实际机械臂控制通过 |
+| ROS 2 JointState / IMU / LaserScan / Clock / TF | 服务；5 个发布 topic 和 1 个关节命令订阅 topic |
+| URDF → USD、MJCF → USD | 脚本；关节与 articulation 保留，导入后 CUDA 目标跟踪通过 |
+| USD → URDF、Heightmap、资产检查 / 优化工具 | 相应扩展随 asset 包安装；未逐项完成转换、优化或验收 |
+| Gain Tuner 核心 | 脚本；机器人标记补全后可发现两关节并计算有效惯量；GUI 和自动调参未验收 |
+| Newton 1.6.1 XPBD 刚体 | 脚本；Kit 内 CUDA 求解，读取直接 Warp state，关闭 CUDA graph |
+| Newton XPBD 布料 | 服务；独立 CUDA Newton 模型，固定点和自由粒子运动通过，导出 USD 动画 / NPZ |
+| 批量 observation / reward step | 服务；`rl_step` 提供基础批量数据，尚无训练算法 |
+| Isaac Lab / 完整强化学习训练 | 独立框架尚未安装和适配；安装 `isaacsim-rl` 元包并不提供训练能力 |
+| IK、RMPflow、cuMotion、Pink、机器人策略回放 | 需要对应规划依赖、机器人描述和策略；当前未验收，不列为可用服务 |
+| 官方原生 RTX 相机、RTX LiDAR / Radar | A100 无 RT Core；当前关闭原生 RTX，不能以物理射线扫描替代并声称等价 |
+| Replicator 图像标注与标准 writer 管线 | 当前未启用；自定义标注不是 Replicator，不能直接代替其全部接口 |
+| 完整官方 ROS OmniGraph bridge / ROS control | 当前未启用；官方 ROS core 的扩展依赖包含 RTX / Replicator 链 |
+| 完整 PBR、MDL、透明材质网络 | 当前顶点颜色适配未完整实现 |
+| PhysX 体积软体、流体 / 粒子、触觉、车辆动力学 | 当前未逐项实测或接入；布料演示不代表这些能力已启用 |
+| GUI、WebRTC 交互视口、NuRec | 当前无图形设备适配或对应模型 / 运行环境，未启用 |
+
+扩展清单及数值证据见 [feature-validation.json](a100/research/feature-validation.json) 和 [extension-inventory.json](a100/research/extension-inventory.json)。清单包含扩展依赖以及独立机器人探测进程实际加载的扩展；不是“所有已安装扩展都在运行”的声明。
+
+![当前 CUDA 机器人场景的 RGB、深度、法向和实例标注](a100/examples/features-preview.jpg)
+
+*RGB 使用 128 spp；标注为每像素中心单射线。深度预览做了显示归一化，米制原始值保存在 NPZ。*
 
 资产视觉目前使用**顶点颜色**。FastTrellis GLB 中的 base-color 纹理可以按原始 UV 采样并烘焙到顶点，保留几何；metallic/roughness 贴图、透明材质和复杂材质网络不会完整还原。没有关节和碰撞定义的普通 mesh，也不会自动成为可控制的机器人。
 
@@ -66,7 +93,7 @@ unshare -Ur -m true
 适配服务不依赖官方示例的大型 LFS 资产，可先跳过这些下载：
 
 ```bash
-GIT_LFS_SKIP_SMUDGE=1 git clone --branch main https://github.com/EurecaMoment/IssacSim4A100.git
+GIT_LFS_SKIP_SMUDGE=1 git clone --branch A100 https://github.com/EurecaMoment/IssacSim4A100.git
 cd IssacSim4A100/a100
 uv python install 3.12
 cp .env.example .env
@@ -139,6 +166,7 @@ bash serve.sh resident
 | `http://127.0.0.1:8321` | 统一入口、常驻队列、批量快速路径 |
 | `http://127.0.0.1:18323` | 通用 GPU 场景仿真和渲染 |
 | `http://127.0.0.1:8320` | 可选：固定资产的 mesh/Gaussian 渲染服务 |
+| `http://127.0.0.1:8322` | 可选：机器人、物理传感器、自定义标注、ROS 2、Newton 布料 |
 
 预加载资产服务不是启动核心服务的必要条件。只有需要它时，设置 `.env` 中的 `A100SIM_RENDER_ASSET=/absolute/path/to/prepared/asset`，再运行 `bash serve.sh render`。mesh 需要 `mesh.npz`，Gaussian 需要符合服务约定的 `object.ply`；普通点云 PLY 不能直接替代 Gaussian 数据。
 
@@ -162,6 +190,137 @@ bash stop.sh
 用户服务要在退出登录后继续运行，宿主需要为当前用户启用 linger，例如管理员执行 `loginctl enable-linger <username>`。在 Slurm 集群上还应遵守已有 GPU 分配方式，在获得 GPU 的节点和会话内启动；安装脚本不申请调度资源。
 
 新服务名为 `isaacsim-a100-*`，不会自动替换原部署的 `isaacsim-gpu2-*`。旧的 `serve-gpu2.sh`、`start-gpu2.sh` 等入口保留为兼容别名。与已有服务共存测试时，用 `.env` 设置其他端口和 `A100SIM_STATE_ROOT` / `A100SIM_LOCAL_STATE`。
+
+## 可选功能的安装与启动
+
+先完成上面的基础运行环境安装，再执行：
+
+```bash
+# 从 a100/ 运行；下载固定版本官方包和带 SHA-256 的 Python 依赖
+bash install-features.sh all
+
+# 前台启动机器人、传感器及 ROS 2 数据桥
+bash serve-features.sh
+```
+
+安装写入独立的 `${A100SIM_FEATURES_ROOT:-$A100SIM_ROOT/features}/packages`，不替换基础服务的包，不重启原服务。`all` 包括机器人、ROS 2、资产转换和 Newton；也可选择 `robotics`、`ros2`、`assets` 或 `newton`。这些 profile 都包含机器人公共依赖；`assets` 还安装 MuJoCo / Newton 转换所需依赖。`robotics` 不安装 ROS 2 时，启动前在 `.env` 设置 `A100SIM_FEATURE_ROS2=0`。没有 Newton 时健康检查不会列出 `cloth` 动作。
+
+安装器固定 Linux x86_64 / CPython 3.12 wheel，使用 `--no-deps` 保留基础 NumPy。完整官方 wheel 和 Python 依赖校验 SHA-256；大型 Kit cache 仅按 [固定扩展计划](a100/research/feature-extensions.json) 做 HTTP Range 提取并检查 ZIP 完整性。当前部署通过离线下载与 overlay 安装完成；**全新机器从零下载的整套安装流程尚未端到端重建**。
+
+后台运行：
+
+```bash
+bash install-systemd.sh
+bash start-features.sh
+curl --fail http://127.0.0.1:8322/health
+journalctl --user -u isaacsim-a100-features.service -f
+# 停止新增服务
+bash stop-features.sh
+```
+
+新增单位与基础 `start.sh` / `stop.sh` 分开管理。当前 g3005 实例在已经分配的 Slurm allocation 内运行，服务寿命受该 allocation 约束；systemd 不会代为申请 GPU。不要只凭旧 systemd 单位的状态判断原服务是否在线，应同时检查对应 HTTP 健康接口。
+
+### 机器人与传感器接口
+
+```bash
+python3 examples/feature_client.py '{"action":"snapshot"}'
+python3 examples/feature_client.py '{"action":"command","mode":"position","targets":[0.6,-0.4],"steps":240}'
+python3 examples/feature_client.py '{"action":"command","mode":"velocity","targets":[0.25,-0.15],"steps":30}'
+python3 examples/feature_client.py '{"action":"command","mode":"effort","targets":[0.4,0],"steps":24}'
+# 恢复位置保持，避免力矩命令继续生效
+python3 examples/feature_client.py '{"action":"command","targets":[0.6,-0.4],"steps":240}'
+python3 examples/feature_client.py '{"action":"dynamics"}'
+python3 examples/feature_client.py '{"action":"scan"}'
+python3 examples/feature_client.py '{"action":"gripper","operation":"cycle"}'
+python3 examples/feature_client.py '{"action":"trajectory","points":[[0.6,-0.4],[0.3,-0.2],[0.1,0.2]]}'
+python3 examples/feature_client.py '{"action":"capture","size":512,"spp":32}'
+python3 examples/feature_client.py '{"action":"cloth","frames":90}'
+```
+
+HTTP 为 `POST /robotics`、`GET /jobs/<id>`、`GET /health`。只提交一次并查询原 job ID；只有 `state=succeeded` 表示成功。所有动作在拥有 Kit 的同一线程串行执行，避免并发修改 USD。默认队列容量 32，不提供任意代码执行入口，绑定 loopback。
+
+单个 `[q1,q2]` 控制 `arm_index` 指定的机械臂，默认 0；N×2 数组同时控制全部 N 个。位置单位 rad、速度 rad/s、力矩 N·m；边界分别为 ±2.96、±5、±20，步数 1–1200。命令持续到被后续控制覆盖；ROS 开启时即使无 HTTP 请求，场景仍会继续步进。PhysX stiffness / damping 参数编辑使用 CPU buffer，目标、力矩和仿真在 CUDA；不能把整个控制链描述成“完全没有 CPU 操作”。
+
+`capture` 保存实时场景的 `render.png`、`scene.usdc`、`render-annotations.npz`、`render-labels.json`，以及 depth / normals / instances 预览。NPZ 含 `depth_m`、`range_m`、`normal_world`、`instance_id`、`semantic_id`、`valid`。深度是相机前向 Z，range 是到相机中心的欧氏距离；未命中为 0，应结合 valid mask。标注采用像素中心单射线，不含 RGB 抗锯齿、多样本或运动模糊；ID 不保证跨场景编辑保持不变。语义读取 prim 或祖先的 `a100sim:semanticLabel` 字符串。当前只支持 mesh 标注，Gaussian 模式会拒绝该请求。
+
+导出从真实 CUDA articulation / rigid-body tensors 读取世界位姿，写入独立 USD 副本后渲染。启用 GPU readback 抑制时，仅保存原始 USD 会留下初始姿态；验收脚本会逐个核对渲染使用的连杆平移及旋转与物理 tensor 一致。
+
+`scan` 是物理碰撞几何上的 180 束二维扫描，不模拟 RTX LiDAR 的强度、波形、材质回波、多次回波或扫描时序。原生传感器的 `hit_positions` 位于传感器局部坐标系。
+
+`gripper` 默认使用自定义 PhysX 约束吸附，不是官方 Surface Gripper 的成功替代实现声明。关闭前实际检查 2 cm 范围内的目标表面，随后创建约束、抬升并删除约束释放。`rl_step` 只返回批量观测、示例 reward 和终止标志，不执行优化器、策略训练或 Isaac Lab 工作流。
+
+### ROS 2
+
+默认使用 wheel 自带的 **Jazzy / rclpy / FastDDS**，不要求修改宿主 ROS 安装。默认 `ROS_DOMAIN_ID=80`、发现范围 `LOCALHOST`。外部主机通信需要在 `.env` 明确配置相同 domain 和网络发现，并重新启动新服务；当前只验收了同机收发。
+
+| Topic | 类型 / 用途 |
+| --- | --- |
+| `/a100/joint_states` | `sensor_msgs/msg/JointState`，4 臂共 8 关节 |
+| `/a100/imu` | `sensor_msgs/msg/Imu`，动态方块 IMU |
+| `/a100/scan` | `sensor_msgs/msg/LaserScan`，180 束物理射线 |
+| `/clock` | `rosgraph_msgs/msg/Clock`，仿真时间 |
+| `/tf` | `tf2_msgs/msg/TFMessage`，world 到机械臂连杆及传感器 |
+| `/a100/joint_commands` | 订阅 `JointState`，同一机械臂的两个关节命令 |
+
+命令的 names 使用 `arm0/joint1`、`arm0/joint2`，可换序；position、velocity、effort 只能填其中一组两个值。多臂用 `arm1`、`arm2` 等。下面的示例使用已有 ROS CLI 环境；需与服务设置相同 domain 和消息类型：
+
+```bash
+ROS_DOMAIN_ID=80 ros2 topic pub --once /a100/joint_commands sensor_msgs/msg/JointState \
+  '{name: [arm0/joint1, arm0/joint2], position: [0.45, -0.25]}'
+```
+
+这是新写的数据桥，借用官方 bundled ROS 库；并没有启用完整官方 `isaacsim.ros2.bridge`、OmniGraph sensor graph、ROS control 或任意机器人控制器管理。
+
+### URDF、MJCF 与 Newton
+
+```bash
+# 提供最小双连杆资产，转换后可选做单关节 CUDA 运动检查
+bash run-assets.sh examples/import_robot.py examples/robots/two_link.urdf \
+  --output "$PWD/results/urdf" --physics-check
+bash run-assets.sh examples/import_robot.py examples/robots/two_link.xml \
+  --output "$PWD/results/mjcf" --physics-check
+
+# Kit Newton XPBD：R535 下使用直接 Warp state
+bash run-newton.sh examples/newton_xpbd.py --output "$PWD/results/newton"
+
+# 独立 Newton CUDA 布料；不切换常驻机器人的 PhysX 引擎
+bash run-features.sh -m a100sim.newton_cloth --output "$PWD/results/cloth" --frames 90
+
+# 查看实际启用的扩展及 Gain Tuner 的有限范围检查
+bash run-features.sh research/inspect_features.py --output "$PWD/results/feature-inspection.json"
+```
+
+转换器关闭 asset transformer，URDF 同时关闭多物理转换后处理；这些选项不影响此次简单机器人生成 PhysX articulation。`--physics-check` 只面向提供的单自由度 fixture，不应直接用于任意机器人。真实机器人还需要检查网格路径、比例、质量 / 惯量、碰撞、限位和驱动。USD 结果可能采用子层或引用，应保留整个输出目录。
+
+Newton 需要在全局配置和 physics scene 上都选 XPBD，并禁用 CUDA graph。Newton tensor 扩展会为 SimulationManager 注册后端，但示例不执行当前驱动不兼容的 tensor GPU 查询，而直接读取 Newton Warp state。Newton/MuJoCo 默认路径当前报 CUDA driver 12.4+ 的条件图节点要求；部分官方 Newton tensor kernels 报 PTX toolchain 不受支持。这些是当前 R535 环境的实测限制，不是布料资产的问题，也不代表 A100 永远不能运行 Newton。
+
+Newton 不会在运行中自动应用任意 USD 属性编辑；应按官方说明使用受支持的数据接口，或停止、编辑、重新初始化。布料是独立 Newton 模型，当前与 PhysX 机器人没有跨求解器双向碰撞耦合。其他布料、体积软体、流体或复杂抓取场景仍须单独验收。
+
+可选 Kit 启动器默认使用 fast shutdown，部分异常后的 Kit 关闭仍可能使进程退出码为 0。示例验收应读取生成报告中的 `success` 和数值，不能只看退出码；外部 `benchmarks/validate_features.py` 检查失败会返回非零退出码。
+
+### 本次实测与限制的来源
+
+| 检查 | 实际结果 |
+| --- | --- |
+| 4 臂分别跟踪位置 | 最大误差约 `5.1e-6 rad` |
+| 速度 `[0.25,-0.15]` | 约 `[0.2483,-0.1505] rad/s` |
+| 施加 `0.4 N·m` | 原生关节传感器约 `0.4001 N·m` |
+| 静止 IMU / 1 kg 方块支撑力 | 约 `9.81 m/s²` / `9.81 N` |
+| 已知物理射线 / 扫描障碍 | `1.5 m` / `1.9 m` |
+| 自定义吸附抓取 | 目标 Z 从 `0.02 m` 升到约 `0.25 m`，释放后回到 `0.02 m` |
+| 深度标准场景 | 相机 Z=3、立方体顶面 Z=1，中心深度 `2.000 m`，法向 `[0,0,1]` |
+| URDF / MJCF 导入后运动 | 目标 `0.3 rad`，实际约 `0.3000026` / `0.3000007 rad` |
+| Kit Newton XPBD 落体 | 0.2 m 方块最终中心 Z=`0.099999 m` |
+| Newton 布料 90 帧 | 221 粒子、384 三角形、13 固定点，固定点误差 0，自由点平均位移约 `0.576 m` |
+| 常驻服务 / ROS 2 | 15 项端到端检查通过，含 CUDA 位姿与渲染一致性；5 topic 实际收取，并通过 ROS 2 改变真实关节状态 |
+
+这些是小型验收场景的结果，不是所有资产、负载和机器人均达到相同精度或性能的保证。可复核的 JSON 报告保留数值和测试范围。
+
+此前“没有开放”混合了三个原因：**部分功能只是原服务接口尚未接入**，此次已补上；**完整原生 RTX 是硬件限制**；**普通 FastTrellis 静态网格缺少机器人和物理定义是资产条件**。对于碰撞、质量、关节、语义和新 robot schema，资产仍需相应配置，不能靠安装扩展自动补齐。
+
+官方 6.2 资料明确不支持没有 RT Core 的 A100 / H100，当前官方推荐驱动也高于此服务器的 R535。因此本仓库是已有环境上的定向适配，不是 NVIDIA 支持的完整原版配置。本次没有升级共享机器驱动或改动其他 GPU。完整 RTX / Replicator 图像工作流需要受支持的 RTX GPU 和驱动；完整训练还需独立安装、适配并验证 Isaac Lab。
+
+参考依据：[6.2 硬件要求](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/installation/requirements.html)、[6.2 release notes](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/overview/release_notes.html)、[Newton 后端与限制](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/physics/newton_physics.html)、[Physics RaycastSensor](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/sensors/isaacsim_sensors_physics_raycast.html)。6.2 拆分了许多库与 Kit 适配扩展，也移除了 Cortex；不能沿用旧版扩展名来判断功能是否缺失。
 
 ## 调用服务
 
@@ -223,6 +382,7 @@ uv run --python 3.12 --no-project python -m unittest discover -s tests -v
 # 已启动服务后的端到端检查与并发基准
 mkdir -p results/performance
 python3 benchmarks/validate_http.py
+python3 benchmarks/validate_features.py --report results/performance/features.json
 python3 benchmarks/gpu2_http.py --url http://127.0.0.1:8321 --concurrency 64 --rounds 3 --workload default \
   --report results/performance/benchmark.json
 ```

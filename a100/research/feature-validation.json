@@ -1,0 +1,444 @@
+{
+  "audit_date": "2026-11-12",
+  "timestamp_utc": "2026-11-12T08:54:28.794798+00:00",
+  "version": {
+    "repository_branch": "A100",
+    "python_package": "6.2.0.0",
+    "runtime": "6.2.0-rc.14+release.52805.02189a84.gl",
+    "upstream_tag": "v6.2.0",
+    "upstream_commit": "74a9356b20250dd60337d90b4b4d913c9454d32b"
+  },
+  "environment": {
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "physical_gpu_index": 2,
+    "driver": "535.161.08",
+    "driver_cuda": "12.2",
+    "warp": "1.17.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "host": "Ubuntu 20.04.6",
+    "rootfs": "Ubuntu 24.04 Noble",
+    "python": "3.12",
+    "native_rtx": false,
+    "physics_device": "cuda:0",
+    "control_note": "Drive parameter edits use CPU buffers; targets, forces, and physics run on CUDA"
+  },
+  "deployment": {
+    "feature_url": "http://127.0.0.1:8322",
+    "unit": "isaacsim-a100-features.service",
+    "lifetime": "Bound to the current Slurm allocation",
+    "arm_count": 4,
+    "ros2_domain": 80,
+    "ros2_discovery": "LOCALHOST"
+  },
+  "acceptance": {
+    "success": true,
+    "checks": {
+      "position": true,
+      "velocity": true,
+      "restore": true,
+      "effort": true,
+      "hold": true,
+      "dynamics": true,
+      "scan": true,
+      "grasp": true,
+      "trajectory": true,
+      "differential_drive": true,
+      "batched_step": true,
+      "capture": true,
+      "capture_pose_sync": true,
+      "cloth": true,
+      "reject_nonfinite": true
+    },
+    "metrics": {
+      "position_targets_rad": [
+        [
+          0.6,
+          -0.4
+        ],
+        [
+          -0.35,
+          0.25
+        ],
+        [
+          0.2,
+          0.5
+        ],
+        [
+          -0.5,
+          -0.2
+        ]
+      ],
+      "position_actual_rad": [
+        [
+          0.6000019907951355,
+          -0.40000176429748535
+        ],
+        [
+          -0.3500016927719116,
+          0.25000348687171936
+        ],
+        [
+          0.2000025510787964,
+          0.49999651312828064
+        ],
+        [
+          -0.5000050663948059,
+          -0.20000195503234863
+        ]
+      ],
+      "max_position_error_rad": 5.066394805908203e-06,
+      "velocity_targets_rad_s": [
+        0.25,
+        -0.15
+      ],
+      "velocity_actual_rad_s": [
+        0.2482697069644928,
+        -0.15053069591522217
+      ],
+      "effort_target_nm": 0.4,
+      "effort_actual_nm": 0.40010908246040344,
+      "imu_acceleration_z_m_s2": 9.809661865234375,
+      "support_force_n": 9.809660911560059,
+      "known_vertical_ranges_m": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "scan_beams": 180,
+      "known_obstacle_range_m": 1.899999976158142,
+      "grasp_cube_initial_z_m": 0.019999999552965164,
+      "grasp_cube_lifted_z_m": 0.24998226761817932,
+      "grasp_cube_released_z_m": 0.020000003278255463,
+      "trajectory_actual_endpoint_rad": [
+        0.09999960660934448,
+        0.19999831914901733
+      ],
+      "differential_controller": {
+        "wheel_velocities_rad_s": [
+          4.0,
+          6.0
+        ],
+        "buffer_device": "cpu",
+        "scope": "controller output only; no wheeled robot is spawned"
+      },
+      "annotation_center_depth_m": 2.0,
+      "annotation_center_normal_world": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "render_pose_source": "CUDA articulation and rigid-body tensors",
+      "render_pose_consistency": true
+    }
+  },
+  "ros2": {
+    "success": true,
+    "distribution": "jazzy",
+    "rmw": "rmw_fastrtps_cpp",
+    "topics_received": [
+      "/a100/imu",
+      "/a100/scan",
+      "/a100/joint_states",
+      "/clock",
+      "/tf"
+    ],
+    "joint_names": [
+      "arm0/joint1",
+      "arm0/joint2",
+      "arm1/joint1",
+      "arm1/joint2",
+      "arm2/joint1",
+      "arm2/joint2",
+      "arm3/joint1",
+      "arm3/joint2"
+    ],
+    "joint_positions": [
+      0.4602591097354889,
+      -0.26861637830734253,
+      -0.3500016927719116,
+      0.25000348687171936,
+      0.2000025510787964,
+      0.49999651312828064,
+      -0.5000050663948059,
+      -0.20000195503234863
+    ],
+    "commanded_arm0": [
+      0.45,
+      -0.25
+    ],
+    "scan_beams": 180,
+    "known_obstacle_range_m": 1.899999976158142,
+    "imu_acceleration_z": 9.810341835021973,
+    "tf_transforms": 14,
+    "clock_seconds": 40.383333333
+  },
+  "importers_and_kit_newton": [
+    {
+      "name": "urdf",
+      "exit_code": 0,
+      "source_format": ".urdf",
+      "success": true,
+      "usd": "${A100SIM_ROOT}/features/reports/urdf-live/two_link_2/two_link.usda",
+      "joints": [
+        "/two_link/Physics/root_joint",
+        "/two_link/Physics/hinge"
+      ],
+      "articulations": [
+        "/two_link/Geometry/base"
+      ],
+      "asset_transformer": false,
+      "urdf_multi_physics_conversion": false,
+      "physics": {
+        "device": "cuda:0",
+        "target_rad": 0.3,
+        "positions_rad": [
+          [
+            0.3000026345252991
+          ]
+        ],
+        "steps": 360
+      }
+    },
+    {
+      "name": "mjcf",
+      "exit_code": 0,
+      "source_format": ".xml",
+      "success": true,
+      "usd": "${A100SIM_ROOT}/features/reports/mjcf-live/two_link_2/two_link.usda",
+      "joints": [
+        "/two_link_mjcf/Geometry/base/link/hinge",
+        "/two_link_mjcf/Geometry/base/PhysicsFixedJoint"
+      ],
+      "articulations": [
+        "/two_link_mjcf/Geometry/base"
+      ],
+      "asset_transformer": false,
+      "physics": {
+        "device": "cuda:0",
+        "target_rad": 0.3,
+        "positions_rad": [
+          [
+            0.3000006675720215
+          ]
+        ],
+        "steps": 360
+      }
+    },
+    {
+      "name": "newton-xpbd",
+      "exit_code": 0,
+      "success": true,
+      "newton_version": "1.6.1",
+      "solver": "xpbd",
+      "device": "cuda:0",
+      "cube_height_m": 0.09999900311231613,
+      "body_paths": [
+        "/World/Arm/base",
+        "/World/Arm/link1",
+        "/World/Arm/link2",
+        "/World/Cube"
+      ],
+      "body_poses": [
+        [
+          2.25068689019281e-07,
+          0.0,
+          0.6498668789863586,
+          0.0,
+          0.0008711315458640456,
+          0.0,
+          0.9999996423721313
+        ],
+        [
+          0.3502587378025055,
+          0.0,
+          0.7975577712059021,
+          0.0,
+          0.002575462916865945,
+          0.0,
+          0.9999966621398926
+        ],
+        [
+          1.0502464771270752,
+          0.0,
+          0.7931870222091675,
+          0.0,
+          0.003034970723092556,
+          0.0,
+          0.9999954104423523
+        ],
+        [
+          1.441476911168138e-07,
+          -1.0000001192092896,
+          0.09999900311231613,
+          -2.7348978637320442e-09,
+          1.1537255595328588e-08,
+          3.0538094275556205e-10,
+          1.0
+        ]
+      ],
+      "scope": "Kit Newton XPBD with direct Warp state; official Newton tensor GPU API not verified",
+      "cuda_graph": false
+    }
+  ],
+  "standalone_newton_cloth": {
+    "success": true,
+    "newton_version": "1.6.1",
+    "solver": "XPBD",
+    "scope": "standalone Newton Warp model; not the Kit Newton tensor backend",
+    "device": "cuda:0",
+    "native_rtx": false,
+    "cpu_fallback": false,
+    "particles": 221,
+    "triangles": 384,
+    "fixed_particles": 13,
+    "frames": 90,
+    "simulation_seconds": 1.5,
+    "anchor_error_m": 0.0,
+    "mean_free_displacement_m": 0.575594425201416,
+    "minimum_height_m": 0.9830910563468933,
+    "execution_seconds": 6.203377716243267,
+    "scene": "${A100SIM_ROOT}/features/jobs/b0678fd283eb4673985744a58044f276/cloth.usdc",
+    "trajectory": "${A100SIM_ROOT}/features/jobs/b0678fd283eb4673985744a58044f276/cloth.npz"
+  },
+  "gain_tuner": {
+    "joint_count": 2,
+    "joints": [
+      {
+        "name": "joint1",
+        "index": 0,
+        "inertia": 1.0142500400543213
+      },
+      {
+        "name": "joint2",
+        "index": 1,
+        "inertia": 0.1457499861717224
+      }
+    ],
+    "scope": "headless joint discovery and effective inertia; automatic tuning tests not run",
+    "success": true
+  },
+  "installed_extension_count": 292,
+  "enabled_in_robotics_probe_count": 95,
+  "overlay_package_versions": {
+    "coacd": "1.0.7",
+    "fonttools": "4.68.0",
+    "fsspec": "2026.9.0",
+    "tqdm": "4.70.1",
+    "Farama-Notifications": "0.0.6",
+    "mujoco-usd-converter": "0.6.1",
+    "isaacsim-gui": "6.2.0.0",
+    "mujoco": "3.12.0",
+    "numpy-stl": "4.0.0",
+    "newton-usd-schemas": "0.5.0",
+    "isaacsim-robot": "6.2.0.0",
+    "isaacsim-storage": "6.2.0.0",
+    "setuptools": "84.2.1",
+    "scipy": "1.17.1",
+    "PyOpenGL": "3.1.10",
+    "newton": "1.6.1",
+    "PyYAML": "6.0.3",
+    "python-utils": "4.0.0",
+    "kiwisolver": "1.5.1",
+    "isaacsim-test": "6.2.0.0",
+    "cycler": "0.12.1",
+    "joblib": "1.6.0",
+    "isaacsim-asset": "6.2.0.0",
+    "absl-py": "2.4.0",
+    "matplotlib": "3.11.2",
+    "MarkupSafe": "3.0.4",
+    "Jinja2": "3.1.6",
+    "colorama": "0.4.6",
+    "tinyobjloader": "2.0.0rc13",
+    "typing_extensions": "4.16.0",
+    "cloudpickle": "3.1.2",
+    "tzdata": "2026.6",
+    "coverage": "7.17.2",
+    "glfw": "2.10.0",
+    "osqp": "1.1.3",
+    "isaacsim-replicator": "6.2.0.0",
+    "pyparsing": "3.3.3",
+    "isaacsim-rl": "6.2.0.0",
+    "isaacsim-robot-motion": "6.2.0.0",
+    "isaacsim-sensor": "6.2.0.0",
+    "python-dateutil": "4.0.0",
+    "etils": "1.13.0",
+    "isaacsim-robot-setup": "6.2.0.0",
+    "cbor2": "5.9.0",
+    "gymnasium": "1.4.0",
+    "mujoco-warp": "3.12.0",
+    "isaacsim-ros2": "6.2.0.0",
+    "contourpy": "1.4.0"
+  },
+  "fleet": {
+    "timestamp_utc": "2026-11-12T08:54:28.794798+00:00",
+    "services": {
+      "8321": {
+        "status": "ready",
+        "cpu_fallback": false,
+        "native_rtx": false,
+        "uptime_seconds": 1738743.96,
+        "completed": 758,
+        "failed": 0
+      },
+      "18323": {
+        "status": "ready",
+        "cpu_fallback": false,
+        "native_rtx": false,
+        "uptime_seconds": 1815597.49,
+        "completed": 849,
+        "failed": 0
+      },
+      "8320": {
+        "status": "ready",
+        "cpu_fallback": null,
+        "native_rtx": null,
+        "uptime_seconds": 2005600.7,
+        "completed": 0,
+        "failed": 0
+      },
+      "8322": {
+        "status": "ready",
+        "cpu_fallback": false,
+        "native_rtx": false,
+        "uptime_seconds": 90.26,
+        "completed": 15,
+        "failed": 0
+      }
+    },
+    "deployment": "g3005, allocated GPU 2; allocation-bound lifetime",
+    "feature_unit": "active",
+    "gpu": "2, NVIDIA A100-SXM4-80GB, 535.161.08, 53535 MiB, 81920 MiB",
+    "success": true
+  },
+  "source_checks": {
+    "ast_files": 57,
+    "bash_files": 30,
+    "systemd_units": 4,
+    "systemd_exit_code": 0,
+    "systemd_output": "",
+    "unit_tests_exit_code": 0,
+    "unit_tests_output": "test_assets_reject_paths_and_symlinks_outside_configured_root (test_contract.ServiceContractTests.test_assets_reject_paths_and_symlinks_outside_configured_root) ... ok\ntest_mesh_requires_prepared_asset_and_normalizes_orientation (test_contract.ServiceContractTests.test_mesh_requires_prepared_asset_and_normalizes_orientation) ... ok\ntest_queue_rejects_overflow_without_creating_another_job (test_contract.ServiceContractTests.test_queue_rejects_overflow_without_creating_another_job) ... ok\ntest_request_rejects_nonfinite_and_boolean_numeric_values (test_contract.ServiceContractTests.test_request_rejects_nonfinite_and_boolean_numeric_values) ... ok\ntest_restart_marks_unfinished_job_interrupted_without_replaying (test_contract.ServiceContractTests.test_restart_marks_unfinished_job_interrupted_without_replaying) ... ok\ntest_bounded_capture_scan_and_trajectory_requests (test_features.FeatureContractTests.test_bounded_capture_scan_and_trajectory_requests) ... ok\ntest_optional_cloth_is_advertised_only_when_newton_is_present (test_features.FeatureContractTests.test_optional_cloth_is_advertised_only_when_newton_is_present) ... ok\ntest_robot_commands_reject_invalid_shapes_modes_and_nonfinite_values (test_features.FeatureContractTests.test_robot_commands_reject_invalid_shapes_modes_and_nonfinite_values) ... ok\ntest_ros_commands_map_reversed_names_and_reject_ambiguous_modes (test_features.FeatureContractTests.test_ros_commands_map_reversed_names_and_reject_ambiguous_modes) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.019s\n\nOK\n",
+    "success": true,
+    "systemd_host": "g3005"
+  },
+  "limitations": {
+    "native_rtx": "A100 has no RT Cores; the complete official RTX application is unsupported",
+    "annotations": "Custom Mitsuba primary-surface outputs, not Replicator; explicit semantic labels required",
+    "raycast_scan": "Collision-geometry distances, not an RTX LiDAR signal model",
+    "gripper": "Custom PhysX fixed-joint demo verified; official Surface Gripper grasp still unverified",
+    "newton_mujoco_warp": "Conditional graph nodes require CUDA driver 12.4+ on this deployment",
+    "newton_tensor_gpu": "Observed unsupported PTX toolchain with R535; direct XPBD Warp state verified",
+    "cloth": "Standalone Newton model; no bidirectional coupling to the PhysX robot world",
+    "isaac_lab": "Framework and Torch training stack not installed or validated; rl_step is observations only",
+    "asset_postprocessing": "Asset transformer disabled; URDF multi-physics postprocessing disabled",
+    "gain_tuner": "Headless joint discovery and inertia only; complete automatic tuning not accepted",
+    "clean_install": "Pinned installer statically checked; a clean, full network rebuild was not performed"
+  },
+  "sources": [
+    "https://docs.isaacsim.omniverse.nvidia.com/6.2.0/installation/requirements.html",
+    "https://docs.isaacsim.omniverse.nvidia.com/6.2.0/overview/release_notes.html",
+    "https://docs.isaacsim.omniverse.nvidia.com/6.2.0/physics/newton_physics.html",
+    "https://docs.isaacsim.omniverse.nvidia.com/6.2.0/sensors/isaacsim_sensors_physics_raycast.html"
+  ]
+}

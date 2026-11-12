@@ -1,0 +1,625 @@
+{
+  "isaacsim_version": "6.2.0.0",
+  "robotics": {
+    "requested": [
+      "isaacsim.sensors.experimental.physics",
+      "isaacsim.robot.surface_gripper",
+      "isaacsim.robot.experimental.wheeled_robots",
+      "isaacsim.robot_motion.experimental.motion_generation",
+      "isaacsim.robot_motion.controllers",
+      "isaacsim.core.cloner",
+      "omni.physx.vehicle",
+      "isaacsim.robot_setup.gain_tuner"
+    ],
+    "required_extensions": [
+      "carb.audio",
+      "carb.windowing.plugins",
+      "isaacsim.common",
+      "isaacsim.core.cloner",
+      "isaacsim.core.deprecation_manager",
+      "isaacsim.core.experimental.materials",
+      "isaacsim.core.experimental.objects",
+      "isaacsim.core.experimental.prims",
+      "isaacsim.core.experimental.utils",
+      "isaacsim.core.simulation_manager",
+      "isaacsim.gui.components",
+      "isaacsim.robot.experimental.wheeled_robots",
+      "isaacsim.robot.schema",
+      "isaacsim.robot.surface_gripper",
+      "isaacsim.robot_motion.controllers",
+      "isaacsim.robot_motion.experimental.motion_generation",
+      "isaacsim.robot_motion.schema",
+      "isaacsim.robot_setup.gain_tuner",
+      "isaacsim.sensors.experimental.physics",
+      "isaacsim.test.docstring",
+      "omni.activity.core",
+      "omni.appwindow",
+      "omni.assets.plugins",
+      "omni.blobkey",
+      "omni.client",
+      "omni.client.lib",
+      "omni.convexdecomposition",
+      "omni.cubric",
+      "omni.datastore",
+      "omni.debugdraw",
+      "omni.gpu_foundation",
+      "omni.gpu_foundation.shadercache.vulkan",
+      "omni.gpucompute.plugins",
+      "omni.graph",
+      "omni.graph.action",
+      "omni.graph.action_core",
+      "omni.graph.action_nodes",
+      "omni.graph.action_nodes_core",
+      "omni.graph.core",
+      "omni.graph.exec",
+      "omni.graph.tools",
+      "omni.graph.visualization.nodes",
+      "omni.grpc.lib",
+      "omni.hsscclient",
+      "omni.hydra.usdrt_delegate",
+      "omni.inspect",
+      "omni.iray.libs",
+      "omni.kit.actions.core",
+      "omni.kit.async_engine",
+      "omni.kit.audiodeviceenum",
+      "omni.kit.clipboard",
+      "omni.kit.commands",
+      "omni.kit.context_menu",
+      "omni.kit.exec.core",
+      "omni.kit.helper.file_utils",
+      "omni.kit.hotkeys.core",
+      "omni.kit.hydra_texture",
+      "omni.kit.loop",
+      "omni.kit.mainwindow",
+      "omni.kit.manipulator.prim",
+      "omni.kit.manipulator.prim.core",
+      "omni.kit.manipulator.prim.usd",
+      "omni.kit.manipulator.selection",
+      "omni.kit.manipulator.selector",
+      "omni.kit.manipulator.tool.snap",
+      "omni.kit.manipulator.transform",
+      "omni.kit.manipulator.viewport",
+      "omni.kit.material.library",
+      "omni.kit.menu.core",
+      "omni.kit.menu.utils",
+      "omni.kit.notification_manager",
+      "omni.kit.pipapi",
+      "omni.kit.primitive.mesh",
+      "omni.kit.property.adapter.core",
+      "omni.kit.property.adapter.usd",
+      "omni.kit.property.material",
+      "omni.kit.property.physics",
+      "omni.kit.property.usd",
+      "omni.kit.raycast.query",
+      "omni.kit.renderer.capture",
+      "omni.kit.renderer.core",
+      "omni.kit.renderer.imgui",
+      "omni.kit.renderer.init",
+      "omni.kit.stage_template.core",
+      "omni.kit.stage_templates",
+      "omni.kit.test",
+      "omni.kit.uiapp",
+      "omni.kit.usd.layers",
+      "omni.kit.usd.mdl",
+      "omni.kit.usd_undo",
+      "omni.kit.viewport.manipulator.transform",
+      "omni.kit.viewport.registry",
+      "omni.kit.viewport.utility",
+      "omni.kit.viewport.window",
+      "omni.kit.widget.browser_bar",
+      "omni.kit.widget.connection_manager",
+      "omni.kit.widget.context_menu",
+      "omni.kit.widget.filebrowser",
+      "omni.kit.widget.filter",
+      "omni.kit.widget.highlight_label",
+      "omni.kit.widget.layers",
+      "omni.kit.widget.nucleus_connector",
+      "omni.kit.widget.options_button",
+      "omni.kit.widget.options_menu",
+      "omni.kit.widget.path_field",
+      "omni.kit.widget.prompt",
+      "omni.kit.widget.searchfield",
+      "omni.kit.widget.settings",
+      "omni.kit.widget.stage",
+      "omni.kit.widget.text_editor",
+      "omni.kit.widget.toolbar",
+      "omni.kit.widget.viewport",
+      "omni.kit.window.extensions",
+      "omni.kit.window.file",
+      "omni.kit.window.file_exporter",
+      "omni.kit.window.file_importer",
+      "omni.kit.window.filepicker",
+      "omni.kit.window.popup_dialog",
+      "omni.kit.window.preferences",
+      "omni.kit.window.property",
+      "omni.materialx.libs",
+      "omni.mdl",
+      "omni.mdl.neuraylib",
+      "omni.metrics.core",
+      "omni.physics",
+      "omni.physics.physx",
+      "omni.physics.stageupdate",
+      "omni.physics.tensors",
+      "omni.physx",
+      "omni.physx.commands",
+      "omni.physx.cooking",
+      "omni.physx.demos",
+      "omni.physx.foundation",
+      "omni.physx.gpu",
+      "omni.physx.tensors",
+      "omni.physx.ui",
+      "omni.physx.vehicle",
+      "omni.protobuf.lib",
+      "omni.stats",
+      "omni.timeline",
+      "omni.ui",
+      "omni.ui.scene",
+      "omni.uiaudio",
+      "omni.ujitso.default",
+      "omni.usd",
+      "omni.usd.config",
+      "omni.usd.core",
+      "omni.usd.libs",
+      "omni.usd.metrics.assembler",
+      "omni.usd.schema.anim",
+      "omni.usd.schema.audio",
+      "omni.usd.schema.metrics.assembler",
+      "omni.usd.schema.mujoco",
+      "omni.usd.schema.newton",
+      "omni.usd.schema.omnigraph",
+      "omni.usd.schema.physx",
+      "omni.usd.schema.playback",
+      "omni.usd.schema.semantics",
+      "omni.usd_resolver",
+      "omni.usdex.libs",
+      "omni.usdphysics",
+      "omni.usdphysics.ui",
+      "omni.warp.core",
+      "usdrt.scenegraph"
+    ],
+    "cache_extensions": {
+      "omni.graph": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.graph-1.142.6+187cf21b.lx64.r.cp312/"
+      },
+      "omni.ui": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.ui-3.3.10+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.window.property": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.window.property-1.15.2+187cf21b/"
+      },
+      "omni.kit.property.physics": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.property.physics-110.4.4+110.4.0.cp312.u7f4/"
+      },
+      "omni.usd.schema.semantics": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.usd.schema.semantics-0.0.0+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.stage_templates": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.stage_templates-2.0.3+187cf21b/"
+      },
+      "omni.usd.metrics.assembler": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.usd.metrics.assembler-110.1.2+110.1.0.lx64.r.cp312.u7f4/"
+      },
+      "omni.usdex.libs": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.usdex.libs-3.0.0+110.0.0.lx64.r.cp312.u7f4/"
+      },
+      "omni.graph.core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.graph.core-3.1.8+187cf21b.lx64.r/"
+      },
+      "omni.graph.tools": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.graph.tools-1.81.0+187cf21b/"
+      },
+      "omni.appwindow": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.appwindow-1.2.2+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.renderer.imgui": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.renderer.imgui-2.2.1+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.menu.utils": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.menu.utils-2.2.8+187cf21b/"
+      },
+      "omni.kit.widget.context_menu": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.context_menu-1.5.0+187cf21b/"
+      },
+      "omni.kit.widget.highlight_label": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.highlight_label-1.0.3+187cf21b/"
+      },
+      "omni.kit.widget.searchfield": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.searchfield-1.1.8+187cf21b/"
+      },
+      "omni.kit.property.usd": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.property.usd-4.9.18+187cf21b/"
+      },
+      "omni.kit.property.material": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.property.material-1.15.1+187cf21b/"
+      },
+      "omni.kit.material.library": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.material.library-3.1.8+187cf21b/"
+      },
+      "omni.debugdraw": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.debugdraw-0.1.4+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.window.file": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.window.file-2.0.17+187cf21b/"
+      },
+      "omni.kit.widget.text_editor": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.text_editor-1.1.1+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.viewport.utility": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.viewport.utility-2.1.2+187cf21b/"
+      },
+      "omni.kit.primitive.mesh": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.primitive.mesh-1.1.1+187cf21b/"
+      },
+      "omni.usdphysics.ui": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.usdphysics.ui-110.4.4+110.4.0.lx64.r.cp312.u7f4/"
+      },
+      "omni.kit.window.preferences": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.window.preferences-1.8.5+187cf21b/"
+      },
+      "omni.kit.context_menu": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.context_menu-1.10.0+187cf21b/"
+      },
+      "omni.kit.widget.settings": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.settings-2.0.1+187cf21b/"
+      },
+      "omni.kit.window.popup_dialog": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.window.popup_dialog-2.0.26+187cf21b/"
+      },
+      "omni.kit.notification_manager": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.notification_manager-1.0.17+187cf21b/"
+      },
+      "omni.ui.scene": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.ui.scene-2.1.1+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.manipulator.tool.snap": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.manipulator.tool.snap-1.5.15+187cf21b/"
+      },
+      "omni.kit.manipulator.transform": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.manipulator.transform-107.0.1+187cf21b/"
+      },
+      "omni.kit.viewport.window": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.viewport.window-110.0.5+187cf21b/"
+      },
+      "omni.kit.stage_template.core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.stage_template.core-1.1.23+187cf21b/"
+      },
+      "omni.usd.schema.metrics.assembler": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.usd.schema.metrics.assembler-110.1.1+110.1.0.lx64.r.cp312.u7f4/"
+      },
+      "omni.inspect": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.inspect-1.0.2+187cf21b.lx64.r.cp312/"
+      },
+      "omni.usd.schema.omnigraph": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.usd.schema.omnigraph-1.0.1+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.renderer.core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.renderer.core-1.3.2+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.test": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.test-2.2.3+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.usd.mdl": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.usd.mdl-1.1.12+187cf21b.lx64.r.cp312/"
+      },
+      "carb.windowing.plugins": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/carb.windowing.plugins-1.0.1+187cf21b.lx64.r/"
+      },
+      "omni.kit.renderer.capture": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.renderer.capture-2.0.2+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.menu.core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.menu.core-1.3.0+187cf21b/"
+      },
+      "omni.kit.widget.stage": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.stage-4.7.2+187cf21b/"
+      },
+      "omni.kit.clipboard": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.clipboard-1.1.1+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.property.adapter.core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.property.adapter.core-1.1.1+187cf21b/"
+      },
+      "omni.kit.property.adapter.usd": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.property.adapter.usd-1.0.6+187cf21b/"
+      },
+      "omni.usd.schema.playback": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.usd.schema.playback-1.1.0+187cf21b/"
+      },
+      "omni.mdl.neuraylib": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.mdl.neuraylib-0.2.23+187cf21b.lx64.r.cp312/"
+      },
+      "omni.mdl": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.mdl-57.0.6+187cf21b.lx64.r.cp312/"
+      },
+      "omni.materialx.libs": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.materialx.libs-1.0.9+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.helper.file_utils": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.helper.file_utils-0.1.10+187cf21b/"
+      },
+      "omni.kit.window.file_importer": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.window.file_importer-1.1.22+187cf21b/"
+      },
+      "omni.kit.window.file_exporter": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.window.file_exporter-1.0.38+187cf21b/"
+      },
+      "omni.kit.viewport.registry": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.viewport.registry-104.0.6+187cf21b/"
+      },
+      "omni.kit.widget.layers": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.layers-1.9.3+187cf21b/"
+      },
+      "omni.kit.manipulator.prim": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.manipulator.prim-108.0.0+187cf21b/"
+      },
+      "omni.kit.manipulator.selector": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.manipulator.selector-1.1.4+187cf21b/"
+      },
+      "omni.kit.manipulator.selection": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.manipulator.selection-110.1.0+187cf21b/"
+      },
+      "omni.kit.raycast.query": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.raycast.query-1.2.0+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.widget.toolbar": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.toolbar-2.1.0+187cf21b/"
+      },
+      "omni.kit.widget.options_menu": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.options_menu-1.1.7+187cf21b/"
+      },
+      "omni.kit.widget.viewport": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.viewport-110.0.1+187cf21b/"
+      },
+      "omni.kit.renderer.init": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.renderer.init-1.0.1+187cf21b.lx64.r/"
+      },
+      "omni.kit.hotkeys.core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.hotkeys.core-1.6.1+187cf21b/"
+      },
+      "omni.kit.widget.filter": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.filter-1.1.9+187cf21b/"
+      },
+      "omni.kit.widget.options_button": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.options_button-1.0.3+187cf21b/"
+      },
+      "omni.iray.libs": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.iray.libs-0.0.1+187cf21b.lx64.r/"
+      },
+      "omni.kit.window.filepicker": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.window.filepicker-3.0.18+187cf21b/"
+      },
+      "omni.kit.widget.prompt": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.prompt-1.0.7+187cf21b/"
+      },
+      "omni.kit.manipulator.prim.core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.manipulator.prim.core-108.0.2+187cf21b/"
+      },
+      "omni.kit.manipulator.prim.usd": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.manipulator.prim.usd-107.0.3+187cf21b/"
+      },
+      "omni.kit.hydra_texture": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.hydra_texture-1.6.2+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.widget.filebrowser": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.filebrowser-2.14.5+187cf21b/"
+      },
+      "omni.kit.widget.browser_bar": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.browser_bar-2.0.11+187cf21b/"
+      },
+      "omni.kit.widget.connection_manager": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.connection_manager-1.0.4+187cf21b/"
+      },
+      "omni.kit.widget.nucleus_connector": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.nucleus_connector-2.4.0+187cf21b/"
+      },
+      "omni.kit.viewport.manipulator.transform": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.viewport.manipulator.transform-107.0.4+187cf21b/"
+      },
+      "omni.kit.widget.path_field": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.widget.path_field-2.0.14+187cf21b/"
+      },
+      "omni.graph.action": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.graph.action-2.10.2+110.0.0/"
+      },
+      "omni.graph.visualization.nodes": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.graph.visualization.nodes-2.1.4/"
+      },
+      "omni.kit.uiapp": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.uiapp-0.0.0+187cf21b/"
+      },
+      "omni.kit.window.extensions": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.window.extensions-1.7.0+187cf21b/"
+      },
+      "omni.graph.action_nodes": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.graph.action_nodes-2.11.0+110.0.0.lx64.r.cp312.u7f4/"
+      },
+      "omni.kit.manipulator.viewport": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.manipulator.viewport-107.0.1+187cf21b/"
+      },
+      "omni.kit.mainwindow": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.mainwindow-1.0.4+187cf21b/"
+      },
+      "omni.uiaudio": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.uiaudio-1.0.0+187cf21b.lx64.r.cp312/"
+      },
+      "omni.kit.pipapi": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.kit.pipapi-0.0.0+187cf21b/"
+      },
+      "omni.graph.action_core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.graph.action_core-1.1.9+187cf21b.lx64.r.cp312/"
+      },
+      "omni.graph.action_nodes_core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.graph.action_nodes_core-2.11.0+110.0.0.lx64.r.cp312.u7f4/"
+      }
+    }
+  },
+  "assets": {
+    "requested": [
+      "isaacsim.asset.importer.urdf",
+      "isaacsim.asset.importer.mjcf",
+      "isaacsim.asset.exporter.urdf"
+    ],
+    "required_extensions": [
+      "carb.audio",
+      "isaacsim.asset.exporter.urdf",
+      "isaacsim.asset.importer.mjcf",
+      "isaacsim.asset.importer.urdf",
+      "isaacsim.asset.importer.utils",
+      "isaacsim.asset.transformer",
+      "isaacsim.asset.transformer.rules",
+      "isaacsim.core.deprecation_manager",
+      "isaacsim.core.experimental.utils",
+      "isaacsim.robot.schema",
+      "omni.activity.core",
+      "omni.assets.plugins",
+      "omni.blobkey",
+      "omni.client",
+      "omni.client.lib",
+      "omni.convexdecomposition",
+      "omni.cubric",
+      "omni.datastore",
+      "omni.gpu_foundation",
+      "omni.gpu_foundation.shadercache.vulkan",
+      "omni.gpucompute.plugins",
+      "omni.graph.exec",
+      "omni.grpc.lib",
+      "omni.hsscclient",
+      "omni.hydra.usdrt_delegate",
+      "omni.kit.actions.core",
+      "omni.kit.async_engine",
+      "omni.kit.audiodeviceenum",
+      "omni.kit.commands",
+      "omni.kit.exec.core",
+      "omni.kit.primitive.mesh",
+      "omni.kit.stage_template.core",
+      "omni.kit.stage_templates",
+      "omni.kit.usd.layers",
+      "omni.kit.usd_undo",
+      "omni.metrics.core",
+      "omni.physics",
+      "omni.physics.physx",
+      "omni.physx",
+      "omni.physx.cooking",
+      "omni.physx.foundation",
+      "omni.physx.gpu",
+      "omni.protobuf.lib",
+      "omni.scene.optimizer.core",
+      "omni.stats",
+      "omni.timeline",
+      "omni.ujitso.default",
+      "omni.usd",
+      "omni.usd.config",
+      "omni.usd.core",
+      "omni.usd.libs",
+      "omni.usd.metrics.assembler",
+      "omni.usd.schema.anim",
+      "omni.usd.schema.audio",
+      "omni.usd.schema.metrics.assembler",
+      "omni.usd.schema.mujoco",
+      "omni.usd.schema.newton",
+      "omni.usd.schema.physx",
+      "omni.usd_resolver",
+      "omni.usdex.libs",
+      "omni.usdphysics",
+      "omni.warp.core",
+      "usdrt.scenegraph"
+    ],
+    "cache_extensions": {
+      "omni.scene.optimizer.core": {
+        "package": "isaacsim-extscache-kit",
+        "prefix": "isaacsim/extscache/omni.scene.optimizer.core-110.3.1+110.2.0.lx64.r.cp312.u7f4/"
+      }
+    }
+  }
+}

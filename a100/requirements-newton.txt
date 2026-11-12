@@ -1,0 +1,15 @@
+# Linux x86_64 / CPython 3.12; install with --no-deps to preserve base NumPy.
+absl-py==2.4.0 --hash=sha256:88476fd881ca8aab94ffa78b7b6c632a782ab3ba1cd19c9bd423abc4fb4cd28d
+cbor2==5.9.0 --hash=sha256:4cd43d8fc374b31643b2830910f28177a606a7bc84975a62675dd3f2e320fc7b
+coacd==1.0.7 --hash=sha256:d1d330c03cdd3f5a571677d5cbb991a51d96bd0e157a34b0fb3623d7ed3b1886
+etils==1.13.0 --hash=sha256:d9cd4f40fbe77ad6613b7348a18132cc511237b6c076dbb89105c0b520a4c6bb
+glfw==2.10.0 --hash=sha256:ce6724bb7cb3d0543dcba17206dce909f94176e68220b8eafee72e9f92bcf542
+mujoco==3.12.0 --hash=sha256:7ec16ce408871a0a9157cc556958ab66cd34db9fc1dccd3ef07717170163a4e0
+mujoco-usd-converter==0.6.1 --hash=sha256:e21e3b24b1877c0489b37624de43f59f34e98662e387e348e0b83271d4572d36
+mujoco-warp==3.12.0 --hash=sha256:a0d5d5df854dbf49727cbe2463f8b1c44117cc979cf17ae91d81f291ae0a3b62
+newton==1.6.1 --hash=sha256:0dbabb85228eeac9f2750347a3f4ce502ad41a9bf19d43f55c6c8e4458b7e318
+newton-usd-schemas==0.5.0 --hash=sha256:edb559522474855fc03e6f395e0702b11074a13fe1c2ed9cce63fbb06516b342
+numpy-stl==4.0.0 --hash=sha256:8ee1413d12699c8a97821dc5d5f105d047c1aeecc3869dfcf1d92b50272da59c
+PyOpenGL==3.1.10 --hash=sha256:794a943daced39300879e4e47bd94525280685f42dbb5a998d336cfff151d74f
+python-utils==4.0.0 --hash=sha256:96b969a878bbc147e69db60aac7c618ff97f7e5e03e9d78ade85d764af71faa5
+tinyobjloader==2.0.0rc13 --hash=sha256:81433d5828bfe5c88a1dabf1185a6e7e73dcde15b66c5a65bcce51340fd444b7
