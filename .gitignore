@@ -1,4 +1,6 @@
 # all folders starting with _ are local
+/.env
+/state/
 _*/
 .ci-dashboard-venv/
 !_impl/

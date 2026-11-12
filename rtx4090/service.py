@@ -87,6 +87,7 @@ class RtxQueue(PhysicsQueue):
         result = super().health()
         result.update(
             native_rtx=True,
+            render_backend="native_rtx",
             physical_gpu=self.gpu,
             gpu_uuid=os.environ.get("RTX4090_GPU_UUID"),
             isaac_sim=self.runtime_version,
@@ -112,6 +113,7 @@ class RtxQueue(PhysicsQueue):
     def capture_scene(self, stage: Any, capture: dict[str, Any], image: Path) -> dict[str, Any]:
         """Write aligned RGB, metric camera depth and semantic IDs from RTX."""
         print("RTX_CAPTURE_INITIALIZING", str(image), flush=True)
+        import asyncio
         import carb
         import numpy as np
         import omni.kit.app
@@ -160,7 +162,16 @@ class RtxQueue(PhysicsQueue):
                 self.app.update()
             # The timeline remains paused: rendering must not advance the state
             # whose tensor poses were exported by the physics stage.
-            rep.orchestrator.step(rt_subframes=max(8, capture["spp"]), delta_time=0.0, pause_timeline=True)
+            task = asyncio.ensure_future(rep.orchestrator.step_async(
+                rt_subframes=max(8, capture["spp"]), delta_time=0.0, pause_timeline=True,
+            ))
+            deadline = time.monotonic() + 120
+            while not task.done():
+                self.app.update()
+                if time.monotonic() > deadline:
+                    task.cancel()
+                    raise TimeoutError("RTX capture did not produce a frame within 120 seconds")
+            task.result()
             print("RTX_CAPTURE_READING_ANNOTATORS", flush=True)
             rgb = np.asarray(annotators["rgb"].get_data())
             depth = np.asarray(annotators["depth"].get_data(), dtype=np.float32).squeeze()

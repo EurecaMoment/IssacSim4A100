@@ -1,5 +1,53 @@
 # IssacSim4A100
 
+## main：4090 / A100 / A800 统一部署
+
+`main` 包含 A100 方案与 `4090` 分支，通过 [deploy.sh](deploy.sh) 自动识别所选显卡并启动对应后端。
+三种卡使用相同的场景输入、HTTP 客户端与任务状态约定，CUDA PhysX 始终在 GPU 上运行。
+
+| 显卡 | 自动渲染路径 | 主要能力 |
+| --- | --- | --- |
+| GeForce RTX 4090 | 官方 RTX / Replicator | RGB、米制深度、语义标签、USD |
+| A100 / A800 | Mitsuba / Dr.Jit CUDA，关闭 Kit RTX | RGB、mesh / 自定义 Gaussian、USD、常驻批量快速路径 |
+
+```bash
+GIT_LFS_SKIP_SMUDGE=1 git clone --branch main https://github.com/EurecaMoment/IssacSim4A100.git
+cd IssacSim4A100
+cp .env.example .env
+# 按下文设置运行时路径；默认自动选择已识别且显存占用最低的一张卡。
+bash deploy.sh detect
+bash deploy.sh prepare
+bash deploy.sh smoke
+bash deploy.sh serve
+```
+
+RTX 机器需要安装官方 Isaac Sim 6.x standalone，并在根目录 `.env` 设置
+`ISAAC_SIM_DIR=/absolute/path/to/isaacsim`；`prepare` 直接检查并复用安装，不重新下载。
+A100/A800 的 `prepare` 使用下文 A100 安装流程准备隔离运行时、系统库、匹配驱动的 OptiX 库和 Dr.Jit 补丁；
+需要预装 CUDA Toolkit、`uv` 和该流程列出的系统工具，允许用户命名空间，并接受 NVIDIA 条款后设置
+`OMNI_KIT_ACCEPT_EULA=YES`。已有运行时可用 `A100SIM_ROOT` / `A100SIM_CONFIG` 复用。
+新机器默认读取实际 NVIDIA 驱动版本，优先使用 `/usr/local/cuda-12.2`，不存在时使用 `/usr/local/cuda`；
+特殊驱动包可设置 `A100SIM_NVIDIA_DEB_URL`。复用运行时不等于通过验收，应继续运行 `smoke`。
+
+统一入口默认 `http://127.0.0.1:8321`；设置 `ISAACSIM_PORT` 可以调整。
+CUDA 后端由入口同时管理通用服务和常驻批量前端，内部端口默认 18323，可用 `ISAACSIM_INTERNAL_PORT` 调整；
+RTX 后端启动单个原生服务。Ctrl+C 会停止这次入口启动的服务。
+
+```bash
+python3 a100/examples/client.py a100/examples/cube.json --url http://127.0.0.1:8321 --wait-ms 0
+```
+
+GPU 识别使用 `nvidia-smi` 的物理编号、UUID 和型号表。`ISAAC_GPU=auto` 选择已识别且显存占用最低的卡；
+也可设置物理编号或完整 UUID，调度环境应指定已分配的卡。它不提供 GPU 资源预留。
+RTX / L4 / L40 / A10 / A16 / A40 型号进入 RTX 路径，A100/A800 进入 CUDA 路径；
+未知型号会明确报错，可由用户设置 `ISAACSIM_BACKEND=rtx|cuda`，不会自动转为 CPU。
+A100/A800 强制设置 RTX 会被拒绝。请不要同时设置 `CUDA_VISIBLE_DEVICES`，以免 Vulkan 与 CUDA 编号错位。
+
+已在真实 4090、A100-SXM4-80GB 和 A800-SXM4-80GB 上确认识别结果。
+4090 已通过统一入口完成原生仿真与 RGB-D/语义请求验收，记录在 `state/main-http-acceptance.json`；
+13 项部署与协议测试通过。本次未重新执行 A100/A800 的完整全新依赖安装。
+CUDA 分支保留原 A100 能力，尚不提供原生 RTX 传感器或深度/语义 HTTP 输出。
+
 ## RTX 4090 分支
 
 `4090` 分支新增 [rtx4090/](rtx4090/)，复用下述 A100 服务的请求校验、场景构建、CUDA PhysX、
