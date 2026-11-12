@@ -1,13 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/config.sh"
-actual_uuid="$(nvidia-smi --query-gpu=uuid --format=csv,noheader --id="$ISAAC_GPU" | tr -d '[:space:]')"
-[[ "$actual_uuid" == GPU-* ]] || { echo "Cannot resolve the selected physical GPU" >&2; exit 2; }
-if [[ -n "${A100SIM_EXPECTED_GPU_UUID:-}" && "$actual_uuid" != "$A100SIM_EXPECTED_GPU_UUID" ]]; then
-    echo "Selected GPU does not match A100SIM_EXPECTED_GPU_UUID" >&2
-    exit 2
-fi
-export ISAAC_GPU="$actual_uuid"
+source "$A100SIM_CODE_ROOT/resolve-gpu.sh"
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-8}" OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
 umask 077
 export A100SIM_FEATURES_ROOT="${A100SIM_FEATURES_ROOT:-$A100SIM_ROOT/features}"

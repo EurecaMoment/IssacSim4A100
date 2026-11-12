@@ -1,25 +1,40 @@
 {
   "captured_at": "2026-11-12",
-  "description": "SHA-256 of the original deployment sources before portability edits; paths are relative to a100/.",
+  "description": "SHA-256 of portable adapter files, with paths relative to a100/. Runtime downloads and local configuration are excluded.",
   "upstream_repository": "https://github.com/isaac-sim/IsaacSim",
   "upstream_commit": "74a9356b20250dd60337d90b4b4d913c9454d32b",
   "runtime_python_package": "6.2.0.0",
   "runtime_build": "6.2.0-rc.14+release.52805.02189a84.gl",
   "files": [
     {
-      "path": "GPU2-\u8fd0\u884c\u8bf4\u660e.txt",
-      "sha256": "af91f498145bf8e14137905c606d9da443fb3e52633b66aef71dbb099b330a22",
-      "bytes": 6638
+      "path": ".env.example",
+      "sha256": "9f99837ef04fc7d5d1757f700df5275b5ed4fdff11bd1905a9ceb83990fcd093",
+      "bytes": 2240
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "463cd560b89921ff72c43a61a8c3a4276631a09251521a1038fa5a9058d55550",
+      "bytes": 59
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "df4997349326ec38496df4434ce5c5f8b6fff61719c56e03115665dc6b8dac50",
+      "bytes": 331
     },
     {
       "path": "a100sim/__init__.py",
-      "sha256": "bed9cd6c95b14033c6326c37be6a67ff350441e652903a1d1c27b7cbb7eed482",
-      "bytes": 96
+      "sha256": "e3970cc0bead9b6c9e77562cd364ffa38a59de3e71749894c9b41cfe1c3324e2",
+      "bytes": 95
+    },
+    {
+      "path": "a100sim/annotations.py",
+      "sha256": "0d9bc0669d85f22839515a1ada18e2ac19e7ca6432620e89ef30748922057b1b",
+      "bytes": 5498
     },
     {
       "path": "a100sim/app.py",
-      "sha256": "d4a2bd2fc657188ae90494eddd3ce9bc3bbbd71f4663334454699be8b510ea5e",
-      "bytes": 3381
+      "sha256": "e9e6b22a11d9df7ac546201384dd79abbddbed0a5a735e9efad306c726ba11ee",
+      "bytes": 4503
     },
     {
       "path": "a100sim/batch_physics.py",
@@ -37,9 +52,24 @@
       "bytes": 987
     },
     {
+      "path": "a100sim/feature_service.py",
+      "sha256": "8c7711729e8f8020c4b967031f53bec76eb343d35851bd2c36ccaa829f46783a",
+      "bytes": 16425
+    },
+    {
       "path": "a100sim/gaussian.py",
       "sha256": "17df831ea3487413d3c3a2c85ac3c40a8e477b07bb4f0540f6670fd4c3866feb",
       "bytes": 6498
+    },
+    {
+      "path": "a100sim/grasping.py",
+      "sha256": "a22b0dfb983d89ec8dcc07a0e731eafaa5a0c735efd40db3ca78041acf86662f",
+      "bytes": 6391
+    },
+    {
+      "path": "a100sim/host.py",
+      "sha256": "e58ea23e1fbe02277818b0d323f06960481b070cbddd102860a8c1becd9f8967",
+      "bytes": 2150
     },
     {
       "path": "a100sim/hybrid_integrator.py",
@@ -47,9 +77,19 @@
       "bytes": 5902
     },
     {
+      "path": "a100sim/newton_cloth.py",
+      "sha256": "365ef35943ea0bf4159e1bd472308ec660fcea1e7f72abb4d84529d96b5c13b1",
+      "bytes": 5246
+    },
+    {
+      "path": "a100sim/newton_compat.py",
+      "sha256": "0345976445c9d3333a7fe500d6200216b4091a5f5713a8ed87f2410d0e54ff6f",
+      "bytes": 4342
+    },
+    {
       "path": "a100sim/physics_service.py",
-      "sha256": "09f5d9652f148c23a1e1a48e7f3ed3e991dc29ca01130a048a32024a2d379f08",
-      "bytes": 18822
+      "sha256": "d59c46b003d8746dc5b009d7fb18b54555672f441777404b530b6bf1a6b79bcd",
+      "bytes": 18823
     },
     {
       "path": "a100sim/probe_batch_render.py",
@@ -73,18 +113,28 @@
     },
     {
       "path": "a100sim/resident_service.py",
-      "sha256": "4cd69e1abc75a36595b10f833b90e5b4504c6b993cb36cbb877b60a7d98af9db",
+      "sha256": "7fbfe8e88a5da02cec82b903716c4906ca880e166b8af9511b7af0e7cc4c1fcd",
       "bytes": 30066
     },
     {
+      "path": "a100sim/robotics.py",
+      "sha256": "bf79682c5180412a64f4e65b6fad6f6fb4cf143cf2e831c70374513db7948e39",
+      "bytes": 17567
+    },
+    {
+      "path": "a100sim/ros2_bridge.py",
+      "sha256": "57a3e95606391325107a5c3b751e53dfbb449b551c14e67514458276474cee08",
+      "bytes": 7370
+    },
+    {
       "path": "a100sim/service_queue.py",
-      "sha256": "8492f4702468fbb1b8e3d7fc258d4772b43d2c7a4a41d49ccde7b9785ed08a41",
-      "bytes": 7875
+      "sha256": "0a8cb17fd3b2c307eda87bb845a5a419aca01bdba59d0a06732ebf42d7df59d4",
+      "bytes": 7934
     },
     {
       "path": "a100sim/usd_renderer.py",
-      "sha256": "2361a5d4ff897898cfc06a31be521b7934fd65d0b6d2a6965e5f98ca52259631",
-      "bytes": 10287
+      "sha256": "e11df189fda4eb60018ea4eebe7ff06a6c75df8cdf1dfb0e388904bf029d77d0",
+      "bytes": 11248
     },
     {
       "path": "a100sim/validate_batch_render.py",
@@ -93,18 +143,18 @@
     },
     {
       "path": "a100sim/validate_resident.py",
-      "sha256": "7cce0be676ae32248fbb7eca4f2503d53bf011ac6c66581c146c7304f9674258",
-      "bytes": 3973
+      "sha256": "69fba78984f9dd38cf63f712fffd0657dd4352e479909187dc870325732f91de",
+      "bytes": 4875
     },
     {
-      "path": "benchmarks/gpu2_http.py",
-      "sha256": "66f5d87094ff2e41f89aec21135448d862a96a0c5c15d22c01cd089f7ba7802b",
-      "bytes": 7409
+      "path": "benchmarks/benchmark_http.py",
+      "sha256": "a9611ce8c30f2a13872eeef84218d38cfcf8e30cad38741463046781cfff94be",
+      "bytes": 9566
     },
     {
       "path": "benchmarks/validate_completion.py",
-      "sha256": "5c9ebd29a73922413ae3986fc1b311f8de47d578926e5673db7262f79aa0d668",
-      "bytes": 3592
+      "sha256": "5405836e28c70624db2ac9476a6237d95734ed0d293afcbedd75a0908712f875",
+      "bytes": 3706
     },
     {
       "path": "benchmarks/validate_controls.py",
@@ -112,14 +162,119 @@
       "bytes": 3303
     },
     {
+      "path": "benchmarks/validate_features.py",
+      "sha256": "fdb374a20dc932ae66b97f6c40e0fb7bb5f1c4cc415f068f6660608b9100ae89",
+      "bytes": 9135
+    },
+    {
       "path": "benchmarks/validate_http.py",
-      "sha256": "61d9067e68dba2dbbab2612b3b9b64d56e817b0875619f3f3eab58e67a74df40",
-      "bytes": 2962
+      "sha256": "85ca0866bd7ebfcdaeb250a463739f2163c41630fe360d31b8fc21951aa611da",
+      "bytes": 3003
+    },
+    {
+      "path": "build-drjit.sh",
+      "sha256": "5fd2a9d82b122178d6322bead1553a06deb168b74f8c874adcd63492fb28dd99",
+      "bytes": 1601
+    },
+    {
+      "path": "build-newton-kernels.sh",
+      "sha256": "50cfc6366c2e28a167c43c2b18d86c9d260e31f83fa55c38c3080cbbbb975748",
+      "bytes": 254
+    },
+    {
+      "path": "config.sh",
+      "sha256": "130374a12e16d63561d3174be532f6938e261d478243640f0fb8180865b921f8",
+      "bytes": 2477
+    },
+    {
+      "path": "doctor.sh",
+      "sha256": "3cb5bd475db4d3456c5c2f1ec9db5b854793c6357e63fddcf423e26d056a7f78",
+      "bytes": 301
+    },
+    {
+      "path": "examples/client.py",
+      "sha256": "fb64435aa846261ab1efce966a88ca977d564f256bfd6d49e5e77aa5c377536b",
+      "bytes": 1825
+    },
+    {
+      "path": "examples/cube.json",
+      "sha256": "b80fc7277e3516aedfed2133f943e3d3db4f28bd6d83c1816377b282647dee68",
+      "bytes": 837
+    },
+    {
+      "path": "examples/denoise_image.py",
+      "sha256": "2bc2b90b375e5905a6a041d1b55b5d3a00efd9fc8a4581d85672f22e11cceb2d",
+      "bytes": 3212
+    },
+    {
+      "path": "examples/feature_client.py",
+      "sha256": "af8b3563f3d219c7a18b41a3582811c00658b218343e2ca0c75421fe144165b9",
+      "bytes": 1909
+    },
+    {
+      "path": "examples/features-preview.jpg",
+      "sha256": "730292431581fb214274eabb3e59c7ab345af68474117460baad762fde47361d",
+      "bytes": 205649
+    },
+    {
+      "path": "examples/import_robot.py",
+      "sha256": "38eab3803e2b0d507d4a801b431fb5c99958b8287fffc6ec05fe5c93bd46cf69",
+      "bytes": 5915
+    },
+    {
+      "path": "examples/make_scene.py",
+      "sha256": "93a3f86d8c763b815a398b839f5f47001844ed97f6a1e5f7e292ddb6cde73153",
+      "bytes": 4762
+    },
+    {
+      "path": "examples/newton_native.py",
+      "sha256": "1515181b3a4c1c915d86515e0187ddd317dbb15b8d31f39e15b64d7ab00cd6cd",
+      "bytes": 6764
+    },
+    {
+      "path": "examples/newton_xpbd.py",
+      "sha256": "f194969d101c299f6d2173c4b308d097cf5f829c055e55e52568d49a519fdf60",
+      "bytes": 3612
+    },
+    {
+      "path": "examples/prepare_fasttrellis_assets.py",
+      "sha256": "9d22859532120a91ebbc0b2f181690dbccf36da2078840d347df10208635a624",
+      "bytes": 6189
+    },
+    {
+      "path": "examples/robots/two_link.urdf",
+      "sha256": "6ed3b4c83cbd3ee882f6f2d5a712e2815fa8cdc60575e299352704759ca51e24",
+      "bytes": 894
+    },
+    {
+      "path": "examples/robots/two_link.xml",
+      "sha256": "3ee1494678f53536ac04ef5d68705c9934c6b6346993e045b4d823e3e1934d41",
+      "bytes": 463
+    },
+    {
+      "path": "examples/scene-preview.jpg",
+      "sha256": "cba25a649b9552e3fc31305c002484e9f837685a118e08814fe6468295397fe2",
+      "bytes": 84111
+    },
+    {
+      "path": "get-driver-libs.sh",
+      "sha256": "86b77ee5e5c40a944e5400eb93cc8cee182344efaf7525642d2ab260c5c083a9",
+      "bytes": 2444
+    },
+    {
+      "path": "install-features.sh",
+      "sha256": "242c71f410e357afe2ee9f2cb339d55fd728c60ea9b24567fbcfd984963f8e3b",
+      "bytes": 1734
     },
     {
       "path": "install-libs.sh",
-      "sha256": "17298133c1069a6c20ca83d032e28fcaf1bbd5bc900bb0559aed4692ef6b235b",
-      "bytes": 735
+      "sha256": "6a771aac7b2fb34a4af909b651e6a61b4b1f6b7729a8a549ff01dae6c73d0081",
+      "bytes": 933
+    },
+    {
+      "path": "install-systemd.sh",
+      "sha256": "a60cdd526dc5702f6fe7587cdd0aef75fe5e0f121503a9ee1cf6d496121648c5",
+      "bytes": 209
     },
     {
       "path": "isaac_sam3d_demo.py",
@@ -128,18 +283,23 @@
     },
     {
       "path": "namespace.sh",
-      "sha256": "171c41c3a95967acf9a3d2511a5ff0380d4cdebdc298f106e8567059266197fd",
-      "bytes": 1952
+      "sha256": "392485719252979e3a7a7f1570f59812fee161f65418f043d5a0797766afb38a",
+      "bytes": 2786
+    },
+    {
+      "path": "patches/drjit-core-a100.patch",
+      "sha256": "f2d428db2a520eab2d9e84f79efa55f94ae6e855260fb1b209d005eb50b10b61",
+      "bytes": 2115
     },
     {
       "path": "physics_smoke.py",
-      "sha256": "88ca553e4481f251fb85f127c5b9354d522c32d47ed57dee649c1e08eeb6eb08",
-      "bytes": 4015
+      "sha256": "caed5c07b2996576bd723958f34640283a3670383bef896d8f344b7a1f5aaca7",
+      "bytes": 4088
     },
     {
       "path": "prepare.sh",
-      "sha256": "e871d3ef0d516390e68d68c092bf99afd2a19d6768616bcadcf6e803aa11a87e",
-      "bytes": 1013
+      "sha256": "39724f6d973af757fab0213985aae8f8747d1432c7ec0e0d81c9fb045f626d8f",
+      "bytes": 2425
     },
     {
       "path": "prepare_mesh.py",
@@ -152,9 +312,39 @@
       "bytes": 1281
     },
     {
+      "path": "requirements-assets.txt",
+      "sha256": "0fb42554eeedd14fca25f987ca63cd8edebb2af20512ea014b77c13da1fb8046",
+      "bytes": 126
+    },
+    {
+      "path": "requirements-features.txt",
+      "sha256": "14853e0c53adf10787719a59aaad1f89e12e0b88a6771ee2bdcba2f7badca844",
+      "bytes": 2390
+    },
+    {
+      "path": "requirements-http.txt",
+      "sha256": "ba814ade038332b2892e7d3aec9de11f5ea1c76e06221e41d66ecf022857cc03",
+      "bytes": 173
+    },
+    {
+      "path": "requirements-newton.txt",
+      "sha256": "8bf06aef61e08ecbb7ff8f2d9336b2e51d0e6a92a58d0dbc801452f07fb40152",
+      "bytes": 1434
+    },
+    {
       "path": "requirements-performance.txt",
       "sha256": "3f9028edc3638ab88ee407a0c6e00cc52fd6d2d35c32bfdeae27d302fdd3f4c3",
       "bytes": 176
+    },
+    {
+      "path": "requirements-render.txt",
+      "sha256": "fc694b039b7f9df7d23d7e19eeb1dd014c0f3838fdc5a98e247216b48d767f5e",
+      "bytes": 86
+    },
+    {
+      "path": "requirements-runtime.txt",
+      "sha256": "d8623f4812df5b6053a7cc72b32874ba534fcdd2f21e1d8bfdc9352c850c9283",
+      "bytes": 264
     },
     {
       "path": "research/app_framework.py",
@@ -167,14 +357,39 @@
       "bytes": 2354
     },
     {
+      "path": "research/extension-inventory.json",
+      "sha256": "4933328bda852ed3152672a9bbb098b310ea1d07897db44f833fa3d36729ed88",
+      "bytes": 108901
+    },
+    {
       "path": "research/extension.toml",
       "sha256": "93db99f62f92cf6d1ff25fc8c24c781b327bca698f1266239dc54440f2542741",
       "bytes": 6800
     },
     {
+      "path": "research/feature-extensions.json",
+      "sha256": "551be9c4d4145c8e00b6f3661414a32bff5ef75e400f79f0ddf19079589e9d20",
+      "bytes": 23805
+    },
+    {
+      "path": "research/feature-package-lock.json",
+      "sha256": "305fd46d92ddcf385379d382063a1c8980dca1ed9976235e6b875db047d4b4fe",
+      "bytes": 12627
+    },
+    {
+      "path": "research/feature-validation.json",
+      "sha256": "c81e8c93746d84771a1a62b94f82db324bd465a9045463fd3633126fff48c025",
+      "bytes": 23771
+    },
+    {
+      "path": "research/fetch_feature_extensions.py",
+      "sha256": "6492191ccabb3bc331233288edb8e04069635c85a96120529f6a1de90ae921f2",
+      "bytes": 3415
+    },
+    {
       "path": "research/fetch_physics_extensions.py",
-      "sha256": "dc8ca30c6d304d2509f3977cea0170f08d8a8d76d0839fbfec18db3baa3aec5b",
-      "bytes": 4424
+      "sha256": "72f68e59d6cb04f18f692612c6cb88b5a036e5bac33dadf4d10ecb041613f30f",
+      "bytes": 4719
     },
     {
       "path": "research/gaussian_test.py",
@@ -183,8 +398,13 @@
     },
     {
       "path": "research/hybrid_probe.py",
-      "sha256": "632386ee54899e4caa1b01d306f5ab1be65a661dc51ab9eaafc285750c8183fa",
-      "bytes": 983
+      "sha256": "4e35eabd8042c349a6990bdd9d9afc61611fdaf519f401973ed3a1a17e0f012f",
+      "bytes": 1062
+    },
+    {
+      "path": "research/inspect_features.py",
+      "sha256": "8258475b56ec6b6202cb432b840bfc3d27614b191ac9e551417be29ed3986429",
+      "bytes": 2485
     },
     {
       "path": "research/introspect_mitsuba.py",
@@ -203,8 +423,8 @@
     },
     {
       "path": "research/physics-extensions.json",
-      "sha256": "39a883e07c45b79162ba6702ca53e930b78a19c5e97256b9e87b818a8a1744c5",
-      "bytes": 970
+      "sha256": "89453a7f0f62197b9400fef52df8b9c2423e69e54b9143154f43c6351a1955fb",
+      "bytes": 971
     },
     {
       "path": "research/range_wheel.py",
@@ -222,64 +442,169 @@
       "bytes": 1557
     },
     {
+      "path": "resolve-gpu.sh",
+      "sha256": "7c73a188b48aee3b73b7acb30f8eb0091148b7df199684aa900da317077403e0",
+      "bytes": 313
+    },
+    {
+      "path": "run-assets.sh",
+      "sha256": "215da5995157d4f2e38afb1652955809f81e431705b5b7a40f44e8c8122bf018",
+      "bytes": 333
+    },
+    {
+      "path": "run-features.sh",
+      "sha256": "c013212a09e8e67f55a0b0f098e3cfc9b5ae5d78512c90764985c666eb04258c",
+      "bytes": 1593
+    },
+    {
       "path": "run-isaac-sam3d.sh",
-      "sha256": "743cbe7ce3e5ebc96021421ab112d6f502102de10abacd1c79e79d469dead7c0",
-      "bytes": 952
+      "sha256": "3acfae386e4a06824613a83703dfec5aca1b3fdea964b13d856ba5e9e4bcd070",
+      "bytes": 177
+    },
+    {
+      "path": "run-newton.sh",
+      "sha256": "59d49516a94edefd17fc6b45bebd130ae95840aabe57eb2e4548d5a58f4e7e30",
+      "bytes": 488
     },
     {
       "path": "run-physics-fixed.sh",
-      "sha256": "727ad008037ff565f87e943ad5a41d1c4affd39dd37279f4f0fd1beba66e1248",
-      "bytes": 860
+      "sha256": "e7f0e8897a98cb390c629560fe9cb6274763da0b2eaabbcb6a6cf17c88f5007b",
+      "bytes": 1247
     },
     {
       "path": "run-python.sh",
-      "sha256": "9edd76cc4cef0039648d80f7e2d39daeffdb116fdbd5bf33158b49f29267bfd8",
-      "bytes": 614
+      "sha256": "388520b298a39807ee585265c5da596c46bb7fd8e6bf865cf3f5d412b4503cf1",
+      "bytes": 115
     },
     {
       "path": "run-render-fixed.sh",
-      "sha256": "dcefe4800221f76e95e98c37624f1867342728c5ad55ff8dff3ab3a3f7f8c827",
-      "bytes": 646
+      "sha256": "441cc187468f81d6ded704d072eedf91e05db6a44b923e24915be8a1defcbd0d",
+      "bytes": 821
     },
     {
       "path": "run-render.sh",
-      "sha256": "9568f61998062faeee6a58dc60c464f2ec067b5bfdc0d4d94114c08c9c36f5ad",
-      "bytes": 523
+      "sha256": "24ad08bc8c82332480e488e47766fe0a2058a13002a6dbf6b481063e945db883",
+      "bytes": 114
     },
     {
-      "path": "serve-gpu2.sh",
-      "sha256": "220efb866e3a7a92d9f5f6270b234c638415fb3a311fe17c49c5a7b746fa1e00",
-      "bytes": 1380
+      "path": "run-ros2.sh",
+      "sha256": "b507f8218cc7bd2131daca22a089eae3aa9d4e94c0619f2a90f32f87f89a1431",
+      "bytes": 919
+    },
+    {
+      "path": "scripts/build_newton_kernels.py",
+      "sha256": "9e54479b5d8f0dcd5d82e9929044e633197912bcd1c7839610821eecba285a0e",
+      "bytes": 5263
+    },
+    {
+      "path": "scripts/doctor.py",
+      "sha256": "ffe9da80f7fa31ae2723de032ba43c0db92a2c2766a966e2cd75239706637d7e",
+      "bytes": 3227
+    },
+    {
+      "path": "scripts/install_feature_wheels.py",
+      "sha256": "57d1885b4231a62de047477a11994e0db1c207ce79f38d8142b716c5c0bfd7ea",
+      "bytes": 2630
+    },
+    {
+      "path": "scripts/install_systemd.py",
+      "sha256": "b5b17fc32d430fd135707c04a8517c0062045ac5890959560980caad0940d1b2",
+      "bytes": 1197
+    },
+    {
+      "path": "scripts/smoke_gpu.py",
+      "sha256": "c052bebd109fc2c58ac23d97bb117c72dd7923280a2ef7aa0069fa29919be3e1",
+      "bytes": 1766
+    },
+    {
+      "path": "scripts/wait_ready.py",
+      "sha256": "a47d54e51428f108e5deb6ce6ca8e0f78a40f100cb48b943e12d96945f8911e9",
+      "bytes": 1502
+    },
+    {
+      "path": "serve-features.sh",
+      "sha256": "6836da8608cceeaedd2ede702c882cf3d94e6e7b4d8dcdf44a8fa969b20656ec",
+      "bytes": 525
+    },
+    {
+      "path": "serve.sh",
+      "sha256": "85171326f9587f568d68253915a9f583bcb281315f22a62898d3a1745a8f3b21",
+      "bytes": 1804
     },
     {
       "path": "start-a100-physics.sh",
-      "sha256": "d05f813cb6ad457158184f236f255d20a38194c96ac6141549efe93616b6b715",
-      "bytes": 186
+      "sha256": "958bb66375892a4ae21cd5a44b99d9f14e9db0825ba5e1ca9c472d53d408b261",
+      "bytes": 103
     },
     {
       "path": "start-a100-render.sh",
-      "sha256": "d05f813cb6ad457158184f236f255d20a38194c96ac6141549efe93616b6b715",
-      "bytes": 186
+      "sha256": "958bb66375892a4ae21cd5a44b99d9f14e9db0825ba5e1ca9c472d53d408b261",
+      "bytes": 103
     },
     {
-      "path": "start-gpu2.sh",
-      "sha256": "c2ced8b18d8a6ab2fdd378c3c0461d777a228e63fd85c1027025c055f0f97539",
-      "bytes": 1636
+      "path": "start-features.sh",
+      "sha256": "79fea81ead9a7cc3de0ba85108b37de211d6e156f3c3577244ecc04f17dc77be",
+      "bytes": 287
+    },
+    {
+      "path": "start.sh",
+      "sha256": "5af8d6f6bccd715ee6b408853f5731c29a5b88f684cd71b072fae2bddbf59c91",
+      "bytes": 698
     },
     {
       "path": "stop-a100-physics.sh",
-      "sha256": "58f9f5bcd0e849f0da0b0ec016562f34842c12729b033c999366d589381bdb37",
-      "bytes": 121
+      "sha256": "eeedf94befe83bef242aead401dd3f8c2a946dec046a941df4e6e3800f6e04ef",
+      "bytes": 102
     },
     {
       "path": "stop-a100-render.sh",
-      "sha256": "6c5c9b657282cf1dc5418f942ef62b2e8a10faf7201f3a5c53e0148a89a79a12",
-      "bytes": 89
+      "sha256": "eeedf94befe83bef242aead401dd3f8c2a946dec046a941df4e6e3800f6e04ef",
+      "bytes": 102
     },
     {
-      "path": "stop-gpu2.sh",
-      "sha256": "94046be883f42e9ec2ee57bfd61e1c94c446b72230bf21fff0fdb2596f9ea33e",
+      "path": "stop-features.sh",
+      "sha256": "e9932de797d62b41f9b62722987d582cff15e84531b9224431cb742703ee92d2",
+      "bytes": 96
+    },
+    {
+      "path": "stop.sh",
+      "sha256": "067353895c0f045a596a94ec2a75af77615662934b99a8e88448026ab5237452",
       "bytes": 150
+    },
+    {
+      "path": "systemd/isaacsim-a100-features.service.in",
+      "sha256": "80124b81c7c2d7fbcfeb96f71ee4de53280444070ebb2daaaacd346dfa315a05",
+      "bytes": 401
+    },
+    {
+      "path": "systemd/isaacsim-a100-generic.service.in",
+      "sha256": "de6e731b5310bbd0728175c01ea602110077ac93f4ff1c7bfbd5343388012b27",
+      "bytes": 375
+    },
+    {
+      "path": "systemd/isaacsim-a100-render.service.in",
+      "sha256": "99e95b72bb504f4d4df67e495b8852620504fc1858be2415a3f3dd59f301b21e",
+      "bytes": 373
+    },
+    {
+      "path": "systemd/isaacsim-a100-resident.service.in",
+      "sha256": "2f78822548a80d90a61a321f6edd7f1aafea1c257eda3d817da575d530964f58",
+      "bytes": 452
+    },
+    {
+      "path": "tests/test_contract.py",
+      "sha256": "f2b49e826dd98b6acad332c3526a02f91bc57b6a6ab1b6c949023ecd3748156b",
+      "bytes": 3608
+    },
+    {
+      "path": "tests/test_features.py",
+      "sha256": "485256fb45954d6c914ccb841d627996dc0338700af77f248bf752f693845695",
+      "bytes": 4178
+    },
+    {
+      "path": "tests/test_portability.py",
+      "sha256": "5ff50c757b9fab5c765526716ae0b3fc6137da3a93d97717cb6d668fa75d2b34",
+      "bytes": 1497
     }
   ]
 }

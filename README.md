@@ -1,96 +1,48 @@
 # IssacSim4A100
 
-在 NVIDIA A100 上运行 **Isaac Sim 6.2 GPU PhysX 仿真 + Mitsuba/Dr.Jit CUDA 渲染**。
+在自己的 NVIDIA A100 上部署 **Isaac Sim 6.2 CUDA 物理仿真、机器人控制与 Mitsuba CUDA 渲染**。
 
-本仓库 fork 自 [isaac-sim/IsaacSim](https://github.com/isaac-sim/IsaacSim)，部署功能维护在 [`A100` 分支](https://github.com/EurecaMoment/IssacSim4A100/tree/A100)，基于官方 `v6.2.0` / `release/6.2`（`74a9356b20250dd60337d90b4b4d913c9454d32b`）。官方源代码和历史保留，原版说明见 [README.upstream.md](README.upstream.md)；当前部署的自定义代码、补丁、启动器、验证和资产处理示例集中在 [a100/](a100/)。
+本仓库 fork 自 [isaac-sim/IsaacSim](https://github.com/isaac-sim/IsaacSim)。适配代码维护在 [`A100` 分支](https://github.com/EurecaMoment/IssacSim4A100/tree/A100)，官方源码基线为 `v6.2.0` / `release/6.2`（`74a9356b20250dd60337d90b4b4d913c9454d32b`）。官方源代码与历史保留，原版说明见 [README.upstream.md](README.upstream.md)；新增部署代码位于 [a100/](a100/)。
 
-**A100 没有 RT Core，不满足官方完整 RTX 渲染器的硬件要求。** 本适配关闭 Kit 原生 RTX，保留 CUDA PhysX，以 Mitsuba/Dr.Jit 的 CUDA/OptiX 路径追踪渲染实时 USD 场景。它是已部署的服务适配，不代表完整 Isaac Sim 的所有功能均已移植到 A100。
+**A100 没有 RT Core，不满足官方完整 RTX 应用的硬件要求。** 本方案关闭 Kit 原生 RTX，使用 CUDA PhysX / Newton 做仿真，以 Mitsuba/Dr.Jit CUDA/OptiX 渲染 USD 场景。自定义图像标注、物理射线扫描和 ROS 数据桥的范围见下表。
 
-![六个 FastTrellis 资产在 A100 上统一布光的示例](a100/examples/scene-preview.jpg)
+![多资产随机陈列与统一布光](a100/examples/scene-preview.jpg)
 
-*实际部署渲染结果；原始几何和大体积资产未随仓库分发。*
+*实际渲染示例；资产文件需要自行准备。*
 
-## 已验证的环境
+## 部署前准备
 
-下面是 2026-11-12 导出代码时的实际运行环境；其他 GPU、驱动和系统组合需要重新验证。
-
-| 项目 | 当前配置 |
+| 条件 | 要求 |
 | --- | --- |
-| GPU | A100-SXM4-80GB，单服务实例使用一张卡 |
-| 宿主系统 | Linux x86_64，Ubuntu 20.04.6 |
-| NVIDIA 驱动 | 535.161.08 |
-| CUDA Toolkit | 12.2，默认 `/usr/local/cuda-12.2` |
-| 隔离运行环境 | Ubuntu 24.04 Noble rootfs；用户命名空间 + bind mount + chroot |
-| Python | uv 管理的独立 CPython 3.12 |
-| Isaac Sim Python 包 | `6.2.0.0` |
-| 已部署运行时的 VERSION | `6.2.0-rc.14+release.52805.02189a84.gl` |
-| 渲染 | Mitsuba 3.9.1，Dr.Jit 1.5.0，variant `cuda_ad_rgb` |
-| Python 主要依赖 | NumPy 2.3.1，Pillow 12.1.1，aiohttp 3.14.5，orjson 3.11.3 |
+| 平台 | 原生 Linux x86_64；Windows 不直接运行这些启动器 |
+| GPU | NVIDIA A100；每个服务实例选择一张可用设备，多卡可运行独立实例 |
+| 驱动 | 已正确安装 NVIDIA Linux 驱动，`nvidia-smi` 能访问分配给自己的 A100 |
+| CUDA Toolkit | 安装与驱动兼容的 Toolkit，提供 `nvcc`；自动从 `CUDA_HOME`、`CUDA_PATH`、`nvcc` 或 `/usr/local/cuda` 检测 |
+| Python | 独立 CPython 3.12，建议由 `uv` 安装，避免混用现有 Conda 包 |
+| 用户权限 | 支持无特权 user/mount namespace：`unshare -Ur -m true` 成功 |
+| 磁盘 | 至少预留 50 GB，另加资产、完整扩展缓存与结果所需空间 |
+| 构建工具 | C/C++ 编译器、CMake ≥ 3.13、Git、curl、tar、dpkg-deb、util-linux、binutils |
+| 网络 | 可访问 NVIDIA PyPI、PyPI、Canonical rootfs、GitHub；驱动库下载支持配置镜像 |
 
-Python 包版本、运行时内部构建字符串和仓库源码 tag 是不同的版本信息，上表分别保留。Noble rootfs 提供较新的 glibc / C++ 运行库，不需要升级宿主系统。驱动库从宿主绑定，OptiX 用户态库从匹配版本的 NVIDIA 包中提取。
+启动器创建 Ubuntu 24.04 rootfs，为 Python 扩展提供统一的 glibc / C++ 运行库，并绑定宿主驱动与 Toolkit。rootfs 不安装宿主内核驱动。无需把宿主系统固定成某个 Ubuntu 版本，但必须具备上述工具、内核权限和驱动。
 
-宿主需要 `bash`、`curl`、`tar`、`git`、`dpkg-deb`、`unshare`、`mount`、`chroot`、C/C++ 编译器、CMake ≥ 3.13 和 `uv`。建议预留至少 50 GB 磁盘空间；大网格场景还需要相应的内存和显存。后台常驻另需可用的 systemd 用户服务。
-
-先检查 GPU 和用户命名空间：
+Debian / Ubuntu 可由管理员安装基础工具：
 
 ```bash
-nvidia-smi
-unshare -Ur -m true
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl git tar dpkg-dev util-linux \
+  build-essential cmake binutils
 ```
 
-如果第二条被宿主策略禁止，需要管理员允许用户命名空间，或提供等效的容器运行环境。仓库当前的启动脚本面向原生 Linux，Windows 不直接运行这些服务。
+其他发行版使用相应包管理器安装等效工具。按 [uv 官方说明](https://docs.astral.sh/uv/getting-started/installation/)安装 `uv`，按 [NVIDIA CUDA 安装指南](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)准备驱动和 Toolkit。`nvidia-smi` 显示的 CUDA 版本表示驱动支持的 API 上限，不表示已经安装相同版本的 Toolkit。
 
-## 功能范围
+本适配的运行包固定为 Isaac Sim `6.2.0.0`、Warp `1.17.0`、Mitsuba `3.9.1`、Dr.Jit `1.5.0`；可选 Newton `1.6.1`、MuJoCo / MuJoCo Warp `3.12.0`。Isaac Python 包版本、运行时内部构建号与源码 tag 是三种信息，诊断时应分别记录。硬件和系统组合的兼容性仍须在部署后验收。
 
-2026-11-12 已扩展并实测以下功能。**“服务”表示已接入独立常驻接口；“脚本”表示已在当前 A100 上运行验证，但没有对应 HTTP 动作；安装了扩展不等于功能已经通过。** 原有三个服务保持运行，新增服务默认在 `127.0.0.1:8322`。
+## 从零安装
 
-| 能力 | 当前 A100 部署的实际状态 |
-| --- | --- |
-| CUDA 刚体物理、GPU broadphase、TGS | 服务；强制 CUDA，支持方块、球和 mesh 刚体 |
-| 动态 mesh 碰撞 | 服务；使用 convex hull，不等同于任意动态凹网格 |
-| USD 场景编辑、引用与导出 | 服务 / 脚本；可保存物理状态、机器人和动画 |
-| RGB、统一布光、多资产场景 | 服务；Mitsuba/Dr.Jit CUDA/OptiX，mesh 和自定义 Gaussian 路径 |
-| 深度、距离、表面法向 | 服务；自定义 CUDA 主射线标注，米制 Z-depth / range、世界坐标法向 |
-| 实例 ID、语义 ID、有效像素 mask | 服务；显式 USD 标签和形状到 prim 的映射；不做自动语义识别 |
-| 机器人位置 / 速度 / 力矩控制 | 服务；真实 PhysX articulation，4 个双关节机械臂分别控制 |
-| 多环境 / 多机器人克隆 | 服务；官方 GridCloner，支持 1–16 个演示机械臂，当前 4 个 |
-| Jacobian、质量矩阵、关节作用力 | 服务；从真实 CUDA articulation tensors 读取 |
-| IMU、接触、JointState、Effort | 服务；官方物理传感器，已核对重力与支撑力 |
-| 物理 RaycastSensor | 服务；三束已知距离测量及 180 束平面扫描 |
-| 抓取、抬升、释放 | 服务；自定义 PhysX fixed-joint 吸附演示，先查询实际碰撞表面 |
-| 官方 Surface Gripper | 扩展已加载；close 调用成功但尚未抓住测试物体，未判定根因 |
-| 关节轨迹生成与执行 | 服务；官方最短时间轨迹生成器，已检查实际机器人到达终点 |
-| 差速控制器 | 服务；官方控制器输出已验证；该动作只计算轮速，没有生成轮式机器人 |
-| ROS 2 Jazzy / FastDDS | 服务；官方 bundled rclpy + 自定义数据桥，收发及实际机械臂控制通过 |
-| ROS 2 JointState / IMU / LaserScan / Clock / TF | 服务；5 个发布 topic 和 1 个关节命令订阅 topic |
-| URDF → USD、MJCF → USD | 脚本；关节与 articulation 保留，导入后 CUDA 目标跟踪通过 |
-| USD → URDF、Heightmap、资产检查 / 优化工具 | 相应扩展随 asset 包安装；未逐项完成转换、优化或验收 |
-| Gain Tuner 核心 | 脚本；机器人标记补全后可发现两关节并计算有效惯量；GUI 和自动调参未验收 |
-| Newton 1.6.1 XPBD 刚体 | 脚本；Kit 内 CUDA 求解，读取直接 Warp state，关闭 CUDA graph |
-| Newton XPBD 布料 | 服务；独立 CUDA Newton 模型，固定点和自由粒子运动通过，导出 USD 动画 / NPZ |
-| 批量 observation / reward step | 服务；`rl_step` 提供基础批量数据，尚无训练算法 |
-| Isaac Lab / 完整强化学习训练 | 独立框架尚未安装和适配；安装 `isaacsim-rl` 元包并不提供训练能力 |
-| IK、RMPflow、cuMotion、Pink、机器人策略回放 | 需要对应规划依赖、机器人描述和策略；当前未验收，不列为可用服务 |
-| 官方原生 RTX 相机、RTX LiDAR / Radar | A100 无 RT Core；当前关闭原生 RTX，不能以物理射线扫描替代并声称等价 |
-| Replicator 图像标注与标准 writer 管线 | 当前未启用；自定义标注不是 Replicator，不能直接代替其全部接口 |
-| 完整官方 ROS OmniGraph bridge / ROS control | 当前未启用；官方 ROS core 的扩展依赖包含 RTX / Replicator 链 |
-| 完整 PBR、MDL、透明材质网络 | 当前顶点颜色适配未完整实现 |
-| PhysX 体积软体、流体 / 粒子、触觉、车辆动力学 | 当前未逐项实测或接入；布料演示不代表这些能力已启用 |
-| GUI、WebRTC 交互视口、NuRec | 当前无图形设备适配或对应模型 / 运行环境，未启用 |
+以下命令均在能访问已分配 A100 的 Linux 会话中执行。普通单机不需要调度器；使用调度系统时，先取得 GPU，再在该资源会话中执行安装检查和启动命令。
 
-扩展清单及数值证据见 [feature-validation.json](a100/research/feature-validation.json) 和 [extension-inventory.json](a100/research/extension-inventory.json)。清单包含扩展依赖以及独立机器人探测进程实际加载的扩展；不是“所有已安装扩展都在运行”的声明。
-
-![当前 CUDA 机器人场景的 RGB、深度、法向和实例标注](a100/examples/features-preview.jpg)
-
-*RGB 使用 128 spp；标注为每像素中心单射线。深度预览做了显示归一化，米制原始值保存在 NPZ。*
-
-资产视觉目前使用**顶点颜色**。FastTrellis GLB 中的 base-color 纹理可以按原始 UV 采样并烘焙到顶点，保留几何；metallic/roughness 贴图、透明材质和复杂材质网络不会完整还原。没有关节和碰撞定义的普通 mesh，也不会自动成为可控制的机器人。
-
-## 安装
-
-### 1. 获取代码并配置
-
-适配服务不依赖官方示例的大型 LFS 资产，可先跳过这些下载：
+### 1. 获取代码与 Python
 
 ```bash
 GIT_LFS_SKIP_SMUDGE=1 git clone --branch A100 https://github.com/EurecaMoment/IssacSim4A100.git
@@ -99,316 +51,306 @@ uv python install 3.12
 cp .env.example .env
 ```
 
-编辑 `.env`：
+跳过的官方 LFS 示例资产不是适配服务的必要依赖。
+
+### 2. 配置本地环境
+
+编辑 `.env`。默认配置会检测设备、Python、Toolkit 和驱动，基础部署只需核对 GPU 分配与 NVIDIA 许可：
 
 ```bash
-ISAAC_GPU=0
-A100SIM_CUDA_ROOT=/usr/local/cuda-12.2
-A100SIM_DRIVER_VERSION=535.161.08
+OMNI_KIT_ACCEPT_EULA=YES
+ISAAC_GPU=auto
+A100SIM_PYTHON=
+A100SIM_CUDA_ROOT=
+A100SIM_DRIVER_VERSION=
 ```
 
-`ISAAC_GPU` 是 `nvidia-smi` 的物理编号或 GPU UUID；原部署使用物理编号 2，新机器应自行选择。`serve.sh` 会解析为 UUID，可用 `A100SIM_EXPECTED_GPU_UUID` 进一步固定卡的身份。隔离后 CUDA 内部显示 `cuda:0`，不代表选择了宿主物理 0 号卡。
+仅在接受 [Isaac Sim additional software and materials license](https://www.nvidia.com/en-us/agreements/enterprise-software/isaac-sim-additional-software-and-materials-license/)后设置 `OMNI_KIT_ACCEPT_EULA=YES`。
 
-Python 默认由 `uv python find 3.12` 查找。如果未正确找到，把 `A100SIM_PYTHON` 设置为用户目录中 uv 管理的 **Python 3.12 绝对路径**。请使用独立 Python，不要直接混用 Conda 中的 Isaac、CUDA 或渲染包。
+`ISAAC_GPU=auto` 在继承的 `CUDA_VISIBLE_DEVICES` 范围内选择 A100；若没有该环境变量，则从可访问设备中选择。也可填写部署者自己的物理设备编号或完整 UUID。显式配置同样不能越过继承的设备范围。需要固定设备身份时设置 `A100SIM_EXPECTED_GPU_UUID`。单卡隔离后程序内部使用 `cuda:0`，这是进程内逻辑编号。
 
-安装和使用 NVIDIA 运行时须接受 [Isaac Sim additional software and materials license](https://www.nvidia.com/en-us/agreements/enterprise-software/isaac-sim-additional-software-and-materials-license/)。确认接受后，在 `.env` 保留 `OMNI_KIT_ACCEPT_EULA=YES`。
+Python 默认通过 `uv python find 3.12` 查找。非标准安装可将 `A100SIM_PYTHON`、`A100SIM_CUDA_ROOT` 设置为本机实际绝对路径；`A100SIM_DRIVER_VERSION` 通常留空。运行时目录默认就是 `a100/`，可用 `A100SIM_ROOT` 放到其他磁盘，代码与运行数据可以分开。
 
-### 2. 准备运行环境
+```bash
+bash doctor.sh
+```
+
+只有报告 `success: true` 才继续。它会检查 Linux、Python、工具、GPU 可见范围、CUDA Toolkit 与用户命名空间，并报告是否可用条件图节点。用户命名空间被系统策略禁用时，需要管理员启用，或自行提供等效容器环境；本仓库启动器使用前述 rootfs 路径。
+
+### 3. 安装基础运行环境
 
 ```bash
 bash prepare.sh minimal
 bash install-libs.sh
 bash get-driver-libs.sh
 bash build-drjit.sh
+bash doctor.sh --runtime
 ```
 
-各步作用：
+安装步骤：
 
-1. `prepare.sh minimal` 下载 Ubuntu Noble rootfs、固定版本的 Isaac 包和 Python 依赖，并通过 HTTP Range 提取 PhysX 所需的 Kit 扩展依赖。下载记录保存在 `downloads/physics-extensions.json`，未解析的必要扩展会报错。
-2. `install-libs.sh` 在 rootfs 中下载并解压系统库，不修改宿主安装的软件包。
-3. `get-driver-libs.sh` 只提取匹配驱动版本的 NVIDIA 用户态库，提供 `libnvoptix.so.1`，不安装或更换宿主驱动。默认下载地址已按 535.161.08 配置；其他版本可通过 `A100SIM_NVIDIA_DEB_URL` 指定匹配的官方 Debian 包。
-4. `build-drjit.sh` 固定 `drjit-core` 到 `3b96411288b9938889045308654ba37d4ef24b71`，应用 [A100 补丁](a100/patches/drjit-core-a100.patch)，编译并替换渲染环境中的 `libdrjit-core.so`，保留 `.original` 备份。
+1. `prepare.sh minimal` 下载 Ubuntu Noble rootfs、固定版本 Isaac / Python 包，并从 Kit cache 提取物理扩展依赖。下载计划保存在 `downloads/`。需要完整 Kit 扩展缓存时改用 `bash prepare.sh full`，下载量明显增加。
+2. `install-libs.sh` 将 Linux 用户态依赖解压到 rootfs。
+3. `get-driver-libs.sh` 自动读取宿主驱动版本，优先复用已安装且版本匹配的 OptiX 库；缺少时下载对应 NVIDIA Linux 驱动归档，**只解包** `libnvoptix` / `libnvidia-rtcore`。支持 `A100SIM_NVIDIA_RUN_URL` 或 `A100SIM_NVIDIA_DEB_URL` 镜像覆盖，归档内库必须与检测到的驱动版本匹配。
+4. `build-drjit.sh` 从固定提交 `3b96411288b9938889045308654ba37d4ef24b71` 编译 Dr.Jit core，并应用 [兼容补丁](a100/patches/drjit-core-a100.patch)。原库保存为 `.original`；重新安装 Dr.Jit 后需要重新应用。构建使用 `-march=native`，应在部署机器上运行。
 
-补丁包含 R535 OptiX JIT 所需的 PTX `copysign` 位运算实现，以及旧 GCC 的 x86_64 Linux 线程指针兼容修改。不要只安装原版 Mitsuba wheel 后漏掉这一步；重新安装 Dr.Jit 后也需要重新应用已编译的库。编译使用 `-march=native`，应在部署机器上完成。
+rootfs 默认镜像 URL 可通过 `A100SIM_ROOTFS_URL` 覆盖；需要固定快照时同时设置 `A100SIM_ROOTFS_SHA256`。HTTP 代理使用标准 `HTTP_PROXY` / `HTTPS_PROXY` 环境变量。离线部署需提前准备相同版本的下载内容；仓库不包含运行时二进制。
 
-需要完整官方 Kit 扩展缓存时，可将第一步改成 `bash prepare.sh full`，下载量会显著增加。这不会自动启用原生 RTX 或新增 HTTP 功能。
-
-如果已有运行环境，可以在 `.env` 设置 `A100SIM_ROOT=/absolute/runtime/path` 复用 `packages/`、`rootfs/`、`render-packages/` 和 `http-packages/`。代码仍从当前 `a100/` 加载。资产若在运行目录外，要设置 `A100SIM_ASSET_ROOT`；所有提交的资产目录都必须位于该根目录内，且不能通过符号链接越界。
-
-### 3. 做一次 GPU 验证
+### 4. 验证 CUDA 仿真与渲染
 
 ```bash
 bash run-physics-fixed.sh scripts/smoke_gpu.py --output "$PWD/results/smoke"
 ```
 
-成功时打印 `A100_GPU_SMOKE_SUCCEEDED`，产生 `render.png`、`scene.usdc` 和 `simulation.json`。应看到 `physics_device: cuda:0`，渲染后端为 CUDA，且没有启用 `omni.hydra.rtx`。原部署的 64 方块物理验证也保留在 `physics_smoke.py`。
+成功打印 `A100_GPU_SMOKE_SUCCEEDED`，输出 `render.png`、`scene.usdc` 和 `simulation.json`。核对物理设备为 `cuda:0`、渲染后端为 CUDA、没有启用原生 RTX。脚本失败时先排查诊断与日志，再启动服务。
 
-这些脚本来自已运行的部署；新的安装流程会从网络重建大体积运行时，而不是分发机器镜像。Ubuntu `current` 镜像和包源可能变化，可用 `A100SIM_ROOTFS_URL` 与 `A100SIM_ROOTFS_SHA256` 固定自己的 rootfs 快照。
+### 5. 启动基础服务
 
-## 启动与停止
-
-### 前台运行
-
-打开两个终端，在同一个 `a100/` 目录运行：
+打开两个终端，在同一个 `a100/` 目录分别运行：
 
 ```bash
-# 终端 1：通用物理与渲染后端
+# 终端一：通用仿真与渲染后端
 bash serve.sh generic
 ```
 
 ```bash
-# 终端 2：批量仿真及请求分流前端
+# 终端二：统一队列与批量仿真入口
 bash serve.sh resident
 ```
 
-| 默认地址 | 用途 |
+| 默认地址 | 服务 |
 | --- | --- |
-| `http://127.0.0.1:8321` | 统一入口、常驻队列、批量快速路径 |
-| `http://127.0.0.1:18323` | 通用 GPU 场景仿真和渲染 |
-| `http://127.0.0.1:8320` | 可选：固定资产的 mesh/Gaussian 渲染服务 |
-| `http://127.0.0.1:8322` | 可选：机器人、物理传感器、自定义标注、ROS 2、Newton 布料 |
+| `http://127.0.0.1:8321` | 统一入口、批量仿真、请求分流 |
+| `http://127.0.0.1:18323` | 通用 CUDA 场景仿真与渲染 |
+| `http://127.0.0.1:8320` | 可选：预加载资产渲染 |
+| `http://127.0.0.1:8322` | 可选：机器人、传感器、ROS 2、标注、布料 |
 
-预加载资产服务不是启动核心服务的必要条件。只有需要它时，设置 `.env` 中的 `A100SIM_RENDER_ASSET=/absolute/path/to/prepared/asset`，再运行 `bash serve.sh render`。mesh 需要 `mesh.npz`，Gaussian 需要符合服务约定的 `object.ply`；普通点云 PLY 不能直接替代 Gaussian 数据。
+```bash
+curl --fail http://127.0.0.1:8321/health
+curl --fail http://127.0.0.1:18323/health
+python3 examples/client.py examples/cube.json
+```
 
-### systemd 后台常驻
+等待健康状态变为 `ready`。仿真服务应报告 `cpu_fallback=false`、`native_rtx=false`。首次启动和 JIT 编译会较慢。
+
+预加载资产渲染按需开启：将 `A100SIM_RENDER_ASSET` 设置为自己准备的资产目录，再运行 `bash serve.sh render`。mesh 需要 `mesh.npz`；Gaussian 需要约定格式的 `object.ply`，普通点云 PLY 不等于 Gaussian 资产。
+
+### 6. 可选：安装机器人、传感器、ROS 2 与 Newton
+
+```bash
+bash install-features.sh all
+# 为本机 GPU 和 Toolkit 构建兼容的 Newton 原生 tensor kernels
+bash build-newton-kernels.sh
+# 前台运行可选功能服务
+bash serve-features.sh
+```
+
+可选包安装到 `${A100SIM_FEATURES_ROOT:-$A100SIM_ROOT/features}/packages`。完整 wheel 与 Python 依赖校验 SHA-256；Kit cache 按固定扩展计划提取并检查 ZIP 完整性。
+
+只需要部分能力时，可使用 `robotics`、`ros2`、`assets` 或 `newton` profile 代替 `all`。这些 profile 含机器人公共依赖；没有 ROS 包时设置 `A100SIM_FEATURE_ROS2=0`。没有 Newton 包时服务不会提供 `cloth` 动作。Newton 原生内核构建步骤只对 Newton 工作流需要，构建要求保留克隆仓库中的官方 `source/`。
+
+```bash
+curl --fail http://127.0.0.1:8322/health
+python3 examples/feature_client.py '{"action":"snapshot"}'
+python3 examples/feature_client.py '{"action":"command","targets":[0.6,-0.4],"steps":240}'
+python3 examples/feature_client.py '{"action":"capture","size":512,"spp":32}'
+python3 examples/feature_client.py '{"action":"cloth","frames":90}'
+```
+
+### 7. 可选：配置后台服务
 
 ```bash
 bash install-systemd.sh
 bash start.sh
-curl --fail http://127.0.0.1:8321/health
-curl --fail http://127.0.0.1:18323/health
-```
-
-`start.sh` 启用服务并等待就绪；配置了 `A100SIM_RENDER_ASSET` 时才启动第三个服务。健康检查应返回 `status=ready`、`cpu_fallback=false`、`native_rtx=false`。首次初始化和着色器编译可能需要较长时间。
-
-```bash
+# 已安装可选功能时
+bash start-features.sh
 systemctl --user status 'isaacsim-a100-*'
 journalctl --user -u 'isaacsim-a100-*' -f
+```
+
+`start.sh` 启动并等待基础服务就绪，配置了渲染资产时还会启动预加载渲染。可选功能使用单独的 `start-features.sh` / `stop-features.sh`：
+
+```bash
+bash stop-features.sh
 bash stop.sh
 ```
 
-用户服务要在退出登录后继续运行，宿主需要为当前用户启用 linger，例如管理员执行 `loginctl enable-linger <username>`。在 Slurm 集群上还应遵守已有 GPU 分配方式，在获得 GPU 的节点和会话内启动；安装脚本不申请调度资源。
+后台方式需要可用的 systemd 用户会话；退出登录后继续运行还需管理员为部署用户启用 linger。没有 systemd 时保持前台会话，或接入自己的服务管理器。调度集群的进程应由已获分配的资源会话启动；通用 systemd 模板不申请 GPU，也不配置集群任务。端口、缓存与结果目录全部可通过 `.env` 调整。
 
-新服务名为 `isaacsim-a100-*`，不会自动替换原部署的 `isaacsim-gpu2-*`。旧的 `serve-gpu2.sh`、`start-gpu2.sh` 等入口保留为兼容别名。与已有服务共存测试时，用 `.env` 设置其他端口和 `A100SIM_STATE_ROOT` / `A100SIM_LOCAL_STATE`。
+## 功能范围
 
-## 可选功能的安装与启动
+“服务”表示已有 HTTP 动作；“脚本”表示提供独立调用与验收方法。实测证据位于 [feature-validation.json](a100/research/feature-validation.json)，扩展清单见 [extension-inventory.json](a100/research/extension-inventory.json)。安装或加载扩展本身不算功能验收。
 
-先完成上面的基础运行环境安装，再执行：
+| 能力 | 支持范围 |
+| --- | --- |
+| CUDA 刚体物理 | 服务；PhysX GPU dynamics、GPU broadphase、TGS，方块 / 球 / mesh |
+| mesh 碰撞 | 服务；动态 mesh 使用 convex hull |
+| 多资产场景与统一打光 | 服务 / 示例；随机排列、展台、多个视角、mesh / 自定义 Gaussian 渲染 |
+| USD 编辑与导出 | 服务 / 脚本；机器人真实 CUDA 位姿写入独立 USD 副本再渲染 |
+| RGB、深度、距离、法向 | 服务；Mitsuba CUDA 主射线标注，米制 Z-depth / range、世界坐标法向 |
+| 实例 / 语义 ID、有效 mask | 服务；按 USD prim 与显式语义属性映射 |
+| 机器人位置 / 速度 / 力矩 | 服务；真实 PhysX articulation；演示支持 1–16 个双关节机械臂 |
+| 多环境克隆与动力学 | 服务；GridCloner、Jacobian、质量矩阵、关节作用力 |
+| IMU、接触、JointState、Effort | 服务；官方物理传感器 |
+| 物理射线扫描 | 服务；RaycastSensor 与 180 束平面距离扫描 |
+| 抓取演示 | 服务；碰撞表面查询 + 自定义 PhysX fixed-joint 吸附、抬升、释放 |
+| 轨迹与差速控制 | 服务；官方关节轨迹生成并实际执行；差速动作只计算轮速 |
+| ROS 2 | 服务；bundled Jazzy / rclpy / FastDDS + 自定义 bridge，5 类发布 topic 和关节命令订阅 |
+| URDF / MJCF → USD | 脚本；保留 articulation，提供导入后 CUDA 运动检查 |
+| Gain Tuner 核心 | 脚本；关节发现与有效惯量；GUI / 完整自动调参未验收 |
+| Newton XPBD | 脚本 / 布料服务；CUDA 刚体、独立布料、USD / NPZ 轨迹 |
+| Newton MuJoCo Warp | 脚本；按驱动 API 自动禁用不可用的条件图节点，保留 CUDA 求解 |
+| Newton 原生 tensor API | 脚本；本机编译兼容内核后，刚体位姿读写、速度 / 质量 / 惯量读取及 MuJoCo 关节控制已验收 |
+| observation / reward step | 服务；`rl_step` 返回基础数据；训练算法、Torch / Isaac Lab 训练栈尚未集成 |
+
+![机器人场景的 RGB、深度、法向与实例标注](a100/examples/features-preview.jpg)
+
+原生 RTX Camera / LiDAR / Radar、Replicator writer、完整 ROS OmniGraph bridge、GUI / WebRTC 视口不在当前适配范围。自定义标注和物理扫描不具有 RTX 传感器的完整光学 / 信号模型。官方 Surface Gripper 插件已加载，但抓住物体的完整路径尚未验收；服务中的吸附演示使用独立约束实现。
+
+IK、RMPflow、cuMotion、Pink、策略回放、PhysX 体积软体、流体 / 粒子、触觉和车辆仍需各自依赖、资产及验收。安装完整扩展缓存不会自动开放这些能力。
+
+## Newton 驱动兼容机制
+
+兼容逻辑由**实际 CUDA driver API 与本机 GPU 架构**决定。
+
+1. MuJoCo Warp 默认会创建条件图节点，该 API 需要 CUDA driver API ≥ 12.4。`create_app()` 在 MuJoCo model 创建后、首次计算前按检测结果设置 `model.opt.graph_conditional`。较旧驱动走库已有的普通 kernel launch 路径，物理求解仍在 CUDA。外层 `NewtonConfig.use_cuda_graph` 是另一个开关，单独关闭它不能处理内部条件图节点。
+2. 官方 Newton tensor wheel 的 GPU 二进制可能缺少 A100 原生 cubin，进而依赖驱动不支持的 PTX JIT。`build-newton-kernels.sh` 使用仓库原始 CUDA 算法、本地 `nvcc` 和检测到的 compute capability 构建原生机器码；核对全部导出 launch wrapper 的 ABI，并记录 plugin / 编译库的 SHA-256。启动时只加载与已安装 plugin 匹配的构建；包更新后需重新构建。
+
+兼容库独立存放在 `features/tools/newton-kernels`，官方 plugin 不被替换。构建只调整独立库的日志输出，并隐藏设备 stub / runtime 导出符号。没有修改 PTX 版本字符串，也不通过 CPU 回退掩盖错误。
 
 ```bash
-# 从 a100/ 运行；下载固定版本官方包和带 SHA-256 的 Python 依赖
-bash install-features.sh all
-
-# 前台启动机器人、传感器及 ROS 2 数据桥
-bash serve-features.sh
+# Kit XPBD 刚体落地验证，直接核对 CUDA Warp state
+bash run-newton.sh examples/newton_xpbd.py --output "$PWD/results/newton-xpbd"
+# 原生 tensor 读写 + MuJoCo 实际关节控制验收
+bash run-newton.sh examples/newton_native.py --output "$PWD/results/newton-native"
+# 独立布料；常驻机器人的物理引擎仍为 PhysX
+bash run-features.sh -m a100sim.newton_cloth --output "$PWD/results/cloth" --frames 90
 ```
 
-安装写入独立的 `${A100SIM_FEATURES_ROOT:-$A100SIM_ROOT/features}/packages`，不替换基础服务的包，不重启原服务。`all` 包括机器人、ROS 2、资产转换和 Newton；也可选择 `robotics`、`ros2`、`assets` 或 `newton`。这些 profile 都包含机器人公共依赖；`assets` 还安装 MuJoCo / Newton 转换所需依赖。`robotics` 不安装 ROS 2 时，启动前在 `.env` 设置 `A100SIM_FEATURE_ROS2=0`。没有 Newton 时健康检查不会列出 `cloth` 动作。
+`.env` 中 `A100SIM_NEWTON_CONDITIONAL_GRAPHS=auto|on|off` 控制条件图策略；`on` 在不支持的驱动上会明确报错。`A100SIM_NEWTON_NATIVE_KERNELS=auto|on|off` 控制兼容内核加载：`auto` 使用已有且匹配的本机构建，`on` 要求构建存在，`off` 使用原 wheel。
 
-安装器固定 Linux x86_64 / CPython 3.12 wheel，使用 `--no-deps` 保留基础 NumPy。完整官方 wheel 和 Python 依赖校验 SHA-256；大型 Kit cache 仅按 [固定扩展计划](a100/research/feature-extensions.json) 做 HTTP Range 提取并检查 ZIP 完整性。当前部署通过离线下载与 overlay 安装完成；**全新机器从零下载的整套安装流程尚未端到端重建**。
+MuJoCo 验收示例将迭代预算显式设为 20 / 8，可用 `--iterations` / `--line-search-iterations` 调整；复杂接触场景应重新确定收敛精度。示例关闭外层 CUDA graph。普通 launch 路径可能比条件图更慢，验收报告记录实测耗时。
 
-后台运行：
+XPBD 的 body poses 可直接变化，而某些 generalized joint state 不随 solver 自动更新；不能把 XPBD 的未更新 `joint_q` 当成实际关节位置。原生关节跟踪验收使用 MuJoCo。独立布料与 PhysX 机器人尚无跨求解器双向耦合。其他 tensor API、软体和复杂接触需分别验证。
 
-```bash
-bash install-systemd.sh
-bash start-features.sh
-curl --fail http://127.0.0.1:8322/health
-journalctl --user -u isaacsim-a100-features.service -f
-# 停止新增服务
-bash stop-features.sh
-```
+Kit fast shutdown 在异常后也可能返回退出码 0，必须检查示例 JSON 的 `success` 及数值。报告失败不能算验收成功。
 
-新增单位与基础 `start.sh` / `stop.sh` 分开管理。当前 g3005 实例在已经分配的 Slurm allocation 内运行，服务寿命受该 allocation 约束；systemd 不会代为申请 GPU。不要只凭旧 systemd 单位的状态判断原服务是否在线，应同时检查对应 HTTP 健康接口。
-
-### 机器人与传感器接口
+## 机器人、标注与 ROS 2 用法
 
 ```bash
-python3 examples/feature_client.py '{"action":"snapshot"}'
-python3 examples/feature_client.py '{"action":"command","mode":"position","targets":[0.6,-0.4],"steps":240}'
 python3 examples/feature_client.py '{"action":"command","mode":"velocity","targets":[0.25,-0.15],"steps":30}'
 python3 examples/feature_client.py '{"action":"command","mode":"effort","targets":[0.4,0],"steps":24}'
-# 恢复位置保持，避免力矩命令继续生效
+# 恢复位置控制
 python3 examples/feature_client.py '{"action":"command","targets":[0.6,-0.4],"steps":240}'
 python3 examples/feature_client.py '{"action":"dynamics"}'
 python3 examples/feature_client.py '{"action":"scan"}'
 python3 examples/feature_client.py '{"action":"gripper","operation":"cycle"}'
 python3 examples/feature_client.py '{"action":"trajectory","points":[[0.6,-0.4],[0.3,-0.2],[0.1,0.2]]}'
-python3 examples/feature_client.py '{"action":"capture","size":512,"spp":32}'
-python3 examples/feature_client.py '{"action":"cloth","frames":90}'
 ```
 
-HTTP 为 `POST /robotics`、`GET /jobs/<id>`、`GET /health`。只提交一次并查询原 job ID；只有 `state=succeeded` 表示成功。所有动作在拥有 Kit 的同一线程串行执行，避免并发修改 USD。默认队列容量 32，不提供任意代码执行入口，绑定 loopback。
+HTTP 为 `POST /robotics`、`GET /jobs/<id>`、`GET /health`。队列任务必须等到 `state=succeeded`。动作在拥有 Kit 的同一线程串行执行。单个 `[q1,q2]` 控制 `arm_index` 指定的机械臂；N×2 数组控制全部 N 个。位置 / 速度 / 力矩单位为 rad、rad/s、N·m，边界为 ±2.96、±5、±20；控制会持续到被后续命令覆盖。开启 ROS 时空闲场景仍持续步进。
 
-单个 `[q1,q2]` 控制 `arm_index` 指定的机械臂，默认 0；N×2 数组同时控制全部 N 个。位置单位 rad、速度 rad/s、力矩 N·m；边界分别为 ±2.96、±5、±20，步数 1–1200。命令持续到被后续控制覆盖；ROS 开启时即使无 HTTP 请求，场景仍会继续步进。PhysX stiffness / damping 参数编辑使用 CPU buffer，目标、力矩和仿真在 CUDA；不能把整个控制链描述成“完全没有 CPU 操作”。
+`capture` 从 CUDA articulation / rigid-body tensors 读取真实位姿，导出独立 USD 副本并渲染。NPZ 包含 `depth_m`、`range_m`、`normal_world`、`instance_id`、`semantic_id`、`valid`；深度为相机前向 Z，range 为欧氏距离。未命中为 0，应结合 valid mask。语义读取 prim 或祖先上的 `a100sim:semanticLabel` 字符串。标注使用像素中心单射线，支持 mesh，Gaussian 标注会拒绝请求。
 
-`capture` 保存实时场景的 `render.png`、`scene.usdc`、`render-annotations.npz`、`render-labels.json`，以及 depth / normals / instances 预览。NPZ 含 `depth_m`、`range_m`、`normal_world`、`instance_id`、`semantic_id`、`valid`。深度是相机前向 Z，range 是到相机中心的欧氏距离；未命中为 0，应结合 valid mask。标注采用像素中心单射线，不含 RGB 抗锯齿、多样本或运动模糊；ID 不保证跨场景编辑保持不变。语义读取 prim 或祖先的 `a100sim:semanticLabel` 字符串。当前只支持 mesh 标注，Gaussian 模式会拒绝该请求。
+ROS 默认 `ROS_DOMAIN_ID=80`、`ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST`。使用 wheel 自带 Jazzy 库，不需要修改宿主 ROS。独立实例应选择自己的 domain；跨主机通信还需配置网络与发现，现有验收只覆盖本地收发。
 
-导出从真实 CUDA articulation / rigid-body tensors 读取世界位姿，写入独立 USD 副本后渲染。启用 GPU readback 抑制时，仅保存原始 USD 会留下初始姿态；验收脚本会逐个核对渲染使用的连杆平移及旋转与物理 tensor 一致。
-
-`scan` 是物理碰撞几何上的 180 束二维扫描，不模拟 RTX LiDAR 的强度、波形、材质回波、多次回波或扫描时序。原生传感器的 `hit_positions` 位于传感器局部坐标系。
-
-`gripper` 默认使用自定义 PhysX 约束吸附，不是官方 Surface Gripper 的成功替代实现声明。关闭前实际检查 2 cm 范围内的目标表面，随后创建约束、抬升并删除约束释放。`rl_step` 只返回批量观测、示例 reward 和终止标志，不执行优化器、策略训练或 Isaac Lab 工作流。
-
-### ROS 2
-
-默认使用 wheel 自带的 **Jazzy / rclpy / FastDDS**，不要求修改宿主 ROS 安装。默认 `ROS_DOMAIN_ID=80`、发现范围 `LOCALHOST`。外部主机通信需要在 `.env` 明确配置相同 domain 和网络发现，并重新启动新服务；当前只验收了同机收发。
-
-| Topic | 类型 / 用途 |
+| Topic | 消息 |
 | --- | --- |
-| `/a100/joint_states` | `sensor_msgs/msg/JointState`，4 臂共 8 关节 |
-| `/a100/imu` | `sensor_msgs/msg/Imu`，动态方块 IMU |
-| `/a100/scan` | `sensor_msgs/msg/LaserScan`，180 束物理射线 |
-| `/clock` | `rosgraph_msgs/msg/Clock`，仿真时间 |
-| `/tf` | `tf2_msgs/msg/TFMessage`，world 到机械臂连杆及传感器 |
-| `/a100/joint_commands` | 订阅 `JointState`，同一机械臂的两个关节命令 |
+| `/a100/joint_states` | `sensor_msgs/msg/JointState` |
+| `/a100/imu` | `sensor_msgs/msg/Imu` |
+| `/a100/scan` | `sensor_msgs/msg/LaserScan` |
+| `/clock` | `rosgraph_msgs/msg/Clock` |
+| `/tf` | `tf2_msgs/msg/TFMessage` |
+| `/a100/joint_commands` | 订阅 `JointState`；每条命令控制同一机械臂的两关节 |
 
-命令的 names 使用 `arm0/joint1`、`arm0/joint2`，可换序；position、velocity、effort 只能填其中一组两个值。多臂用 `arm1`、`arm2` 等。下面的示例使用已有 ROS CLI 环境；需与服务设置相同 domain 和消息类型：
+有 ROS CLI 时，可使用与服务相同的 domain：
 
 ```bash
 ROS_DOMAIN_ID=80 ros2 topic pub --once /a100/joint_commands sensor_msgs/msg/JointState \
   '{name: [arm0/joint1, arm0/joint2], position: [0.45, -0.25]}'
 ```
 
-这是新写的数据桥，借用官方 bundled ROS 库；并没有启用完整官方 `isaacsim.ros2.bridge`、OmniGraph sensor graph、ROS control 或任意机器人控制器管理。
-
-### URDF、MJCF 与 Newton
+## URDF / MJCF 导入
 
 ```bash
-# 提供最小双连杆资产，转换后可选做单关节 CUDA 运动检查
 bash run-assets.sh examples/import_robot.py examples/robots/two_link.urdf \
   --output "$PWD/results/urdf" --physics-check
 bash run-assets.sh examples/import_robot.py examples/robots/two_link.xml \
   --output "$PWD/results/mjcf" --physics-check
-
-# Kit Newton XPBD：R535 下使用直接 Warp state
-bash run-newton.sh examples/newton_xpbd.py --output "$PWD/results/newton"
-
-# 独立 Newton CUDA 布料；不切换常驻机器人的 PhysX 引擎
-bash run-features.sh -m a100sim.newton_cloth --output "$PWD/results/cloth" --frames 90
-
-# 查看实际启用的扩展及 Gain Tuner 的有限范围检查
-bash run-features.sh research/inspect_features.py --output "$PWD/results/feature-inspection.json"
+bash run-features.sh research/inspect_features.py --output "$PWD/results/inspection.json"
 ```
 
-转换器关闭 asset transformer，URDF 同时关闭多物理转换后处理；这些选项不影响此次简单机器人生成 PhysX articulation。`--physics-check` 只面向提供的单自由度 fixture，不应直接用于任意机器人。真实机器人还需要检查网格路径、比例、质量 / 惯量、碰撞、限位和驱动。USD 结果可能采用子层或引用，应保留整个输出目录。
+`--physics-check` 只面向提供的 fixture。转换器关闭 asset transformer，URDF 还关闭多物理后处理。自己的机器人需检查 mesh 路径、单位、碰撞、质量 / 惯量、关节限位和 drive，并保留 USD 输出目录中的子层 / 引用。
 
-Newton 需要在全局配置和 physics scene 上都选 XPBD，并禁用 CUDA graph。Newton tensor 扩展会为 SimulationManager 注册后端，但示例不执行当前驱动不兼容的 tensor GPU 查询，而直接读取 Newton Warp state。Newton/MuJoCo 默认路径当前报 CUDA driver 12.4+ 的条件图节点要求；部分官方 Newton tensor kernels 报 PTX toolchain 不受支持。这些是当前 R535 环境的实测限制，不是布料资产的问题，也不代表 A100 永远不能运行 Newton。
+## FastTrellis 资产与统一布光
 
-Newton 不会在运行中自动应用任意 USD 属性编辑；应按官方说明使用受支持的数据接口，或停止、编辑、重新初始化。布料是独立 Newton 模型，当前与 PhysX 机器人没有跨求解器双向碰撞耦合。其他布料、体积软体、流体或复杂抓取场景仍须单独验收。
-
-可选 Kit 启动器默认使用 fast shutdown，部分异常后的 Kit 关闭仍可能使进程退出码为 0。示例验收应读取生成报告中的 `success` 和数值，不能只看退出码；外部 `benchmarks/validate_features.py` 检查失败会返回非零退出码。
-
-### 本次实测与限制的来源
-
-| 检查 | 实际结果 |
-| --- | --- |
-| 4 臂分别跟踪位置 | 最大误差约 `5.1e-6 rad` |
-| 速度 `[0.25,-0.15]` | 约 `[0.2483,-0.1505] rad/s` |
-| 施加 `0.4 N·m` | 原生关节传感器约 `0.4001 N·m` |
-| 静止 IMU / 1 kg 方块支撑力 | 约 `9.81 m/s²` / `9.81 N` |
-| 已知物理射线 / 扫描障碍 | `1.5 m` / `1.9 m` |
-| 自定义吸附抓取 | 目标 Z 从 `0.02 m` 升到约 `0.25 m`，释放后回到 `0.02 m` |
-| 深度标准场景 | 相机 Z=3、立方体顶面 Z=1，中心深度 `2.000 m`，法向 `[0,0,1]` |
-| URDF / MJCF 导入后运动 | 目标 `0.3 rad`，实际约 `0.3000026` / `0.3000007 rad` |
-| Kit Newton XPBD 落体 | 0.2 m 方块最终中心 Z=`0.099999 m` |
-| Newton 布料 90 帧 | 221 粒子、384 三角形、13 固定点，固定点误差 0，自由点平均位移约 `0.576 m` |
-| 常驻服务 / ROS 2 | 15 项端到端检查通过，含 CUDA 位姿与渲染一致性；5 topic 实际收取，并通过 ROS 2 改变真实关节状态 |
-
-这些是小型验收场景的结果，不是所有资产、负载和机器人均达到相同精度或性能的保证。可复核的 JSON 报告保留数值和测试范围。
-
-此前“没有开放”混合了三个原因：**部分功能只是原服务接口尚未接入**，此次已补上；**完整原生 RTX 是硬件限制**；**普通 FastTrellis 静态网格缺少机器人和物理定义是资产条件**。对于碰撞、质量、关节、语义和新 robot schema，资产仍需相应配置，不能靠安装扩展自动补齐。
-
-官方 6.2 资料明确不支持没有 RT Core 的 A100 / H100，当前官方推荐驱动也高于此服务器的 R535。因此本仓库是已有环境上的定向适配，不是 NVIDIA 支持的完整原版配置。本次没有升级共享机器驱动或改动其他 GPU。完整 RTX / Replicator 图像工作流需要受支持的 RTX GPU 和驱动；完整训练还需独立安装、适配并验证 Isaac Lab。
-
-参考依据：[6.2 硬件要求](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/installation/requirements.html)、[6.2 release notes](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/overview/release_notes.html)、[Newton 后端与限制](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/physics/newton_physics.html)、[Physics RaycastSensor](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/sensors/isaacsim_sensors_physics_raycast.html)。6.2 拆分了许多库与 Kit 适配扩展，也移除了 Cortex；不能沿用旧版扩展名来判断功能是否缺失。
-
-## 调用服务
-
-从 `a100/` 提交带统一光照的方块和球体示例：
-
-```bash
-python3 examples/client.py examples/cube.json
-```
-
-客户端只提交一次，通过返回的 job ID 查询完成状态。只有 **`state=succeeded`** 才表示完成；排队、运行中或超时都不应通过再次提交同一请求来等待。
-
-统一前端支持长轮询：
-
-```bash
-curl --fail -X POST 'http://127.0.0.1:8321/simulate?wait_ms=30000' \
-  -H 'Content-Type: application/json' --data-binary @examples/cube.json
-curl --fail 'http://127.0.0.1:8321/jobs/<job-id>?wait_ms=30000'
-```
-
-直接调用通用后端时使用普通轮询，不带 `wait_ms`：
-
-```bash
-python3 examples/client.py examples/cube.json --url http://127.0.0.1:18323 --wait-ms 0
-```
-
-请求包含 `bodies`、`steps`、`dt`、`gravity`、`ground` 和可选的 `render`。当前主要限制：1–256 个刚体、1–1200 步、正方形图像 64–1024 像素、1–256 spp，队列容量默认 64。方块使用 `size`，球使用 `radius`，mesh 使用服务端绝对 `asset` 目录；旋转是 `orientation_xyzw`。
-
-`mesh.npz` 必须包含 `vertices`、`normals`、`faces`、`colors`。颜色是 0–1 RGB；存在 `colors_linear` 键时按线性颜色读取，否则由 sRGB 解码。细节见 [physics_service.py](a100/a100sim/physics_service.py) 的 `PhysicsQueue.prepare()`。
-
-结果 JSON 返回服务器上的文件路径，HTTP 接口不承担任意文件下载。通用结果在 `results/physics-service/<id>/`；快速路径结果在 `${A100SIM_LOCAL_STATE}/jobs/<id>/`，默认 `/var/tmp/a100sim-<uid>/jobs/`，保留策略默认 24 小时或 4096 个已完成任务。首次重启发现的未完成通用任务会标为 `interrupted`，不会自动重跑。
-
-## FastTrellis 多资产与统一布光
-
-转换环境与服务分开安装。在服务器上准备自己的 GLB 文件后：
+将自己的 GLB 放到可访问目录，安装独立资产转换环境：
 
 ```bash
 uv venv --python 3.12 .venv-assets
 uv pip install --python .venv-assets/bin/python -r requirements-assets.txt
-.venv-assets/bin/python examples/prepare_fasttrellis_assets.py /path/to/glb-or-directory \
+.venv-assets/bin/python examples/prepare_fasttrellis_assets.py /path/to/your/glb-or-directory \
   --output "$PWD/assets/fasttrellis" --source-up y --max-size 1.2
-python3 examples/make_scene.py assets/fasttrellis/assets.json --output results/gallery --seed 20261112
+python3 examples/make_scene.py assets/fasttrellis/assets.json --output results/gallery --seed 42
 python3 examples/client.py results/gallery/overview.json
 python3 examples/client.py results/gallery/left-angle.json
 python3 examples/client.py results/gallery/close-up.json
 ```
 
-多个输入可以一次传入。转换保持完整网格，将 Y-up 转成 Z-up，按最长边归一化到 1.2 米，采样原始 base-color 纹理并记录原文件 SHA-256。已有 Z-up 资产用 `--source-up z`。
+转换保留完整网格，将 Y-up 转为 Z-up、按最长边归一化，按原 UV 将 base-color 纹理采样到顶点颜色。已有 Z-up 资产改用 `--source-up z`。随机场景包含展台、背景、暖主光与冷补光，生成三个视角。metallic / roughness、透明材质和复杂 MDL / PBR 网络尚未完整还原；普通 mesh 不会自动获得机器人关节和物理定义。
 
-场景生成器按种子打乱顺序、轻微随机化位置和角度，组合展台、背景、暖色主光与冷色补光，并生成三个视角。零重力加一次 CUDA 物理步保留陈列位姿。原部署曾完成六个 FastTrellis 资产、约 565 万三角面的统一场景渲染；实际耗时依几何量、分辨率和 spp 而变。
+所有服务端资产路径必须位于 `A100SIM_ASSET_ROOT` 中，默认 `$A100SIM_ROOT/assets`；符号链接不能越界。自定义 `mesh.npz` 需要 `vertices`、`normals`、`faces`、`colors`。可选 OIDN CPU 降噪见 [denoise_image.py](a100/examples/denoise_image.py)。
 
-可选的 [denoise_image.py](a100/examples/denoise_image.py) 使用另行安装的 OIDN 2 库对图像做 CPU 后处理。它不改变物理与光线追踪的 CUDA 执行路径，也不是核心启动依赖。
+## 接口与验收
 
-## 验证与性能
+基础 `POST /simulate` 请求包含 `bodies`、`steps`、`dt`、`gravity`、`ground` 和可选 `render`。服务支持 1–256 个刚体、1–1200 步、64–1024 像素的正方形图像及 1–256 spp。方块用 `size`，球用 `radius`，mesh 用服务端 `asset` 目录；旋转用 `orientation_xyzw`。
 
 ```bash
-# Python 3.12；从 a100/ 运行，不需要 GPU
-uv run --python 3.12 --no-project python -m unittest discover -s tests -v
-
-# 已启动服务后的端到端检查与并发基准
-mkdir -p results/performance
-python3 benchmarks/validate_http.py
-python3 benchmarks/validate_features.py --report results/performance/features.json
-python3 benchmarks/gpu2_http.py --url http://127.0.0.1:8321 --concurrency 64 --rounds 3 --workload default \
-  --report results/performance/benchmark.json
+curl --fail -X POST 'http://127.0.0.1:8321/simulate?wait_ms=30000' \
+  -H 'Content-Type: application/json' --data-binary @examples/cube.json
+curl --fail 'http://127.0.0.1:8321/jobs/<job-id>?wait_ms=30000'
+# 直接调用通用后端时关闭长轮询
+python3 examples/client.py examples/cube.json --url http://127.0.0.1:18323 --wait-ms 0
 ```
 
-`benchmarks/` 的检查需要在可读取服务端结果路径的机器上运行；`validate_http.py` 包含 65 并发的队列压力检查，应在服务空闲时执行。`a100sim/validate_*` 是原部署的研究验证脚本，部分依赖历史基准报告，不属于全新安装的必跑检查。涉及外部资产的测试需要设置 `A100SIM_RENDER_ASSET`。快速路径最多 64 个环境、每环境最多 64 个 0.2 米方块，只有符合地面、相机、尺寸和采样等条件的请求会合批，其余场景分流到通用后端。详细条件见 [resident_service.py](a100/a100sim/resident_service.py)。
+只提交一次，通过返回的 job ID 查询完成状态。HTTP 202、排队、运行中或等待超时不代表成功。结果 JSON 提供服务端文件路径；接口不负责任意文件下载。通用结果位于 `$A100SIM_ROOT/results/physics-service`，批量结果位于 `$A100SIM_LOCAL_STATE/jobs`。保留策略默认 24 小时或 4096 个完成任务。重启后未完成任务标记为 `interrupted`。
 
-此次整理已在现有 A100 运行环境上验证迁移后的 CUDA 仿真、128px 渲染和 USD 导出，并执行独立的队列/路径测试、Shell 语法检查及 systemd 模板验证。全新机器上的完整依赖下载与安装尚未端到端重跑。
+```bash
+# 无 GPU 的接口边界与配置测试
+uv run --python 3.12 --no-project python -m unittest discover -s tests -v
+# 启动服务后的功能验收；需能够读取服务端结果文件
+mkdir -p results/performance
+python3 benchmarks/validate_features.py --report results/performance/features.json
+# 队列压力与并发基准：在服务空闲时按需执行
+python3 benchmarks/validate_http.py
+python3 benchmarks/benchmark_http.py --url http://127.0.0.1:8321 \
+  --concurrency 64 --rounds 3 --workload default --report results/performance/benchmark.json
+```
 
-历史上曾在特定 64 并发方块负载中完成亚秒级响应；这不适用于任意 mesh 场景，也不是所有请求的延迟保证。基准应区分冷启动、预热、排队、GPU 计算和结果写盘。
+批量快速路径最多 64 个环境，每环境最多 64 个固定尺寸方块；不符合条件的请求分流通用后端。性能应区分首次编译、预热、排队、GPU 计算和写盘；方块基准不能代表任意 mesh 场景。`a100sim/validate_*` 中的研究脚本可能需要显式输入已有的基准报告，不属于从零安装的必跑步骤。
+
+公开验收报告保留匿名数值和功能范围，不包含部署主机、用户、设备身份或调度任务。兼容修复与启动器在 A100 运行环境上进行实际验证；完整网络下载流程尚未在空白主机从头到尾重建，部署者应执行上述诊断与 smoke / 功能检查。
 
 ## 常见问题
 
-| 现象 | 排查方向 |
+| 现象 | 处理 |
 | --- | --- |
-| glibc / GLIBCXX 版本错误 | 确认通过本仓库的 `run-*-fixed.sh` 启动；先完成 `install-libs.sh`。特殊环境可指定 `A100SIM_CXX_LIB_DIR` |
-| 找不到 `libnvoptix.so.1` | 执行 `get-driver-libs.sh`，核对驱动版本与 `A100SIM_NVIDIA_ROOT` |
-| OptiX JIT / PTX `copysign` 错误 | 检查 Dr.Jit 固定版本和补丁库，重新执行 `build-drjit.sh` |
-| `asset must be ... under ...` | 使用服务端绝对目录，确保位于 `A100SIM_ASSET_ROOT` 内 |
-| systemd 用户服务不可用 | 先用两个终端前台启动，检查用户会话和集群限制 |
-| 端口冲突 | 调整 `.env` 的三个端口；前端会按配置连接通用后端 |
-| 材质像塑料或细节丢失 | 当前顶点颜色渲染不完整复现源 PBR 材质；检查网格顶点密度和 base-color 转换 |
+| 找不到 A100 或分配范围内无匹配设备 | 核对 `CUDA_VISIBLE_DEVICES`、本机设备列表与 `ISAAC_GPU` |
+| 找不到 Toolkit / Python | 设置自己安装位置对应的 `A100SIM_CUDA_ROOT` / `A100SIM_PYTHON` |
+| glibc / GLIBCXX 错误 | 完成 `install-libs.sh`，通过仓库启动器运行；必要时配置 `A100SIM_CXX_LIB_DIR` |
+| 找不到 OptiX 库 | 执行 `get-driver-libs.sh`；核对归档版本与实际驱动是否匹配 |
+| OptiX PTX / copysign 错误 | 检查固定 Dr.Jit 版本与补丁，重新运行 `build-drjit.sh` |
+| 条件图节点需要较新驱动 | 使用仓库 `create_app()` 与 `auto` 策略；检查是否绕过兼容层 |
+| Newton tensor PTX toolchain 错误 | 构建兼容 kernels；核对使用本仓库 `run-newton.sh` / `create_app()`，更新包后重建 |
+| 编译时 ABI 不匹配 | 使用当前分支对应的源码与固定包；检查 Toolkit 的 CUDA C++ 头文件版本 |
+| systemd 用户服务不可用 | 先用前台终端启动，核对用户会话与资源管理策略 |
+| 端口冲突 | 修改 `.env` 中对应端口；基础入口按配置连接后端 |
+| 资产路径被拒绝 | 使用服务端绝对路径，确保位于配置的资产根目录中 |
 
-## 源码与许可
+## 源码、许可与参考
 
-`a100/source-manifest.json` 保存整理前部署源码的 SHA-256 和版本来源，便于追溯。源码经过路径、设备、端口、安装与启动配置的迁移整理；它不是整台服务器的镜像。
+[source-manifest.json](a100/source-manifest.json) 记录适配源码的相对路径、SHA-256 与官方基线。大型运行时、rootfs、wheel、权重、资产、结果及 `.env` 均由 `.gitignore` 排除。
 
-本仓库保留官方 [LICENSE](LICENSE) 与 [THIRD_PARTY_NOTICE.md](THIRD_PARTY_NOTICE.md)。新增适配代码按 Apache-2.0 提供。Isaac Sim / Omniverse Kit 运行时、NVIDIA 驱动组件、Mitsuba、Dr.Jit、OIDN 及模型资产分别遵循各自许可。Dr.Jit 补丁基于 [mitsuba-renderer/drjit-core](https://github.com/mitsuba-renderer/drjit-core)；`a100/research/` 中 NVIDIA 源码保留其原版权声明。
+保留官方 [LICENSE](LICENSE) 和 [THIRD_PARTY_NOTICE.md](THIRD_PARTY_NOTICE.md)。新增适配代码使用 Apache-2.0；Isaac Sim / Kit 运行时、驱动组件、Mitsuba、Dr.Jit、OIDN 和资产分别遵循各自许可。兼容构建使用仓库中的 NVIDIA CUDA 源码并保留版权；Dr.Jit 补丁基于 [drjit-core](https://github.com/mitsuba-renderer/drjit-core)。
 
-大型运行时二进制、rootfs、wheel、模型权重、生成资产、作业结果及本机配置均由 `.gitignore` 排除，按上面的步骤在部署机获取。
+参考：[Isaac Sim 6.2 硬件要求](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/installation/requirements.html)、[release notes](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/overview/release_notes.html)、[Newton 后端](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/physics/newton_physics.html)、[Physics RaycastSensor](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/sensors/isaacsim_sensors_physics_raycast.html)。本方案不改变 NVIDIA 对完整 RTX 应用的官方硬件支持范围。

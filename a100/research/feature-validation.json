@@ -9,16 +9,14 @@
     "upstream_commit": "74a9356b20250dd60337d90b4b4d913c9454d32b"
   },
   "environment": {
-    "gpu": "NVIDIA A100-SXM4-80GB",
-    "physical_gpu_index": 2,
-    "driver": "535.161.08",
+    "gpu": "NVIDIA A100",
     "driver_cuda": "12.2",
     "warp": "1.17.0",
     "mitsuba": "3.9.1",
     "drjit": "1.5.0",
-    "host": "Ubuntu 20.04.6",
     "rootfs": "Ubuntu 24.04 Noble",
     "python": "3.12",
+    "scope": "Anonymous compatibility test; this is not a required host configuration",
     "native_rtx": false,
     "physics_device": "cuda:0",
     "control_note": "Drive parameter edits use CPU buffers; targets, forces, and physics run on CUDA"
@@ -26,7 +24,6 @@
   "deployment": {
     "feature_url": "http://127.0.0.1:8322",
     "unit": "isaacsim-a100-features.service",
-    "lifetime": "Bound to the current Slurm allocation",
     "arm_count": 4,
     "ros2_domain": 80,
     "ros2_discovery": "LOCALHOST"
@@ -277,7 +274,7 @@
           1.0
         ]
       ],
-      "scope": "Kit Newton XPBD with direct Warp state; official Newton tensor GPU API not verified",
+      "scope": "Earlier direct Warp state check; the separate portable newton-native acceptance verifies native tensor control",
       "cuda_graph": false
     }
   ],
@@ -298,8 +295,8 @@
     "mean_free_displacement_m": 0.575594425201416,
     "minimum_height_m": 0.9830910563468933,
     "execution_seconds": 6.203377716243267,
-    "scene": "${A100SIM_ROOT}/features/jobs/b0678fd283eb4673985744a58044f276/cloth.usdc",
-    "trajectory": "${A100SIM_ROOT}/features/jobs/b0678fd283eb4673985744a58044f276/cloth.npz"
+    "scene": "${RESULT_DIR}/cloth.usdc",
+    "trajectory": "${RESULT_DIR}/cloth.npz"
   },
   "gain_tuner": {
     "joint_count": 2,
@@ -370,65 +367,48 @@
     "isaacsim-ros2": "6.2.0.0",
     "contourpy": "1.4.0"
   },
-  "fleet": {
-    "timestamp_utc": "2026-11-12T08:54:28.794798+00:00",
+  "service_health": {
+    "success": true,
     "services": {
       "8321": {
         "status": "ready",
         "cpu_fallback": false,
-        "native_rtx": false,
-        "uptime_seconds": 1738743.96,
-        "completed": 758,
-        "failed": 0
+        "native_rtx": false
       },
       "18323": {
         "status": "ready",
         "cpu_fallback": false,
-        "native_rtx": false,
-        "uptime_seconds": 1815597.49,
-        "completed": 849,
-        "failed": 0
+        "native_rtx": false
       },
       "8320": {
         "status": "ready",
         "cpu_fallback": null,
-        "native_rtx": null,
-        "uptime_seconds": 2005600.7,
-        "completed": 0,
-        "failed": 0
+        "native_rtx": null
       },
       "8322": {
         "status": "ready",
         "cpu_fallback": false,
-        "native_rtx": false,
-        "uptime_seconds": 90.26,
-        "completed": 15,
-        "failed": 0
+        "native_rtx": false
       }
-    },
-    "deployment": "g3005, allocated GPU 2; allocation-bound lifetime",
-    "feature_unit": "active",
-    "gpu": "2, NVIDIA A100-SXM4-80GB, 535.161.08, 53535 MiB, 81920 MiB",
-    "success": true
+    }
   },
   "source_checks": {
-    "ast_files": 57,
+    "ast_files": 63,
     "bash_files": 30,
     "systemd_units": 4,
     "systemd_exit_code": 0,
     "systemd_output": "",
     "unit_tests_exit_code": 0,
-    "unit_tests_output": "test_assets_reject_paths_and_symlinks_outside_configured_root (test_contract.ServiceContractTests.test_assets_reject_paths_and_symlinks_outside_configured_root) ... ok\ntest_mesh_requires_prepared_asset_and_normalizes_orientation (test_contract.ServiceContractTests.test_mesh_requires_prepared_asset_and_normalizes_orientation) ... ok\ntest_queue_rejects_overflow_without_creating_another_job (test_contract.ServiceContractTests.test_queue_rejects_overflow_without_creating_another_job) ... ok\ntest_request_rejects_nonfinite_and_boolean_numeric_values (test_contract.ServiceContractTests.test_request_rejects_nonfinite_and_boolean_numeric_values) ... ok\ntest_restart_marks_unfinished_job_interrupted_without_replaying (test_contract.ServiceContractTests.test_restart_marks_unfinished_job_interrupted_without_replaying) ... ok\ntest_bounded_capture_scan_and_trajectory_requests (test_features.FeatureContractTests.test_bounded_capture_scan_and_trajectory_requests) ... ok\ntest_optional_cloth_is_advertised_only_when_newton_is_present (test_features.FeatureContractTests.test_optional_cloth_is_advertised_only_when_newton_is_present) ... ok\ntest_robot_commands_reject_invalid_shapes_modes_and_nonfinite_values (test_features.FeatureContractTests.test_robot_commands_reject_invalid_shapes_modes_and_nonfinite_values) ... ok\ntest_ros_commands_map_reversed_names_and_reject_ambiguous_modes (test_features.FeatureContractTests.test_ros_commands_map_reversed_names_and_reject_ambiguous_modes) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.019s\n\nOK\n",
-    "success": true,
-    "systemd_host": "g3005"
+    "unit_tests_output": "test_assets_reject_paths_and_symlinks_outside_configured_root (test_contract.ServiceContractTests.test_assets_reject_paths_and_symlinks_outside_configured_root) ... ok\ntest_mesh_requires_prepared_asset_and_normalizes_orientation (test_contract.ServiceContractTests.test_mesh_requires_prepared_asset_and_normalizes_orientation) ... ok\ntest_queue_rejects_overflow_without_creating_another_job (test_contract.ServiceContractTests.test_queue_rejects_overflow_without_creating_another_job) ... ok\ntest_request_rejects_nonfinite_and_boolean_numeric_values (test_contract.ServiceContractTests.test_request_rejects_nonfinite_and_boolean_numeric_values) ... ok\ntest_restart_marks_unfinished_job_interrupted_without_replaying (test_contract.ServiceContractTests.test_restart_marks_unfinished_job_interrupted_without_replaying) ... ok\ntest_bounded_capture_scan_and_trajectory_requests (test_features.FeatureContractTests.test_bounded_capture_scan_and_trajectory_requests) ... ok\ntest_optional_cloth_is_advertised_only_when_newton_is_present (test_features.FeatureContractTests.test_optional_cloth_is_advertised_only_when_newton_is_present) ... ok\ntest_robot_commands_reject_invalid_shapes_modes_and_nonfinite_values (test_features.FeatureContractTests.test_robot_commands_reject_invalid_shapes_modes_and_nonfinite_values) ... ok\ntest_ros_commands_map_reversed_names_and_reject_ambiguous_modes (test_features.FeatureContractTests.test_ros_commands_map_reversed_names_and_reject_ambiguous_modes) ... ok\ntest_conditional_graphs_follow_the_driver_api (test_portability.PortabilityTests.test_conditional_graphs_follow_the_driver_api) ... ok\ntest_selection_respects_masks_even_with_an_explicit_gpu (test_portability.PortabilityTests.test_selection_respects_masks_even_with_an_explicit_gpu) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.021s\n\nOK\n",
+    "success": true
   },
   "limitations": {
     "native_rtx": "A100 has no RT Cores; the complete official RTX application is unsupported",
     "annotations": "Custom Mitsuba primary-surface outputs, not Replicator; explicit semantic labels required",
     "raycast_scan": "Collision-geometry distances, not an RTX LiDAR signal model",
     "gripper": "Custom PhysX fixed-joint demo verified; official Surface Gripper grasp still unverified",
-    "newton_mujoco_warp": "Conditional graph nodes require CUDA driver 12.4+ on this deployment",
-    "newton_tensor_gpu": "Observed unsupported PTX toolchain with R535; direct XPBD Warp state verified",
+    "newton_mujoco_warp": "Conditional graph nodes need CUDA driver API 12.4+; compatibility layer selects ordinary CUDA launches below that version",
+    "newton_tensor_gpu": "Build compatible native kernels on the deployment host; native rigid-body tensor operations and MuJoCo joint control are verified by newton_native.py",
     "cloth": "Standalone Newton model; no bidirectional coupling to the PhysX robot world",
     "isaac_lab": "Framework and Torch training stack not installed or validated; rl_step is observations only",
     "asset_postprocessing": "Asset transformer disabled; URDF multi-physics postprocessing disabled",
@@ -440,5 +420,363 @@
     "https://docs.isaacsim.omniverse.nvidia.com/6.2.0/overview/release_notes.html",
     "https://docs.isaacsim.omniverse.nvidia.com/6.2.0/physics/newton_physics.html",
     "https://docs.isaacsim.omniverse.nvidia.com/6.2.0/sensors/isaacsim_sensors_physics_raycast.html"
-  ]
+  ],
+  "portable_launchers": [
+    {
+      "name": "doctor-prerequisites",
+      "exit_code": 0,
+      "success": true
+    },
+    {
+      "name": "doctor-runtime",
+      "exit_code": 0,
+      "success": true
+    },
+    {
+      "name": "native-kernel-build",
+      "exit_code": 0,
+      "success": true
+    },
+    {
+      "name": "newton-native",
+      "exit_code": 0,
+      "report": {
+        "success": true,
+        "newton_version": "1.6.1",
+        "device": "cuda:0",
+        "cpu_fallback": false,
+        "solver": "mujoco",
+        "compatibility": {
+          "driver_api_version": 12020,
+          "conditional_graphs": false,
+          "cpu_fallback": false
+        },
+        "conditional_graphs": false,
+        "outer_cuda_graph": false,
+        "steps": 240,
+        "iterations": 20,
+        "line_search_iterations": 8,
+        "step_seconds": 14.188402004539967,
+        "cube_pose": [
+          [
+            -4.9894723908039396e-09,
+            -1.0,
+            0.0999726876616478,
+            -3.4558195194378527e-10,
+            -5.205623043735841e-09,
+            1.0603899092131996e-08,
+            1.0
+          ]
+        ],
+        "joint_positions": [
+          [
+            0.29999983310699463,
+            -0.19999992847442627
+          ]
+        ],
+        "max_joint_error_rad": 1.7881393432617188e-07,
+        "checks": {
+          "pose_write_read": true,
+          "pose_matches_cuda_state": true,
+          "velocity_read": true,
+          "mass_matches_cuda_model": true,
+          "inertia_matches_cuda_model": true,
+          "joint_target_tracking": true
+        },
+        "scope": "Native Newton tensor rigid-body reads/writes and MuJoCo articulation control; other APIs require validation"
+      },
+      "success": true
+    },
+    {
+      "name": "newton-xpbd",
+      "exit_code": 0,
+      "report": {
+        "success": true,
+        "newton_version": "1.6.1",
+        "solver": "xpbd",
+        "device": "cuda:0",
+        "cube_height_m": 0.09999900311231613,
+        "body_paths": [
+          "/World/Arm/base",
+          "/World/Arm/link1",
+          "/World/Arm/link2",
+          "/World/Cube"
+        ],
+        "body_poses": [
+          [
+            2.25068689019281e-07,
+            0.0,
+            0.6498668789863586,
+            0.0,
+            0.0008711315458640456,
+            0.0,
+            0.9999996423721313
+          ],
+          [
+            0.3502587378025055,
+            0.0,
+            0.7975577712059021,
+            0.0,
+            0.002575462916865945,
+            0.0,
+            0.9999966621398926
+          ],
+          [
+            1.0502464771270752,
+            0.0,
+            0.7931870222091675,
+            0.0,
+            0.003034970723092556,
+            0.0,
+            0.9999954104423523
+          ],
+          [
+            1.441476911168138e-07,
+            -1.0000001192092896,
+            0.09999900311231613,
+            -2.7348978637320442e-09,
+            1.1537255595328588e-08,
+            3.0538094275556205e-10,
+            1.0
+          ]
+        ],
+        "scope": "Kit Newton XPBD direct Warp state; native tensor control is checked separately by newton_native.py",
+        "cuda_graph": false
+      },
+      "success": true
+    },
+    {
+      "name": "portable-smoke",
+      "exit_code": 0,
+      "report": {
+        "isaac_sim": "6.2.0",
+        "physics_device": "cuda:0",
+        "native_rtx": false,
+        "cpu_fallback": false,
+        "bodies": [
+          {
+            "id": "smoke-cube",
+            "prim_path": "/World/Bodies/B0000",
+            "pose_xyzw": [
+              -0.20000030100345612,
+              -3.7604104363708757e-07,
+              0.10000000149011612,
+              9.94125343822816e-07,
+              -4.983387498214142e-07,
+              1.512273972714695e-09,
+              1.0
+            ],
+            "velocity": [
+              5.3510044381255284e-05,
+              -3.131409175693989e-05,
+              -0.00010647717863321304,
+              0.0008432096219621599,
+              0.00010890259000007063,
+              -2.0485010736592812e-06
+            ]
+          },
+          {
+            "id": "smoke-sphere",
+            "prim_path": "/World/Bodies/B0001",
+            "pose_xyzw": [
+              0.20000000298023224,
+              0.0,
+              0.10000000894069672,
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "velocity": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "rigid_bodies": 2,
+        "steps": 120,
+        "dt": 0.008333333333333333,
+        "simulation_seconds": 1.0,
+        "setup_seconds": 0.24004793912172318,
+        "physics_seconds": 0.397701621055603,
+        "state_npz": "${A100SIM_ROOT}/features/reports/portable-portable-smoke/state.npz",
+        "collision": "PhysX primitives; convexHull for dynamic mesh",
+        "scene": "${A100SIM_ROOT}/features/reports/portable-portable-smoke/scene.usdc",
+        "render": {
+          "mode": "mesh",
+          "renderer": "A100 CUDA USD adapter",
+          "native_rtx": false,
+          "cpu_fallback": false,
+          "resolution": [
+            128,
+            128
+          ],
+          "spp": 4,
+          "gaussian_gain": null,
+          "setup_seconds": 1.0132415294647217,
+          "render_seconds": 1.175222247838974,
+          "image": "render.png",
+          "camera": "/World/Camera",
+          "camera_world": [
+            [
+              0.8191520442889919,
+              -0.1961746949690111,
+              0.5389855446957561,
+              1.6169566340872683
+            ],
+            [
+              0.573576436351046,
+              0.2801664995932356,
+              -0.7697511313200572,
+              -2.3092533939601716
+            ],
+            [
+              0.0,
+              0.9396926207859084,
+              0.34202014332566877,
+              1.2260604299770061
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "fov_degrees": 34.00000021004289,
+          "usd_sources": [
+            {
+              "prim": "/World/Ground",
+              "kind": "cube",
+              "world_matrix": [
+                [
+                  200.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  200.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.20000000298023224,
+                  -0.1
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ]
+            },
+            {
+              "prim": "/World/Bodies/B0000/Visual",
+              "kind": "cube",
+              "world_matrix": [
+                [
+                  0.2000000029801329,
+                  -6.051077625750888e-10,
+                  -1.9933550229754015e-07,
+                  -0.20000030100345612
+                ],
+                [
+                  6.047114336243778e-10,
+                  0.20000000297983694,
+                  -3.9765014375602503e-07,
+                  -3.7604104363708757e-07
+                ],
+                [
+                  1.9933550350025208e-07,
+                  3.976501431531253e-07,
+                  0.20000000297973758,
+                  0.10000000149011612
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ]
+            },
+            {
+              "prim": "/World/Bodies/B0001/Visual",
+              "kind": "sphere",
+              "world_matrix": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.20000000298023224
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.10000000894069672
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ]
+            },
+            {
+              "prim": "/World/Dome",
+              "kind": "DomeLight",
+              "radiance": [
+                0.44999998807907104,
+                0.47999998927116394,
+                0.5199999809265137
+              ]
+            },
+            {
+              "prim": "/World/KeyLight",
+              "kind": "RectLight",
+              "radiance": [
+                5.0,
+                5.0,
+                5.0
+              ]
+            }
+          ]
+        },
+        "image": "${A100SIM_ROOT}/features/reports/portable-portable-smoke/render.png"
+      },
+      "success": true
+    }
+  ],
+  "newton_native_kernel_build": {
+    "plugin_sha256": "cc202e64946d22d449f59b4250798e3f4f4e318dffc726ba7c5dc7d24f97feab",
+    "library_sha256": "483f9cf76d0168f4c130059aa07ca75902895289330bd7607b08ada73826e690",
+    "compute_capability": "80",
+    "code_type": "native cubin",
+    "launch_wrappers": 32,
+    "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2023 NVIDIA Corporation\nBuilt on Tue_Aug_15_22:02:13_PDT_2023\nCuda compilation tools, release 12.2, V12.2.140\nBuild cuda_12.2.r12.2/compiler.33191640_0",
+    "source_sha256": {
+      "gpu/CudaKernels.cu": "8a4e5b7f72a7bcbe90491c8ce0b415dd9e6d0264fde80217607accec0d20a803",
+      "gpu/CudaKernels.hpp": "8997261d3f9e1d5616035f28771d42b303f16dc65e21f71372f34a624f0c9966",
+      "gpu/CudaCommon.hpp": "104f51899e8c999a23f98494d3c7a99b5dd1e4b5cf8ca6836fe42914c9e9444f",
+      "utils/WarpCompat.hpp": "a0c5efdc223acf80c9dda7597aa7890867312857f1eb4ade320b4e61e23d060e",
+      "utils/WrenchOps.hpp": "6ab15e9058e15dc8b0e47717918d3b1fdaaaa4b6f3e887250219789238e35114"
+    }
+  }
 }

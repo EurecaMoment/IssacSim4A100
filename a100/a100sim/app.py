@@ -5,6 +5,13 @@ from pathlib import Path
 
 
 def create_app():
+    requested = [name.strip() for name in os.environ.get("A100SIM_ENABLE_EXTENSIONS", "").split(",") if name.strip()]
+    use_newton = "isaacsim.physics.newton" in requested
+    if use_newton:
+        from a100sim.newton_compat import load_kernel_override
+
+        # Load before Kit opens its Newton plugin so the CUDA launch wrappers resolve here.
+        load_kernel_override()
     from isaacsim import SimulationApp
 
     base = Path(os.environ.get("A100SIM_ROOT", Path(__file__).resolve().parents[1]))
@@ -20,7 +27,7 @@ def create_app():
         "omni.kit.usd.layers",
         "omni.hydra.usdrt_delegate",
     ]
-    extensions += [name.strip() for name in os.environ.get("A100SIM_ENABLE_EXTENSIONS", "").split(",") if name.strip()]
+    extensions += requested
     args = [
         "--/app/extensions/registryEnabled=false",
         "--/app/renderer/enabled=false",
@@ -45,7 +52,7 @@ def create_app():
         args += [f"--/app/extensions/excluded/{index}={name}"]
     for name in extensions:
         args += ["--enable", name]
-    return SimulationApp(
+    app = SimulationApp(
         {
             "headless": True,
             "multi_gpu": False,
@@ -56,6 +63,11 @@ def create_app():
         },
         experience=None,
     )
+    if use_newton:
+        from a100sim.newton_compat import install_mujoco_compatibility
+
+        install_mujoco_compatibility()
+    return app
 
 
 class Physics:

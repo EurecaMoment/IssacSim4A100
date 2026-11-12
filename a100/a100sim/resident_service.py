@@ -27,7 +27,7 @@ from pathlib import Path
 from .physics_service import PhysicsQueue
 from .service_queue import JOB_ID
 
-OWNER_TAG = "isaacsim-gpu2-resident-v1"
+OWNER_TAG = "isaacsim-a100-resident-v1"
 
 
 def compact_json(path, value):

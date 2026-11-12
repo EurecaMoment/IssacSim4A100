@@ -4,11 +4,15 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/config.sh"
 rootfs="$A100SIM_ROOT/rootfs"
 workdir="$PWD"
 [[ -x "$rootfs/bin/bash" ]] || { echo "Run prepare.sh first: missing Ubuntu rootfs" >&2; exit 2; }
+python_prefix="$("$A100SIM_PYTHON" -c 'import sys; print(sys.base_prefix)')"
+case "$python_prefix" in
+    /|/usr|/usr/local) echo "Use an independent Python 3.12 installation, for example uv python install 3.12" >&2; exit 2 ;;
+esac
 mount --make-rprivate /
 mkdir -p "$rootfs/dev" "$rootfs/proc" "$rootfs/sys" "$rootfs/opt/host-nvidia" "$rootfs/usr/share/nvidia"
 # Bind paths at their original absolute names so USD references and job paths agree.
 # Non-recursive binds avoid importing this namespace's child mounts again.
-for directory in "$A100SIM_HOST_HOME" "$A100SIM_ROOT" "$A100SIM_CODE_ROOT" "$A100SIM_NVIDIA_ROOT" \
+for directory in "$A100SIM_HOST_HOME" "$A100SIM_ROOT" "$A100SIM_CODE_ROOT" "$A100SIM_NVIDIA_ROOT" "$python_prefix" \
                  "$A100SIM_LOCAL_STATE" "$A100SIM_ASSET_ROOT" "$A100SIM_STATE_ROOT" \
                  "${A100SIM_FEATURES_ROOT:-$A100SIM_ROOT/features}"; do
     [[ "$directory" = /* && "$directory" != / ]] || { echo "Expected absolute directory: $directory" >&2; exit 2; }
@@ -19,6 +23,9 @@ chmod 700 "$A100SIM_LOCAL_STATE"
 for directory in /dev /proc /sys; do
     mount --rbind "$directory" "$rootfs$directory"
 done
+[[ -n "$A100SIM_CUDA_ROOT" && -d "$A100SIM_CUDA_ROOT" ]] || {
+    echo "CUDA Toolkit not detected; set A100SIM_CUDA_ROOT to its absolute directory" >&2; exit 2;
+}
 mkdir -p "$rootfs$A100SIM_CUDA_ROOT"
 mount --bind "$A100SIM_CUDA_ROOT" "$rootfs$A100SIM_CUDA_ROOT"
 while IFS= read -r library; do

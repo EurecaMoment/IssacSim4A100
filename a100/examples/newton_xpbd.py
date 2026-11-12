@@ -1,4 +1,4 @@
-"""Check the Kit Newton XPBD solver using direct CUDA Warp state on driver R535."""
+"""Check the Kit Newton XPBD solver using direct CUDA Warp state."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from a100sim.app import create_app
 
 
 def main() -> None:
-    """Run a one-second drop without the unsupported Newton tensor GPU kernels."""
+    """Run a one-second drop and verify the live CUDA state."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     arguments = parser.parse_args()
@@ -71,7 +71,7 @@ def main() -> None:
             cube_height_m=cube_height,
             body_paths=list(current.model.body_label),
             body_poses=poses.tolist(),
-            scope="Kit Newton XPBD with direct Warp state; official Newton tensor GPU API not verified",
+            scope="Kit Newton XPBD direct Warp state; native tensor control is checked separately by newton_native.py",
             cuda_graph=False,
         )
         timeline.stop()
