@@ -1,0 +1,600 @@
+{
+  "scope": "loopback gRPC + HTTP fixture; no simulator/GPU work",
+  "simulator_execution_verified": false,
+  "platform": "Windows",
+  "python": "3.12.14",
+  "grpcio": "1.85.1",
+  "timestamp_unix": 1794605262.5098624,
+  "warmup_requests_per_workload": 10,
+  "api_version": "a100sim.v1",
+  "measurements": [
+    {
+      "workload": "capabilities",
+      "concurrency": 1,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.6150035000173375,
+      "completed_per_second": 325.20140128367046,
+      "admission": {
+        "p50_ms": 2.701299963518977,
+        "p95_ms": 5.471500102430582,
+        "p99_ms": 6.419899989850819,
+        "mean_ms": 3.0109874956542626
+      },
+      "end_to_end": {
+        "p50_ms": 2.702099969610572,
+        "p95_ms": 5.472099990583956,
+        "p99_ms": 6.42130000051111,
+        "mean_ms": 3.0117614957271144
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 1
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 1,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.5862244999734685,
+      "completed_per_second": 341.16622558260815,
+      "admission": {
+        "p50_ms": 2.5334999663755298,
+        "p95_ms": 4.928899928927422,
+        "p99_ms": 6.710399989970028,
+        "mean_ms": 2.8870615031337366
+      },
+      "end_to_end": {
+        "p50_ms": 2.534199971705675,
+        "p95_ms": 4.929599934257567,
+        "p99_ms": 6.711299996823072,
+        "mean_ms": 2.887754501425661
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 2
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 1,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.6770788999274373,
+      "completed_per_second": 295.3865495165099,
+      "admission": {
+        "p50_ms": 2.5314000668004155,
+        "p95_ms": 5.404600058682263,
+        "p99_ms": 9.66450001578778,
+        "mean_ms": 3.3452635043067858
+      },
+      "end_to_end": {
+        "p50_ms": 2.5321999564766884,
+        "p95_ms": 5.405800067819655,
+        "p99_ms": 9.665300021879375,
+        "mean_ms": 3.346240003593266
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 3
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 8,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.4152489999542013,
+      "completed_per_second": 481.6387276599304,
+      "admission": {
+        "p50_ms": 16.10619993880391,
+        "p95_ms": 21.61560009699315,
+        "p99_ms": 23.75190006569028,
+        "mean_ms": 16.25007000286132
+      },
+      "end_to_end": {
+        "p50_ms": 16.106899944134057,
+        "p95_ms": 21.61649998743087,
+        "p99_ms": 23.752600071020424,
+        "mean_ms": 16.251022499636747
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 1
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 8,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.40360790002159774,
+      "completed_per_second": 495.53043929342726,
+      "admission": {
+        "p50_ms": 15.973899979144335,
+        "p95_ms": 19.40310001373291,
+        "p99_ms": 21.273299935273826,
+        "mean_ms": 15.782823497429492
+      },
+      "end_to_end": {
+        "p50_ms": 15.97459998447448,
+        "p95_ms": 19.403700018301606,
+        "p99_ms": 21.27439994364977,
+        "mean_ms": 15.783542498247698
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 2
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 8,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.41533790004905313,
+      "completed_per_second": 481.5356363490526,
+      "admission": {
+        "p50_ms": 16.228599939495325,
+        "p95_ms": 20.892299944534898,
+        "p99_ms": 27.053199941292405,
+        "mean_ms": 16.28391199570615
+      },
+      "end_to_end": {
+        "p50_ms": 16.22939994558692,
+        "p95_ms": 20.892799948342144,
+        "p99_ms": 27.054399950429797,
+        "mean_ms": 16.284821496228687
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 3
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 32,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.3957582999719307,
+      "completed_per_second": 505.3589527097349,
+      "admission": {
+        "p50_ms": 62.26180004887283,
+        "p95_ms": 68.39989998843521,
+        "p99_ms": 70.64879999961704,
+        "mean_ms": 58.97322949953377
+      },
+      "end_to_end": {
+        "p50_ms": 62.262200051918626,
+        "p95_ms": 68.40009998995811,
+        "p99_ms": 70.65000000875443,
+        "mean_ms": 58.97410599747673
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 1
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 32,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.5204959000693634,
+      "completed_per_second": 384.24894408072606,
+      "admission": {
+        "p50_ms": 63.933599973097444,
+        "p95_ms": 119.24630007706583,
+        "p99_ms": 121.70719995629042,
+        "mean_ms": 75.9369529952528
+      },
+      "end_to_end": {
+        "p50_ms": 63.93449997995049,
+        "p95_ms": 119.247299968265,
+        "p99_ms": 121.70819996390492,
+        "mean_ms": 75.93777399510145
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 2
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 32,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.4129827000433579,
+      "completed_per_second": 484.281787055493,
+      "admission": {
+        "p50_ms": 66.54150004032999,
+        "p95_ms": 76.50070008821785,
+        "p99_ms": 78.20069999434054,
+        "mean_ms": 61.833924000384286
+      },
+      "end_to_end": {
+        "p50_ms": 66.54220004566014,
+        "p95_ms": 76.50169997941703,
+        "p99_ms": 78.20099999662489,
+        "mean_ms": 61.834689999814145
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 3
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 1,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 4.258406699984334,
+      "completed_per_second": 46.965922724275195,
+      "admission": {
+        "p50_ms": 7.266700034961104,
+        "p95_ms": 12.450699927285314,
+        "p99_ms": 17.31979998294264,
+        "mean_ms": 8.152027002652176
+      },
+      "end_to_end": {
+        "p50_ms": 19.41889990121126,
+        "p95_ms": 31.575000029988587,
+        "p99_ms": 49.21299999114126,
+        "mean_ms": 21.223951501306146
+      },
+      "queue": {
+        "p50_ms": 2.0036697387695312,
+        "p95_ms": 4.81104850769043,
+        "p99_ms": 7.187366485595703,
+        "mean_ms": 2.214341163635254
+      },
+      "upstream_execution": {
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "mean_ms": 0.0
+      },
+      "trial": 1
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 1,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 4.539792599971406,
+      "completed_per_second": 44.05487598734349,
+      "admission": {
+        "p50_ms": 7.57110002450645,
+        "p95_ms": 12.59820000268519,
+        "p99_ms": 30.17869999166578,
+        "mean_ms": 8.571562502766028
+      },
+      "end_to_end": {
+        "p50_ms": 19.832100020721555,
+        "p95_ms": 28.98210007697344,
+        "p99_ms": 64.1512000001967,
+        "mean_ms": 22.631270496058278
+      },
+      "queue": {
+        "p50_ms": 2.043008804321289,
+        "p95_ms": 5.008935928344727,
+        "p99_ms": 9.47880744934082,
+        "mean_ms": 2.3890256881713867
+      },
+      "upstream_execution": {
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "mean_ms": 0.0
+      },
+      "trial": 2
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 1,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 4.195242399931885,
+      "completed_per_second": 47.673049834557176,
+      "admission": {
+        "p50_ms": 7.614700007252395,
+        "p95_ms": 13.908999972045422,
+        "p99_ms": 18.50670005660504,
+        "mean_ms": 8.16634800285101
+      },
+      "end_to_end": {
+        "p50_ms": 19.694400019943714,
+        "p95_ms": 29.945299960672855,
+        "p99_ms": 41.66119999717921,
+        "mean_ms": 20.89621949591674
+      },
+      "queue": {
+        "p50_ms": 1.9707679748535156,
+        "p95_ms": 4.740238189697266,
+        "p99_ms": 6.298065185546875,
+        "mean_ms": 2.169833183288574
+      },
+      "upstream_execution": {
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "mean_ms": 0.0
+      },
+      "trial": 3
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 8,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 3.3353572000050917,
+      "completed_per_second": 59.96359250508302,
+      "admission": {
+        "p50_ms": 48.382399952970445,
+        "p95_ms": 85.11620003264397,
+        "p99_ms": 120.11869996786118,
+        "mean_ms": 52.23137749941088
+      },
+      "end_to_end": {
+        "p50_ms": 125.01720001455396,
+        "p95_ms": 183.64740000106394,
+        "p99_ms": 198.54170002508909,
+        "mean_ms": 129.83546150266193
+      },
+      "queue": {
+        "p50_ms": 3.7758350372314453,
+        "p95_ms": 7.676362991333008,
+        "p99_ms": 9.904623031616211,
+        "mean_ms": 3.970868587493896
+      },
+      "upstream_execution": {
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "mean_ms": 0.0
+      },
+      "trial": 1
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 8,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 3.2811524000717327,
+      "completed_per_second": 60.9541940190366,
+      "admission": {
+        "p50_ms": 51.91849998664111,
+        "p95_ms": 81.70910004992038,
+        "p99_ms": 113.81480004638433,
+        "mean_ms": 53.85067199880723
+      },
+      "end_to_end": {
+        "p50_ms": 120.82469998858869,
+        "p95_ms": 191.25659996643662,
+        "p99_ms": 241.21890007518232,
+        "mean_ms": 127.79291599814313
+      },
+      "queue": {
+        "p50_ms": 3.7298202514648438,
+        "p95_ms": 8.332014083862305,
+        "p99_ms": 10.587215423583984,
+        "mean_ms": 4.25128698348999
+      },
+      "upstream_execution": {
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "mean_ms": 0.0
+      },
+      "trial": 2
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 8,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 3.8415160999866202,
+      "completed_per_second": 52.06277802680473,
+      "admission": {
+        "p50_ms": 55.97059999126941,
+        "p95_ms": 101.34080005809665,
+        "p99_ms": 313.5077999904752,
+        "mean_ms": 64.27293450164143
+      },
+      "end_to_end": {
+        "p50_ms": 131.40089996159077,
+        "p95_ms": 261.2890999298543,
+        "p99_ms": 411.9433999294415,
+        "mean_ms": 150.24004250473808
+      },
+      "queue": {
+        "p50_ms": 3.7751197814941406,
+        "p95_ms": 7.966518402099609,
+        "p99_ms": 12.938737869262695,
+        "mean_ms": 4.182330369949341
+      },
+      "upstream_execution": {
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "mean_ms": 0.0
+      },
+      "trial": 3
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 32,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 3.9540094999829307,
+      "completed_per_second": 50.58156789984025,
+      "admission": {
+        "p50_ms": 411.7991999955848,
+        "p95_ms": 600.983600015752,
+        "p99_ms": 616.4785999571905,
+        "mean_ms": 414.9301924975589
+      },
+      "end_to_end": {
+        "p50_ms": 525.8374999975786,
+        "p95_ms": 938.3768000407144,
+        "p99_ms": 991.9354000594467,
+        "mean_ms": 602.9515649966197
+      },
+      "queue": {
+        "p50_ms": 4.3773651123046875,
+        "p95_ms": 11.196136474609375,
+        "p99_ms": 15.865325927734375,
+        "mean_ms": 5.086492300033569
+      },
+      "upstream_execution": {
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "mean_ms": 0.0
+      },
+      "trial": 1
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 32,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 3.363857400021516,
+      "completed_per_second": 59.45555242583136,
+      "admission": {
+        "p50_ms": 417.0093999709934,
+        "p95_ms": 572.4532000022009,
+        "p99_ms": 587.0404000161216,
+        "mean_ms": 412.1105129935313
+      },
+      "end_to_end": {
+        "p50_ms": 507.3229999979958,
+        "p95_ms": 661.932299961336,
+        "p99_ms": 676.0784999933094,
+        "mean_ms": 505.97271849750535
+      },
+      "queue": {
+        "p50_ms": 3.8328170776367188,
+        "p95_ms": 8.189916610717773,
+        "p99_ms": 10.972976684570312,
+        "mean_ms": 4.271832704544067
+      },
+      "upstream_execution": {
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "mean_ms": 0.0
+      },
+      "trial": 2
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 32,
+      "requests": 200,
+      "completed": 200,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 3.2077953000552952,
+      "completed_per_second": 62.348118035010664,
+      "admission": {
+        "p50_ms": 393.5117000946775,
+        "p95_ms": 501.5816999366507,
+        "p99_ms": 517.4646000377834,
+        "mean_ms": 380.071948004188
+      },
+      "end_to_end": {
+        "p50_ms": 501.5239999629557,
+        "p95_ms": 602.9159999452531,
+        "p99_ms": 617.807500064373,
+        "mean_ms": 482.4227480054833
+      },
+      "queue": {
+        "p50_ms": 4.250764846801758,
+        "p95_ms": 9.105682373046875,
+        "p99_ms": 12.365341186523438,
+        "mean_ms": 4.805494546890259
+      },
+      "upstream_execution": {
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "mean_ms": 0.0
+      },
+      "trial": 3
+    }
+  ],
+  "success": true,
+  "captured_at": "2026-11-14",
+  "measured_calls": 3600,
+  "failed_calls": 0,
+  "summary": [
+    {
+      "workload": "capabilities",
+      "concurrency": 1,
+      "trials": 3,
+      "median_completed_per_second": 325.20140128367046,
+      "median_p95_ms": 5.405800067819655
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 8,
+      "trials": 3,
+      "median_completed_per_second": 481.6387276599304,
+      "median_p95_ms": 20.892799948342144
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 32,
+      "trials": 3,
+      "median_completed_per_second": 484.281787055493,
+      "median_p95_ms": 76.50169997941703
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 1,
+      "trials": 3,
+      "median_completed_per_second": 46.965922724275195,
+      "median_p95_ms": 29.945299960672855
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 8,
+      "trials": 3,
+      "median_completed_per_second": 59.96359250508302,
+      "median_p95_ms": 191.25659996643662
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 32,
+      "trials": 3,
+      "median_completed_per_second": 59.45555242583136,
+      "median_p95_ms": 661.932299961336
+    }
+  ]
+}

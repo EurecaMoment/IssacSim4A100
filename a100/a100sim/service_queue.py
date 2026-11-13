@@ -11,6 +11,7 @@ import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 JOB_ID = re.compile(r"^[a-f0-9]{32}$")
 ASSET_ROOT = Path(os.environ.get("A100SIM_ASSET_ROOT", Path(__file__).resolve().parents[1] / "assets")).resolve()
@@ -54,6 +55,7 @@ class JobQueue:
         self.output.mkdir(parents=True, exist_ok=True)
         self.jobs = queue.Queue(maxsize=capacity)
         self.lock = threading.RLock()
+        self.changed = threading.Condition(self.lock)
         self.ready = False
         self.error = None
         self.engine = engine
@@ -128,6 +130,7 @@ class JobQueue:
             with self.lock:
                 persist(directory / "job.json", record)
                 self.active = None
+                self.changed.notify_all()
             self.jobs.task_done()
 
     def work_forever(self):
@@ -170,12 +173,23 @@ def start_http(state, host, port, submit_route):
                 pass
 
         def do_GET(self):
-            if self.path == "/health":
+            parsed = urlsplit(self.path)
+            if parsed.path == "/health":
                 self.reply(state.health(), 200 if state.ready else 503)
                 return
-            if self.path.startswith("/jobs/"):
+            if parsed.path.startswith("/jobs/"):
                 try:
-                    value = state.status(self.path[len("/jobs/"):])
+                    job_id = parsed.path[len("/jobs/"):]
+                    parameters = parse_qs(parsed.query)
+                    wait_ms = integer(parameters.get("wait_ms", [0])[0], "wait_ms", 0, 30000)
+                    with state.changed:
+                        value = state.status(job_id)
+                        if value and value["state"] in {"queued", "running"} and wait_ms:
+                            state.changed.wait_for(
+                                lambda: state.status(job_id)["state"] not in {"queued", "running"},
+                                timeout=wait_ms / 1000,
+                            )
+                            value = state.status(job_id)
                     self.reply(value or {"error": "job not found"}, 200 if value else 404)
                 except ValueError as exc:
                     self.reply({"error": str(exc)}, 400)

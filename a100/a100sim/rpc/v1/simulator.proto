@@ -1,0 +1,240 @@
+syntax = "proto3";
+
+package a100sim.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+// Clients need this contract only. No Kit, CUDA, filesystem mounts or HTTP
+// backend addresses are part of the caller's runtime requirements.
+service Simulator {
+  rpc GetCapabilities(google.protobuf.Empty) returns (Capabilities);
+  // request_id is required. Reusing it with the same task returns the same job;
+  // a different task with that ID fails with ALREADY_EXISTS. Never retry a
+  // mutating request with a newly generated ID after an ambiguous timeout.
+  rpc SubmitTask(SubmitTaskRequest) returns (Job);
+  rpc GetJob(JobRequest) returns (Job);
+  // Cancelling this stream cancels observation, not accepted simulation work.
+  rpc WatchJob(WatchJobRequest) returns (stream Job);
+  // Only work still queued in the gateway can be cancelled safely.
+  rpc CancelJob(JobRequest) returns (Job);
+  // Process tasks in stream order; each response is a terminal job. Disconnects
+  // do not revoke work already accepted under its request_id.
+  rpc RunTasks(stream SubmitTaskRequest) returns (stream Job);
+  rpc ListAssets(google.protobuf.Empty) returns (AssetList);
+  // One file per stream. The first chunk supplies an optional existing asset_id
+  // and relative_path. File contents are immutable after successful upload.
+  rpc UploadAsset(stream UploadChunk) returns (AssetFile);
+  // Only artifacts returned by this job are accessible. Offsets support resume.
+  rpc DownloadArtifact(DownloadRequest) returns (stream DownloadChunk);
+}
+
+enum Availability {
+  AVAILABILITY_UNSPECIFIED = 0;
+  AVAILABLE = 1;
+  UNAVAILABLE = 2;
+  UNSUPPORTED = 3;
+  UNVERIFIED = 4;
+}
+
+message Capability {
+  string name = 1;
+  Availability availability = 2;
+  string reason = 3;
+  string scope = 4;
+  google.protobuf.Struct details = 5;
+}
+
+message Capabilities {
+  string api_version = 1;
+  string simulator_version = 2;
+  bool native_rtx = 3;
+  repeated Capability capabilities = 4;
+  uint32 queue_capacity = 5;
+  uint32 queued_jobs = 6;
+  uint32 running_jobs = 7;
+}
+
+enum Shape { CUBE = 0; SPHERE = 1; MESH = 2; }
+enum RenderKind { MESH_RENDER = 0; GAUSSIAN_RENDER = 1; }
+enum PhysicsRoute { AUTO = 0; GENERIC = 1; }
+enum ControlMode { POSITION = 0; VELOCITY = 1; EFFORT = 2; }
+enum NewtonSolver { XPBD = 0; MUJOCO_NATIVE = 1; }
+
+// Positions, lengths and depths use meters; rotations use radians except
+// explicitly named camera azimuth/elevation, which use degrees.
+message Body {
+  string id = 1;
+  Shape shape = 2;
+  repeated double position = 3;
+  repeated double orientation_xyzw = 4;
+  repeated double size = 5;
+  optional double radius = 6;
+  optional double mass = 7;
+  string asset_id = 8;
+  repeated double color = 9;
+}
+
+message Light {
+  repeated double color = 1;
+  optional double intensity = 2;
+  optional double exposure = 3;
+  optional double width = 4;
+  optional double height = 5;
+  repeated double origin = 6;
+  repeated double target = 7;
+}
+message Lighting { Light dome = 1; Light key = 2; repeated Light fills = 3; }
+message RenderSettings {
+  RenderKind kind = 1;
+  optional uint32 size = 2;
+  optional uint32 spp = 3;
+  optional uint32 seed = 4;
+  optional double azimuth = 5;
+  optional double elevation = 6;
+  optional double distance = 7;
+  repeated double target = 8;
+  Lighting lighting = 9;
+  optional double gaussian_gain = 10;
+}
+message SimulateRequest {
+  repeated Body bodies = 1;
+  optional uint32 steps = 2;
+  optional double dt = 3;
+  optional double gravity = 4;
+  optional bool ground = 5;
+  RenderSettings render = 6;
+  PhysicsRoute route = 7;
+}
+message JointTargets { repeated double values = 1; }
+message ControlRequest {
+  ControlMode mode = 1;
+  uint32 arm_index = 2;
+  // One row controls arm_index; N rows control all N configured arms.
+  repeated JointTargets targets = 3;
+  optional uint32 steps = 4;
+}
+message StepRequest { optional uint32 steps = 1; }
+message CaptureRequest { optional uint32 size = 1; optional uint32 spp = 2; }
+message GripperRequest { string operation = 1; }
+message TrajectoryRequest {
+  repeated JointTargets points = 1;
+  uint32 arm_index = 2;
+  optional double max_velocity = 3;
+  optional double max_acceleration = 4;
+}
+message DifferentialDriveRequest {
+  optional double linear_velocity = 1;
+  optional double angular_velocity = 2;
+  optional double wheel_radius = 3;
+  optional double wheel_base = 4;
+}
+message ClothRequest { optional uint32 frames = 1; }
+message ImportRobotRequest {
+  string asset_id = 1;
+  string relative_path = 2;
+  // This optional acceptance check supports the bundled one-DOF fixtures only.
+  bool physics_check = 3;
+}
+message NewtonRequest {
+  NewtonSolver solver = 1;
+  optional uint32 steps = 2;
+  optional uint32 iterations = 3;
+  optional uint32 line_search_iterations = 4;
+}
+message ConvertAssetRequest {
+  string asset_id = 1;
+  string relative_path = 2;
+  string source_up = 3;
+  optional double max_size = 4;
+}
+// Operator-installed plugins declare named operations and a parameter schema.
+// Clients cannot load extensions, select a Python function or submit code.
+message ExtensionRequest { string operation = 1; google.protobuf.Struct arguments = 2; }
+
+message SubmitTaskRequest {
+  string request_id = 1;
+  oneof task {
+    SimulateRequest simulate = 10;
+    RenderSettings render_asset = 11;
+    google.protobuf.Empty snapshot = 12;
+    StepRequest step = 13;
+    ControlRequest control = 14;
+    google.protobuf.Empty dynamics = 15;
+    google.protobuf.Empty scan = 16;
+    CaptureRequest capture = 17;
+    GripperRequest gripper = 18;
+    TrajectoryRequest trajectory = 19;
+    DifferentialDriveRequest differential_drive = 20;
+    ControlRequest rl_step = 21;
+    ClothRequest cloth = 22;
+    ImportRobotRequest import_robot = 23;
+    NewtonRequest newton = 24;
+    ConvertAssetRequest convert_asset = 25;
+    google.protobuf.Empty export_scene = 26;
+    google.protobuf.Empty inspect_gains = 27;
+    google.protobuf.Empty ros2_status = 28;
+    ExtensionRequest extension = 50;
+  }
+}
+
+enum JobState {
+  JOB_STATE_UNSPECIFIED = 0;
+  QUEUED = 1;
+  RUNNING = 2;
+  SUCCEEDED = 3;
+  FAILED = 4;
+  CANCELLED = 5;
+  INTERRUPTED = 6;
+}
+message JobRequest { string job_id = 1; }
+message WatchJobRequest { string job_id = 1; uint64 after_revision = 2; }
+message Failure { string code = 1; string message = 2; }
+message Timings {
+  double gateway_queue_seconds = 1;
+  double backend_wait_seconds = 2;
+  double upstream_queue_seconds = 3;
+  double upstream_execution_seconds = 4;
+  double total_seconds = 5;
+  double submit_seconds = 6;
+}
+message Artifact {
+  string artifact_id = 1;
+  string name = 2;
+  uint64 size_bytes = 3;
+  string media_type = 4;
+}
+message Job {
+  string job_id = 1;
+  string request_id = 2;
+  string operation = 3;
+  JobState state = 4;
+  uint64 revision = 5;
+  google.protobuf.Struct result = 6;
+  Failure failure = 7;
+  repeated Artifact artifacts = 8;
+  Timings timings = 9;
+  double created_at_unix = 10;
+}
+message Asset { string asset_id = 1; repeated string files = 2; }
+message AssetList { repeated Asset assets = 1; }
+message UploadChunk {
+  string asset_id = 1;
+  string relative_path = 2;
+  bytes data = 3;
+  // Optional expected digest, supplied on the first chunk.
+  string sha256 = 4;
+}
+message AssetFile {
+  string asset_id = 1;
+  string relative_path = 2;
+  uint64 size_bytes = 3;
+  string sha256 = 4;
+}
+message DownloadRequest {
+  string job_id = 1;
+  string artifact_id = 2;
+  uint64 offset = 3;
+  optional uint32 chunk_bytes = 4;
+}
+message DownloadChunk { uint64 offset = 1; bytes data = 2; }

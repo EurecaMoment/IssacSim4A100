@@ -47,6 +47,8 @@ class FeatureQueue(JobQueue):
             "trajectory",
             "differential_drive",
             "rl_step",
+            "export_scene",
+            "inspect_gains",
         ]
         if importlib.util.find_spec("newton") is not None:
             self.actions.append("cloth")
@@ -120,6 +122,27 @@ class FeatureQueue(JobQueue):
             result["gripper"] = world.grasp(payload["operation"])
         elif action == "capture":
             result["capture"] = self.capture(directory, payload)
+        elif action == "export_scene":
+            scene = directory / "robot-scene.usda"
+            world.save(scene)
+            result["scene"] = str(scene)
+        elif action == "inspect_gains":
+            from isaacsim.robot_setup.gain_tuner.gains_tuner import GainTuner
+
+            tuner = GainTuner()
+            tuner.setup(world.arm_paths[0])
+            tuner.compute_joints_accumulated_inertia()
+            result["gains"] = {
+                "scope": "joint discovery and accumulated inertia; no automatic tuning",
+                "joints": [
+                    {
+                        "name": joint.display_name,
+                        "index": joint.dof_index,
+                        "inertia": tuner.get_joint_accumulated_inertia(joint.joint),
+                    }
+                    for joint in tuner.get_joint_entries()
+                ],
+            }
         elif action == "cloth":
             from .newton_cloth import simulate_cloth
 

@@ -230,6 +230,145 @@ bash stop.sh
 
 IK、RMPflow、cuMotion、Pink、策略回放、PhysX 体积软体、流体 / 粒子、触觉和车辆仍需各自依赖、资产及验收。安装完整扩展缓存不会自动开放这些能力。
 
+## Isaac Sim 6.2 能力调研与开发边界
+
+调研基线为本分支固定的官方 `v6.2.0` 源码、[6.2 官方文档](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/index.html)和已有 A100 验收记录。运行 wheel 的内部标识是 `6.2.0-rc.14+release.52805.02189a84.gl`，不能把源码 tag、wheel 版本和运行构建号视为同一项。下列“官方能力”覆盖产品范围；部署是否可调用由实时能力查询决定。
+
+| 领域 | 官方能力 | 本 A100 适配的实际范围 |
+| --- | --- | --- |
+| 场景与数字孪生 | OpenUSD 层、引用、变体、实例、物理材质；仓库、工厂和机器人资产 | 场景生成、USD 输出、随机布局、统一灯光；未提供任意 USD 场景的交互编辑接口 |
+| 资产处理 | URDF/MJCF 导入、URDF 导出、CAD/glTF 转换、Asset Transformer、SimReady 验证 | URDF/MJCF 导入与 GLB 转换；Transformer、CAD、URDF 导出尚无 RPC 实现 |
+| 刚体与关节 | PhysX 接触、摩擦、约束、articulation、GPU 动力学和克隆 | CUDA 刚体、mesh convex hull、双关节臂、多环境、动力学查询已有验收 |
+| Newton | Warp 求解器、MuJoCo Warp、tensor API、执行器、可微分工作流 | XPBD、独立布料、MuJoCo 原生 tensor 验收；可微分训练与其他求解器未验收 |
+| 高级物理 | 可变形体、粒子、流体、SDF 碰撞、复杂接触模型 | 仅独立 XPBD 布料通过验收；不能推定其他物理模型均可用 |
+| 操作与移动 | 位置/速度/力矩控制、轨迹、IK、RMPflow、cuMotion、Pink、差速/Ackermann/全向控制 | 关节控制、轨迹执行、约束抓取；差速仅返回轮速；规划器和移动导航闭环待集成 |
+| 物理传感器 | IMU、接触、力矩、关节状态和物理射线 | 已有官方物理传感器及平面几何扫描；不模拟光学回波 |
+| 视觉及非视觉 RTX | RGB、深度、结构光、畸变模型、多相机；LiDAR、Radar、声学 | A100 缺少 RT Core；自定义 CUDA RGB/深度/ID 不等同于这些原生传感器模型 |
+| 数据生成 | Replicator 随机化、annotator/writer；MobilityGen、事件/行为、抓取与遥操作数据 | 自定义随机场景、RGB、深度、距离、法向、实例/语义 ID；其余生成框架待集成 |
+| ROS 2 与外部软件 | 传感器、TF、时钟、控制、仿真管理；Nav2、MoveIt 2、ros2_control | 自定义 Jazzy 数据桥和关节命令；尚未验收 Nav2/MoveIt/ros2_control 完整闭环 |
+| 机器人学习 | Isaac Lab 并行环境、训练与策略评估，独立训练框架 | `rl_step` 提供基础 observation/reward；不是完整 Gymnasium/Isaac Lab 训练环境 |
+| 开发与观测 | Python/C++、OmniGraph、扩展、独立 libraries、性能分析、MCP、GUI/流媒体 | Bash/Conda、独立工作进程、HTTP 与 gRPC；GUI、WebRTC、MCP 未接入当前适配 |
+
+依据：[参考架构](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/introduction/reference_architecture.html)、[Newton](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/physics/newton_physics.html)、[物理限制](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/physics/physics_resources.html)、[传感器](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/learn/sensors_and_physics.html)、[ROS 2](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/ros2_tutorials/index.html)、[数据生成](https://docs.isaacsim.omniverse.nvidia.com/6.2.0/synthetic_data_generation/index.html)。6.2 已移除 Cortex；新开发应使用 Experimental Core API，并按对应物理后端验收。
+
+## gRPC 接口：供 DSH 等外部调用方使用
+
+gRPC 服务属于 Isaac Sim 端，调用方仅依赖 [a100sim.v1 协议](a100/a100sim/rpc/v1/simulator.proto)。协议包不依赖 DSH、Kit 或 CUDA。网关在独立 Python 环境运行，连接同一部署中的内部工作进程；所有 Kit/物理操作继续由工作进程的所属线程执行。现有 HTTP 地址为部署内部实现，外部调用方使用一个 gRPC 地址。
+
+```text
+外部调用方 → a100sim.v1 gRPC → 有界、持久化任务队列
+                                  ├─ PhysX 批处理 / 通用仿真进程
+                                  ├─ 机器人、传感器、渲染与 ROS 2 进程
+                                  ├─ 预加载渲染进程
+                                  └─ 独立 URDF/MJCF、Newton、GLB 转换工作流
+```
+
+### 启动
+
+完成上述基础与可选功能部署后，在已激活的 Conda 环境内、`a100/` 目录执行：
+
+```bash
+bash serve-grpc.sh install
+bash serve-grpc.sh
+```
+
+默认监听 `127.0.0.1:50051`。前台启动可用 `Ctrl+C` 停止；它不会启动或停止已有 GPU 工作进程。`deploy.sh` 管理的基础与可选服务按原方式启停。网关环境默认位于 `$A100SIM_ROOT/.venv-grpc`，安装 gRPC/protobuf 不会更改 Kit 的 Python 包。
+
+独立的导入和 Newton 工作流需要在 `.env` 设置 `A100SIM_GRPC_WORKFLOWS=1`，并完成对应运行环境安装。GLB 转换使用资产准备章节中的 `.venv-assets` 环境，或者通过 `A100SIM_ASSET_PYTHON` 指定转换环境的 Python。缺失组件会在能力查询中返回不可用。
+
+跨机器直接监听时，在 `.env` 配置自己的域名/绑定地址、TLS 证书和密钥，并设置 `A100SIM_GRPC_TOKEN`。非本机监听缺少 TLS 或 token 时拒绝启动；RPC、标准健康检查和 reflection 使用相同的 `authorization: Bearer <token>`。调用方验证服务端证书；仓库不内置任何凭证。也可通过自己已有的安全隧道连接本机监听端口。
+
+### 协议与操作覆盖
+
+| RPC | 行为 |
+| --- | --- |
+| `GetCapabilities` | 返回 API 版本、实时队列状态和每项能力的 `AVAILABLE / UNAVAILABLE / UNSUPPORTED / UNVERIFIED`、范围和原因 |
+| `SubmitTask` | 强类型 `oneof` 请求；返回持久化的任务身份，不等待仿真完成 |
+| `GetJob / WatchJob` | 查询快照或订阅递增 revision，直到终态；支持从已知 revision 继续观察 |
+| `CancelJob` | 取消仍在网关排队的任务；已提交给仿真器的任务返回 `FAILED_PRECONDITION` |
+| `RunTasks` | 双向流；同一流按顺序提交，每个响应是对应任务的终态，提供流控 |
+| `ListAssets / UploadAsset` | 使用资产 ID 与相对路径；分块上传、SHA-256 校验、禁止覆盖、限制总大小 |
+| `DownloadArtifact` | 按任务和 artifact ID 分块下载；可指定偏移继续下载，无需共享服务器磁盘 |
+
+`SubmitTask` 覆盖 19 类现有操作：
+
+| 请求字段 | 实际行为 |
+| --- | --- |
+| `simulate` | CUDA 刚体、mesh 碰撞、批处理分流、场景输出和可选渲染 |
+| `render_asset` | 对配置的预加载 mesh/Gaussian 资产渲染 |
+| `snapshot / step / control` | 机器人状态、推进仿真、位置/速度/力矩命令 |
+| `dynamics / scan` | 动力学矩阵与作用力、物理射线扫描 |
+| `capture` | 同步机器人真实 CUDA 位姿的 RGB 和自定义标注 |
+| `gripper / trajectory / differential_drive` | 约束抓取、关节轨迹执行、差速轮速计算 |
+| `rl_step / cloth` | 批量基础 observation/reward、独立 Newton 布料 |
+| `import_robot / newton / convert_asset` | 独立 URDF/MJCF 导入、Newton 验收工作流、GLB 转换；转换结果返回可用于 mesh 仿真的资产 ID |
+| `export_scene / inspect_gains / ros2_status` | 当前机器人 USD 输出、关节与有效惯量发现、ROS 2 桥状态 |
+
+这覆盖本适配现有服务和脚本的功能，**不代表把官方产品所有功能都实现成 RPC**。例如，导入机器人目前输出 USD，不能把任意导入机器人替换进常驻双关节演示世界；`newton` 是固定验收工作流，并非任意 Newton 模型的交互式控制会话。完整训练、规划器、原生 RTX、遥操作、CAD、URDF 导出等会明确报告未接入或未验收。
+
+导入工作流同时返回保留目录结构的 ZIP，包含导出的 USD、工作流生成的依赖和验收报告，可通过 `DownloadArtifact` 获取。
+
+后续功能可在 Isaac Sim 端通过 `SimulatorBackend.register()` 注册受信任操作，配合 `ExtensionRequest` 和能力描述中的参数 schema 扩展。调用方不能上传 Python、选择服务器函数或执行任意命令。稳定的高频能力应新增有类型的 protobuf 消息，并遵守字段编号兼容规则。
+
+### 调用约定
+
+- 每次逻辑操作提供稳定且唯一的 `request_id`。相同 ID 和相同请求返回同一任务；相同 ID 但不同请求返回 `ALREADY_EXISTS`。超时后用原 ID 或任务 ID 查询，不要换 ID 重发控制命令。
+- 幂等记录与结果元数据写入本地 SQLite WAL，`synchronous=FULL`；重启将未完成任务标记为 `INTERRUPTED`，不自动重放。默认保留最近最多 4096 个任务，过期后不再保证旧 ID 的去重。该机制不宣称跨进程崩溃的分布式 exactly-once。
+- 网关队列默认 64，分发任务默认最多 32；满载返回 `RESOURCE_EXHAUSTED`，不接受新任务。现有工作进程也有独立的有界队列。常驻机器人世界的操作按顺序执行；多个调用方共享这个世界，不提供多租户会话隔离。严格连续控制使用 `RunTasks`，并由调用方管理世界的使用权。
+- 单次 RPC 的 deadline/断开连接终止等待，不撤销已接受的仿真。已运行任务不能承诺无副作用取消。停止网关也不会回滚已提交给工作进程的操作。
+- 请求使用明确的 protobuf 类型；可变长度结果通过 `Struct` 返回，图像、NPZ、USD 等二进制使用 artifact 流传输。`Struct` 的数值遵循 protobuf double 语义；时间、任务 ID 和文件大小使用协议中的专门字段。上传默认每文件 512 MiB、每块不超过 1 MiB；下载默认每块 256 KiB。
+- 位置、长度与深度为米，关节角为弧度；相机 `azimuth/elevation` 为度。四元数标注为 `xyzw`。标注文件进一步说明深度、法向和 ID 的坐标与有效性约定。
+- 标准 `grpc.health.v1.Health` 表示网关能够接收调用；GPU 功能是否就绪必须检查 `GetCapabilities`。同一主机上可以通过 `.env` 调整内部端口与 `A100SIM_GRPC_*_URL`，调用方无须知道这些内部地址。
+
+已提交 Python bindings。其他语言可直接根据 `.proto` 生成 SDK；Python 重新生成的方法是：
+
+```bash
+# 在独立的网关环境中执行，不在 Kit 环境中安装 protoc 工具。
+.venv-grpc/bin/python -m pip install grpcio-tools==1.85.1
+.venv-grpc/bin/python -m grpc_tools.protoc -I . \
+  --python_out=. --grpc_python_out=. --pyi_out=. a100sim/rpc/v1/simulator.proto
+```
+
+### 功能验收与性能测试
+
+以下命令在 `a100/` 目录执行。测试和基准属于仿真器端工具，不包含 DSH 业务逻辑：
+
+```bash
+# 无 GPU：真实 HTTP/2 RPC、去重、队列、取消、重启、上传下载、内部 HTTP 转发。
+.venv-grpc/bin/python -m unittest discover -s tests -v
+
+# 无 GPU：传输基准；真实 gRPC + HTTP + SQLite，后端是明确标记的测试 fixture。
+PYTHONPATH="$PWD" .venv-grpc/bin/python benchmarks/benchmark_grpc.py \
+  --loopback-fixture --requests 200 --rounds 3 --concurrency 1 8 32 \
+  --report results/grpc-transport.json
+
+# 已启动 GPU 服务：通过 gRPC 验收当前可用操作并下载、校验产物。
+PYTHONPATH="$PWD" .venv-grpc/bin/python benchmarks/validate_grpc.py \
+  --target 127.0.0.1:50051 --report results/grpc-acceptance.json
+
+# 真正的 GPU 刚体吞吐与渲染基准；机器人状态/单步/捕获可单独选择。
+PYTHONPATH="$PWD" .venv-grpc/bin/python benchmarks/benchmark_grpc.py \
+  --target 127.0.0.1:50051 --workloads simulate render \
+  --requests 50 --rounds 3 --concurrency 1 8 32 --report results/grpc-gpu.json
+```
+
+远程 TLS 服务增加 `--ca /path/to/ca.pem`，通过环境变量传入 token。`validate_grpc.py` 会逐项记录未启动/未安装的功能；`--skip-workflows` 可明确跳过需要新建进程的验收。验收会实际推进和控制共享机器人世界、创建测试资产并生成产物，适合在开发实例空闲时执行。
+
+基准区分提交延迟、端到端延迟、网关/上游排队、上游执行时间，并记录并发度、预热、重复轮次、完成吞吐、p50/p95/p99 和错误数。`simulator_execution_verified=false` 表示没有确认 CUDA 仿真执行，不能把 fixture 结果当作 A100 性能。单个有状态世界的控制吞吐也不能替代独立环境批量仿真吞吐。
+
+已提交的 [接口基准报告](a100/research/grpc-benchmark.json) 来自 loopback 测试，包含持久化与真实网络协议开销，报告明确标记 `simulator_execution_verified=false`。新增 RPC 的 A100 功能与性能应通过上述部署端命令验收；原有 CUDA 功能记录 `feature-validation.json` 不能替代新接口验收。
+
+该报告共计 3600 次测量调用，全部成功。以下为每组 3 轮、每轮 200 次调用的中位数；具体平台与所有分位数见 JSON。这里的 `simulate` 后端是测试 fixture，**没有执行物理或渲染**，数据不能用作 GPU 吞吐指标。
+
+| 测试链路 | 并发 | 完成数/秒 | 端到端 p95 |
+| --- | --- | --- | --- |
+| 能力查询 | 1 | 325.2 | 5.41 ms |
+| 能力查询 | 8 | 481.6 | 20.89 ms |
+| 能力查询 | 32 | 484.3 | 76.50 ms |
+| 任务提交、持久化、内部 HTTP、结果订阅 | 1 | 47.0 | 29.95 ms |
+| 同上 | 8 | 60.0 | 191.26 ms |
+| 同上 | 32 | 59.5 | 661.93 ms |
+
 ## Newton 驱动兼容机制
 
 兼容逻辑由**实际 CUDA driver API 与本机 GPU 架构**决定。
