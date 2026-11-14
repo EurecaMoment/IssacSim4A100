@@ -1,18 +1,43 @@
 """Verify request bounds, asset containment and durable job recovery without a GPU."""
+
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import queue
 import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
-from a100sim.physics_service import PhysicsQueue
 from a100sim import service_queue
+from a100sim.physics_service import PhysicsQueue
+from a100sim.render_service import RenderState
 
 
 class ServiceContractTests(unittest.TestCase):
+    def test_preloaded_render_rejects_invalid_values_without_silent_clamping(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            state = RenderState(root / "assets", root / "results", 256, 4)
+            state.renderers = {"mesh": object()}
+            for request in (
+                {"spp": 0},
+                {"spp": 257},
+                {"seed": -1},
+                {"distance": 0},
+                {"elevation": 90},
+                {"azimuth": float("nan")},
+                {"spp": True},
+                {"size": 512},
+            ):
+                with self.subTest(request=request), self.assertRaises(ValueError):
+                    state.submit(request)
+            self.assertTrue(state.jobs.empty())
+            state.submit({"seed": 0, "elevation": 0})
+            job = state.jobs.get_nowait()
+            self.assertEqual(job["seed"], 0)
+            self.assertEqual(job["elevation"], 0)
+
     def test_queue_rejects_overflow_without_creating_another_job(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             state = service_queue.JobQueue(directory, capacity=1)
@@ -55,8 +80,13 @@ class ServiceContractTests(unittest.TestCase):
     def test_request_rejects_nonfinite_and_boolean_numeric_values(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             state = PhysicsQueue(directory)
-            for request in ({"steps": True}, {"gravity": float("nan")},
-                            {"bodies": []}, {"steps": 1201}, {"robot_command": "unsupported"}):
+            for request in (
+                {"steps": True},
+                {"gravity": float("nan")},
+                {"bodies": []},
+                {"steps": 1201},
+                {"robot_command": "unsupported"},
+            ):
                 with self.subTest(request=request), self.assertRaises((ValueError, KeyError)):
                     state.prepare(request)
 
@@ -66,8 +96,9 @@ class ServiceContractTests(unittest.TestCase):
             (root / "mesh.npz").touch()
             state = PhysicsQueue(root / "jobs")
             with patch.object(service_queue, "ASSET_ROOT", root):
-                request = state.prepare({"bodies": [{"shape": "mesh", "asset": str(root),
-                                                     "orientation_xyzw": [0, 0, 0, 0.5]}]})
+                request = state.prepare(
+                    {"bodies": [{"shape": "mesh", "asset": str(root), "orientation_xyzw": [0, 0, 0, 0.5]}]}
+                )
                 self.assertEqual(request["bodies"][0]["orientation_xyzw"], [0, 0, 0, 1])
 
 

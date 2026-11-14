@@ -26,6 +26,7 @@ from pathlib import Path
 
 from .physics_service import PhysicsQueue
 from .service_queue import JOB_ID
+from .network import require_loopback, require_worker_url
 
 OWNER_TAG = "isaacsim-a100-resident-v1"
 
@@ -144,7 +145,7 @@ class ResidentQueue(PhysicsQueue):
             os.chmod(marker, 0o600)
         os.chmod(output, 0o700)
         super().__init__(output, capacity, 'Isaac Sim 6.2 resident GPU PhysX micro-batches')
-        self.generic_url = generic_url.rstrip('/')
+        self.generic_url = require_worker_url(generic_url)
         self.legacy_output = Path(legacy_output) if legacy_output else None
         self.batch_wait = batch_wait
         self.batch_idle = batch_idle
@@ -464,6 +465,7 @@ class ResidentQueue(PhysicsQueue):
 
 
 def start_resident_http(state, host, port):
+    host = require_loopback(host)
     from aiohttp import web
     loop = asyncio.new_event_loop()
     started = threading.Event()
@@ -540,7 +542,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--port', type=int, default=8321)
-    parser.add_argument('--host', default='127.0.0.1')
+    parser.add_argument('--host', type=require_loopback, default='127.0.0.1')
     parser.add_argument('--queue-size', type=int, default=64)
     parser.add_argument('--batch-wait-ms', type=float, default=300)
     parser.add_argument('--batch-idle-ms', type=float, default=50)

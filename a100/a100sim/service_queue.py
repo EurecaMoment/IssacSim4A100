@@ -6,12 +6,15 @@ import math
 import os
 import queue
 import re
+import socket
 import threading
 import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
+
+from .network import require_loopback
 
 JOB_ID = re.compile(r"^[a-f0-9]{32}$")
 ASSET_ROOT = Path(os.environ.get("A100SIM_ASSET_ROOT", Path(__file__).resolve().parents[1] / "assets")).resolve()
@@ -142,6 +145,7 @@ class JobQueue:
             return {"status": "ready" if self.ready else "failed" if self.error else "initializing",
                     "engine": self.engine, "physical_gpu": os.environ.get("CUDA_VISIBLE_DEVICES"),
                     "cuda_required": True, "cpu_fallback": False, "native_rtx": False,
+                    "job_long_poll": True,
                     "uptime_seconds": round(time.time() - self.started, 2),
                     "queue_depth": self.jobs.qsize(), "queue_capacity": self.jobs.maxsize,
                     "active_job": self.active, "completed": self.completed, "failed": self.failed,
@@ -149,7 +153,10 @@ class JobQueue:
 
 
 def start_http(state, host, port, submit_route):
+    host = require_loopback(host)
+
     class Server(ThreadingHTTPServer):
+        address_family = socket.AF_INET6 if ":" in host else socket.AF_INET
         request_queue_size = 128
         daemon_threads = True
 

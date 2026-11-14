@@ -108,6 +108,10 @@ async def validate(arguments: argparse.Namespace) -> dict[str, Any]:
         capabilities = await client.GetCapabilities(Empty(), metadata=metadata, timeout=10)
         available = {item.name for item in capabilities.capabilities if item.availability == pb.AVAILABLE}
         report["capabilities"] = MessageToDict(capabilities, preserving_proto_field_name=True)
+        catalog = await client.GetApiCatalog(Empty(), metadata=metadata, timeout=10)
+        if catalog.simulator_version != "6.2.0.0" or len(catalog.domains) != 30:
+            raise RuntimeError("Expected the Isaac Sim 6.2.0 catalog with all 30 domains")
+        report["catalog"] = MessageToDict(catalog, preserving_proto_field_name=True)
         if not available:
             raise RuntimeError("No simulator operation is available")
 
@@ -156,10 +160,18 @@ async def validate(arguments: argparse.Namespace) -> dict[str, Any]:
         simulation = await run(
             "simulate",
             pb.SimulateRequest(
-                bodies=[pb.Body(id="cube", position=[0, 0, 1], size=[0.2] * 3)],
+                bodies=[
+                    pb.Body(
+                        id="cube",
+                        position=[0, 0, 1],
+                        size=[0.2] * 3,
+                        material=pb.PbrMaterial(metallic=0.6, roughness=0.25),
+                        semantic_label="test_cube",
+                    )
+                ],
                 steps=120,
                 route=pb.GENERIC,
-                render=pb.RenderSettings(size=128, spp=4),
+                render=pb.RenderSettings(size=128, spp=4, annotations=True),
             ),
         )
         if simulation is not None:
@@ -167,6 +179,23 @@ async def validate(arguments: argparse.Namespace) -> dict[str, Any]:
                 raise RuntimeError("Simulation did not report the required CUDA backend")
             if abs(simulation["bodies"][0]["pose_xyzw"][2] - 0.1) > 0.02:
                 raise RuntimeError("Falling cube did not reach the ground")
+            annotations = simulation.get("render", {}).get("annotations", {})
+            if annotations.get("valid_pixels", 0) <= 0 or "test_cube" not in annotations.get("classes", {}).values():
+                raise RuntimeError("Custom scene semantic annotations did not preserve the supplied label")
+        randomized = await run(
+            "randomize",
+            pb.RandomizeRequest(
+                scene=pb.SimulateRequest(bodies=[pb.Body(id="random", position=[0, 0, 1])], steps=120),
+                seed=0,
+                position_min=[-0.5, -0.5, 1],
+                position_max=[0.5, 0.5, 1.5],
+                randomize_color=True,
+                metallic_range=[0, 1],
+                roughness_range=[0.2, 0.8],
+            ),
+        )
+        if randomized and randomized.get("randomization", {}).get("seed") != 0:
+            raise RuntimeError("Randomization did not preserve the seed and initial scene metadata")
         await run("render_asset", pb.RenderSettings(spp=4))
         state = await run("snapshot", Empty())
         await run("step", pb.StepRequest(steps=2))
@@ -239,7 +268,11 @@ async def validate(arguments: argparse.Namespace) -> dict[str, Any]:
             converted = await run(
                 "convert_asset",
                 pb.ConvertAssetRequest(
-                    asset_id=asset.asset_id, relative_path=asset.relative_path, source_up="z", max_size=0.2
+                    asset_id=asset.asset_id,
+                    relative_path=asset.relative_path,
+                    source_up="z",
+                    max_size=0.2,
+                    strict_materials=True,
                 ),
             )
             if converted:
@@ -249,6 +282,7 @@ async def validate(arguments: argparse.Namespace) -> dict[str, Any]:
                         bodies=[pb.Body(id="mesh", shape=pb.MESH, asset_id=converted["asset_id"], position=[0, 0, 1])],
                         steps=120,
                         route=pb.GENERIC,
+                        render=pb.RenderSettings(size=128, spp=4),
                     ),
                     label="mesh_simulation",
                 )

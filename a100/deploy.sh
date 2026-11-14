@@ -26,6 +26,8 @@ fi
 pid_dir="$A100SIM_STATE_ROOT/deploy"
 log_dir="$A100SIM_ROOT/logs"
 started_services=()
+grpc_listen="${A100SIM_GRPC_LISTEN:-127.0.0.1:50051}"
+gateway_python="${A100SIM_GRPC_ENV:-$A100SIM_ROOT/.venv-grpc}/bin/python"
 
 process_start_time() {
     local pid="$1" stat rest
@@ -70,9 +72,9 @@ if [[ "$action" = status || "$action" = stop ]]; then
     mkdir -p "$pid_dir"
     chmod 700 "$pid_dir"
     if [[ "$action" = stop ]]; then
-        for name in render features resident generic; do stop_service "$name"; done
+        for name in grpc render features resident generic; do stop_service "$name"; done
     else
-        for name in generic resident render features; do
+        for name in generic resident render features grpc; do
             if pid="$(recorded_pid "$name")"; then
                 echo "$name: running (pid $pid)"
             else
@@ -133,7 +135,11 @@ chmod 700 "$pid_dir"
 
 wait_for_service() {
     local name="$1" url="$2" timeout="$3"
-    if ! "$A100SIM_PYTHON" "$code_root/scripts/wait_ready.py" --timeout "$timeout" "$url"; then
+    local probe=("$A100SIM_PYTHON" "$code_root/scripts/wait_ready.py" --timeout "$timeout" "$url")
+    if [[ "$name" = grpc ]]; then
+        probe=("$gateway_python" "$code_root/scripts/wait_ready.py" --grpc --timeout "$timeout" "$url")
+    fi
+    if ! "${probe[@]}"; then
         echo "Service $name failed to become ready. Log: $log_dir/deploy-$name.log" >&2
         tail -n 60 "$log_dir/deploy-$name.log" >&2 || true
         stop_service "$name" || true
@@ -151,7 +157,9 @@ start_service() {
         return
     fi
     rm -f -- "$pid_dir/deploy-$name.pid"
-    nohup /bin/bash "$code_root/serve.sh" "$@" >> "$log_dir/deploy-$name.log" 2>&1 </dev/null &
+    local launcher="$code_root/serve.sh"
+    if [[ "$name" = grpc ]]; then launcher="$code_root/serve-grpc.sh"; fi
+    nohup /bin/bash "$launcher" "$@" >> "$log_dir/deploy-$name.log" 2>&1 </dev/null &
     pid=$!
     for _ in {1..20}; do
         if start="$(process_start_time "$pid")"; then break; fi
@@ -172,7 +180,7 @@ ensure_available_port() {
     local name="$1" port="$2"
     recorded_pid "$name" && return 0
     if "$A100SIM_PYTHON" -c \
-        'import socket,sys; s=socket.socket(); s.settimeout(.3); result=s.connect_ex(("127.0.0.1", int(sys.argv[1]))); s.close(); sys.exit(result == 0)' \
+        'import socket,sys; s=socket.socket(); s.settimeout(.3); result=s.connect_ex(("127.0.0.1", int(sys.argv[1]))); s.close(); sys.exit(0 if result == 0 else 1)' \
         "$port"; then
         echo "Port $port for $name is already in use. Stop its owner or choose another port in .env" >&2
         return 1
@@ -182,6 +190,7 @@ ensure_available_port() {
 preflight_ports() {
     ensure_available_port generic "$A100SIM_GENERIC_PORT"
     ensure_available_port resident "$A100SIM_RESIDENT_PORT"
+    ensure_available_port grpc "${grpc_listen##*:}"
     if [[ -n "${A100SIM_RENDER_ASSET:-}" ]]; then
         ensure_available_port render "$A100SIM_RENDER_PORT"
     fi
@@ -210,6 +219,16 @@ deploy_runtime() {
     if [[ "${A100SIM_DEPLOY_FEATURES:-all}" = all ]]; then
         bash "$code_root/install-features.sh" all
         bash "$code_root/build-newton-kernels.sh"
+    fi
+    if recorded_pid grpc >/dev/null; then stop_service grpc; fi
+    bash "$code_root/serve-grpc.sh" install
+    if [[ "${A100SIM_GRPC_WORKFLOWS:-0}" = 1 ]]; then
+        local asset_python="${A100SIM_ASSET_PYTHON:-$code_root/.venv-assets/bin/python}"
+        if [[ -z "${A100SIM_ASSET_PYTHON:-}" ]]; then
+            "$A100SIM_PYTHON" -m venv "$code_root/.venv-assets"
+        fi
+        [[ -x "$asset_python" ]] || { echo "Configured asset conversion Python was not found" >&2; return 1; }
+        uv pip install --python "$asset_python" -r "$code_root/requirements-assets.txt"
     fi
 }
 
@@ -246,6 +265,7 @@ start_services() {
             }
         fi
     fi
+    start_service grpc "$grpc_listen" 60
 }
 
 cleanup_failed_start() {

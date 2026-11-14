@@ -16,6 +16,7 @@ class Availability(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     UNAVAILABLE: _ClassVar[Availability]
     UNSUPPORTED: _ClassVar[Availability]
     UNVERIFIED: _ClassVar[Availability]
+    PARTIAL: _ClassVar[Availability]
 
 class Shape(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -58,6 +59,7 @@ AVAILABLE: Availability
 UNAVAILABLE: Availability
 UNSUPPORTED: Availability
 UNVERIFIED: Availability
+PARTIAL: Availability
 CUBE: Shape
 SPHERE: Shape
 MESH: Shape
@@ -77,6 +79,64 @@ SUCCEEDED: JobState
 FAILED: JobState
 CANCELLED: JobState
 INTERRUPTED: JobState
+
+class Feature(_message.Message):
+    __slots__ = ("id", "title", "support", "availability", "reason", "task_field", "request_type", "request_schema", "fixed_arguments", "evidence")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    TITLE_FIELD_NUMBER: _ClassVar[int]
+    SUPPORT_FIELD_NUMBER: _ClassVar[int]
+    AVAILABILITY_FIELD_NUMBER: _ClassVar[int]
+    REASON_FIELD_NUMBER: _ClassVar[int]
+    TASK_FIELD_FIELD_NUMBER: _ClassVar[int]
+    REQUEST_TYPE_FIELD_NUMBER: _ClassVar[int]
+    REQUEST_SCHEMA_FIELD_NUMBER: _ClassVar[int]
+    FIXED_ARGUMENTS_FIELD_NUMBER: _ClassVar[int]
+    EVIDENCE_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    title: str
+    support: Availability
+    availability: Availability
+    reason: str
+    task_field: str
+    request_type: str
+    request_schema: _struct_pb2.Struct
+    fixed_arguments: _struct_pb2.Struct
+    evidence: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, id: _Optional[str] = ..., title: _Optional[str] = ..., support: _Optional[_Union[Availability, str]] = ..., availability: _Optional[_Union[Availability, str]] = ..., reason: _Optional[str] = ..., task_field: _Optional[str] = ..., request_type: _Optional[str] = ..., request_schema: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., fixed_arguments: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., evidence: _Optional[_Iterable[str]] = ...) -> None: ...
+
+class ApiDomain(_message.Message):
+    __slots__ = ("number", "id", "title", "features")
+    NUMBER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    TITLE_FIELD_NUMBER: _ClassVar[int]
+    FEATURES_FIELD_NUMBER: _ClassVar[int]
+    number: int
+    id: str
+    title: str
+    features: _containers.RepeatedCompositeFieldContainer[Feature]
+    def __init__(self, number: _Optional[int] = ..., id: _Optional[str] = ..., title: _Optional[str] = ..., features: _Optional[_Iterable[_Union[Feature, _Mapping]]] = ...) -> None: ...
+
+class ApiCatalog(_message.Message):
+    __slots__ = ("api_version", "simulator_version", "domains", "validation_scope")
+    API_VERSION_FIELD_NUMBER: _ClassVar[int]
+    SIMULATOR_VERSION_FIELD_NUMBER: _ClassVar[int]
+    DOMAINS_FIELD_NUMBER: _ClassVar[int]
+    VALIDATION_SCOPE_FIELD_NUMBER: _ClassVar[int]
+    api_version: str
+    simulator_version: str
+    domains: _containers.RepeatedCompositeFieldContainer[ApiDomain]
+    validation_scope: str
+    def __init__(self, api_version: _Optional[str] = ..., simulator_version: _Optional[str] = ..., domains: _Optional[_Iterable[_Union[ApiDomain, _Mapping]]] = ..., validation_scope: _Optional[str] = ...) -> None: ...
+
+class FeatureRequest(_message.Message):
+    __slots__ = ("request_id", "feature_id", "arguments")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    FEATURE_ID_FIELD_NUMBER: _ClassVar[int]
+    ARGUMENTS_FIELD_NUMBER: _ClassVar[int]
+    request_id: str
+    feature_id: str
+    arguments: _struct_pb2.Struct
+    def __init__(self, request_id: _Optional[str] = ..., feature_id: _Optional[str] = ..., arguments: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ...) -> None: ...
 
 class Capability(_message.Message):
     __slots__ = ("name", "availability", "reason", "scope", "details")
@@ -110,8 +170,18 @@ class Capabilities(_message.Message):
     running_jobs: int
     def __init__(self, api_version: _Optional[str] = ..., simulator_version: _Optional[str] = ..., native_rtx: _Optional[bool] = ..., capabilities: _Optional[_Iterable[_Union[Capability, _Mapping]]] = ..., queue_capacity: _Optional[int] = ..., queued_jobs: _Optional[int] = ..., running_jobs: _Optional[int] = ...) -> None: ...
 
+class PbrMaterial(_message.Message):
+    __slots__ = ("base_color", "metallic", "roughness")
+    BASE_COLOR_FIELD_NUMBER: _ClassVar[int]
+    METALLIC_FIELD_NUMBER: _ClassVar[int]
+    ROUGHNESS_FIELD_NUMBER: _ClassVar[int]
+    base_color: _containers.RepeatedScalarFieldContainer[float]
+    metallic: float
+    roughness: float
+    def __init__(self, base_color: _Optional[_Iterable[float]] = ..., metallic: _Optional[float] = ..., roughness: _Optional[float] = ...) -> None: ...
+
 class Body(_message.Message):
-    __slots__ = ("id", "shape", "position", "orientation_xyzw", "size", "radius", "mass", "asset_id", "color")
+    __slots__ = ("id", "shape", "position", "orientation_xyzw", "size", "radius", "mass", "asset_id", "color", "material", "semantic_label")
     ID_FIELD_NUMBER: _ClassVar[int]
     SHAPE_FIELD_NUMBER: _ClassVar[int]
     POSITION_FIELD_NUMBER: _ClassVar[int]
@@ -121,6 +191,8 @@ class Body(_message.Message):
     MASS_FIELD_NUMBER: _ClassVar[int]
     ASSET_ID_FIELD_NUMBER: _ClassVar[int]
     COLOR_FIELD_NUMBER: _ClassVar[int]
+    MATERIAL_FIELD_NUMBER: _ClassVar[int]
+    SEMANTIC_LABEL_FIELD_NUMBER: _ClassVar[int]
     id: str
     shape: Shape
     position: _containers.RepeatedScalarFieldContainer[float]
@@ -130,7 +202,9 @@ class Body(_message.Message):
     mass: float
     asset_id: str
     color: _containers.RepeatedScalarFieldContainer[float]
-    def __init__(self, id: _Optional[str] = ..., shape: _Optional[_Union[Shape, str]] = ..., position: _Optional[_Iterable[float]] = ..., orientation_xyzw: _Optional[_Iterable[float]] = ..., size: _Optional[_Iterable[float]] = ..., radius: _Optional[float] = ..., mass: _Optional[float] = ..., asset_id: _Optional[str] = ..., color: _Optional[_Iterable[float]] = ...) -> None: ...
+    material: PbrMaterial
+    semantic_label: str
+    def __init__(self, id: _Optional[str] = ..., shape: _Optional[_Union[Shape, str]] = ..., position: _Optional[_Iterable[float]] = ..., orientation_xyzw: _Optional[_Iterable[float]] = ..., size: _Optional[_Iterable[float]] = ..., radius: _Optional[float] = ..., mass: _Optional[float] = ..., asset_id: _Optional[str] = ..., color: _Optional[_Iterable[float]] = ..., material: _Optional[_Union[PbrMaterial, _Mapping]] = ..., semantic_label: _Optional[str] = ...) -> None: ...
 
 class Light(_message.Message):
     __slots__ = ("color", "intensity", "exposure", "width", "height", "origin", "target")
@@ -161,7 +235,7 @@ class Lighting(_message.Message):
     def __init__(self, dome: _Optional[_Union[Light, _Mapping]] = ..., key: _Optional[_Union[Light, _Mapping]] = ..., fills: _Optional[_Iterable[_Union[Light, _Mapping]]] = ...) -> None: ...
 
 class RenderSettings(_message.Message):
-    __slots__ = ("kind", "size", "spp", "seed", "azimuth", "elevation", "distance", "target", "lighting", "gaussian_gain")
+    __slots__ = ("kind", "size", "spp", "seed", "azimuth", "elevation", "distance", "target", "lighting", "gaussian_gain", "annotations")
     KIND_FIELD_NUMBER: _ClassVar[int]
     SIZE_FIELD_NUMBER: _ClassVar[int]
     SPP_FIELD_NUMBER: _ClassVar[int]
@@ -172,6 +246,7 @@ class RenderSettings(_message.Message):
     TARGET_FIELD_NUMBER: _ClassVar[int]
     LIGHTING_FIELD_NUMBER: _ClassVar[int]
     GAUSSIAN_GAIN_FIELD_NUMBER: _ClassVar[int]
+    ANNOTATIONS_FIELD_NUMBER: _ClassVar[int]
     kind: RenderKind
     size: int
     spp: int
@@ -182,7 +257,8 @@ class RenderSettings(_message.Message):
     target: _containers.RepeatedScalarFieldContainer[float]
     lighting: Lighting
     gaussian_gain: float
-    def __init__(self, kind: _Optional[_Union[RenderKind, str]] = ..., size: _Optional[int] = ..., spp: _Optional[int] = ..., seed: _Optional[int] = ..., azimuth: _Optional[float] = ..., elevation: _Optional[float] = ..., distance: _Optional[float] = ..., target: _Optional[_Iterable[float]] = ..., lighting: _Optional[_Union[Lighting, _Mapping]] = ..., gaussian_gain: _Optional[float] = ...) -> None: ...
+    annotations: bool
+    def __init__(self, kind: _Optional[_Union[RenderKind, str]] = ..., size: _Optional[int] = ..., spp: _Optional[int] = ..., seed: _Optional[int] = ..., azimuth: _Optional[float] = ..., elevation: _Optional[float] = ..., distance: _Optional[float] = ..., target: _Optional[_Iterable[float]] = ..., lighting: _Optional[_Union[Lighting, _Mapping]] = ..., gaussian_gain: _Optional[float] = ..., annotations: _Optional[bool] = ...) -> None: ...
 
 class SimulateRequest(_message.Message):
     __slots__ = ("bodies", "steps", "dt", "gravity", "ground", "render", "route")
@@ -293,16 +369,38 @@ class NewtonRequest(_message.Message):
     def __init__(self, solver: _Optional[_Union[NewtonSolver, str]] = ..., steps: _Optional[int] = ..., iterations: _Optional[int] = ..., line_search_iterations: _Optional[int] = ...) -> None: ...
 
 class ConvertAssetRequest(_message.Message):
-    __slots__ = ("asset_id", "relative_path", "source_up", "max_size")
+    __slots__ = ("asset_id", "relative_path", "source_up", "max_size", "strict_materials")
     ASSET_ID_FIELD_NUMBER: _ClassVar[int]
     RELATIVE_PATH_FIELD_NUMBER: _ClassVar[int]
     SOURCE_UP_FIELD_NUMBER: _ClassVar[int]
     MAX_SIZE_FIELD_NUMBER: _ClassVar[int]
+    STRICT_MATERIALS_FIELD_NUMBER: _ClassVar[int]
     asset_id: str
     relative_path: str
     source_up: str
     max_size: float
-    def __init__(self, asset_id: _Optional[str] = ..., relative_path: _Optional[str] = ..., source_up: _Optional[str] = ..., max_size: _Optional[float] = ...) -> None: ...
+    strict_materials: bool
+    def __init__(self, asset_id: _Optional[str] = ..., relative_path: _Optional[str] = ..., source_up: _Optional[str] = ..., max_size: _Optional[float] = ..., strict_materials: _Optional[bool] = ...) -> None: ...
+
+class RandomizeRequest(_message.Message):
+    __slots__ = ("scene", "seed", "position_min", "position_max", "randomize_color", "metallic_range", "roughness_range", "mass_range")
+    SCENE_FIELD_NUMBER: _ClassVar[int]
+    SEED_FIELD_NUMBER: _ClassVar[int]
+    POSITION_MIN_FIELD_NUMBER: _ClassVar[int]
+    POSITION_MAX_FIELD_NUMBER: _ClassVar[int]
+    RANDOMIZE_COLOR_FIELD_NUMBER: _ClassVar[int]
+    METALLIC_RANGE_FIELD_NUMBER: _ClassVar[int]
+    ROUGHNESS_RANGE_FIELD_NUMBER: _ClassVar[int]
+    MASS_RANGE_FIELD_NUMBER: _ClassVar[int]
+    scene: SimulateRequest
+    seed: int
+    position_min: _containers.RepeatedScalarFieldContainer[float]
+    position_max: _containers.RepeatedScalarFieldContainer[float]
+    randomize_color: bool
+    metallic_range: _containers.RepeatedScalarFieldContainer[float]
+    roughness_range: _containers.RepeatedScalarFieldContainer[float]
+    mass_range: _containers.RepeatedScalarFieldContainer[float]
+    def __init__(self, scene: _Optional[_Union[SimulateRequest, _Mapping]] = ..., seed: _Optional[int] = ..., position_min: _Optional[_Iterable[float]] = ..., position_max: _Optional[_Iterable[float]] = ..., randomize_color: _Optional[bool] = ..., metallic_range: _Optional[_Iterable[float]] = ..., roughness_range: _Optional[_Iterable[float]] = ..., mass_range: _Optional[_Iterable[float]] = ...) -> None: ...
 
 class ExtensionRequest(_message.Message):
     __slots__ = ("operation", "arguments")
@@ -313,7 +411,7 @@ class ExtensionRequest(_message.Message):
     def __init__(self, operation: _Optional[str] = ..., arguments: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ...) -> None: ...
 
 class SubmitTaskRequest(_message.Message):
-    __slots__ = ("request_id", "simulate", "render_asset", "snapshot", "step", "control", "dynamics", "scan", "capture", "gripper", "trajectory", "differential_drive", "rl_step", "cloth", "import_robot", "newton", "convert_asset", "export_scene", "inspect_gains", "ros2_status", "extension")
+    __slots__ = ("request_id", "simulate", "render_asset", "snapshot", "step", "control", "dynamics", "scan", "capture", "gripper", "trajectory", "differential_drive", "rl_step", "cloth", "import_robot", "newton", "convert_asset", "export_scene", "inspect_gains", "ros2_status", "randomize", "extension")
     REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     SIMULATE_FIELD_NUMBER: _ClassVar[int]
     RENDER_ASSET_FIELD_NUMBER: _ClassVar[int]
@@ -334,6 +432,7 @@ class SubmitTaskRequest(_message.Message):
     EXPORT_SCENE_FIELD_NUMBER: _ClassVar[int]
     INSPECT_GAINS_FIELD_NUMBER: _ClassVar[int]
     ROS2_STATUS_FIELD_NUMBER: _ClassVar[int]
+    RANDOMIZE_FIELD_NUMBER: _ClassVar[int]
     EXTENSION_FIELD_NUMBER: _ClassVar[int]
     request_id: str
     simulate: SimulateRequest
@@ -355,8 +454,9 @@ class SubmitTaskRequest(_message.Message):
     export_scene: _empty_pb2.Empty
     inspect_gains: _empty_pb2.Empty
     ros2_status: _empty_pb2.Empty
+    randomize: RandomizeRequest
     extension: ExtensionRequest
-    def __init__(self, request_id: _Optional[str] = ..., simulate: _Optional[_Union[SimulateRequest, _Mapping]] = ..., render_asset: _Optional[_Union[RenderSettings, _Mapping]] = ..., snapshot: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., step: _Optional[_Union[StepRequest, _Mapping]] = ..., control: _Optional[_Union[ControlRequest, _Mapping]] = ..., dynamics: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., scan: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., capture: _Optional[_Union[CaptureRequest, _Mapping]] = ..., gripper: _Optional[_Union[GripperRequest, _Mapping]] = ..., trajectory: _Optional[_Union[TrajectoryRequest, _Mapping]] = ..., differential_drive: _Optional[_Union[DifferentialDriveRequest, _Mapping]] = ..., rl_step: _Optional[_Union[ControlRequest, _Mapping]] = ..., cloth: _Optional[_Union[ClothRequest, _Mapping]] = ..., import_robot: _Optional[_Union[ImportRobotRequest, _Mapping]] = ..., newton: _Optional[_Union[NewtonRequest, _Mapping]] = ..., convert_asset: _Optional[_Union[ConvertAssetRequest, _Mapping]] = ..., export_scene: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., inspect_gains: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., ros2_status: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., extension: _Optional[_Union[ExtensionRequest, _Mapping]] = ...) -> None: ...
+    def __init__(self, request_id: _Optional[str] = ..., simulate: _Optional[_Union[SimulateRequest, _Mapping]] = ..., render_asset: _Optional[_Union[RenderSettings, _Mapping]] = ..., snapshot: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., step: _Optional[_Union[StepRequest, _Mapping]] = ..., control: _Optional[_Union[ControlRequest, _Mapping]] = ..., dynamics: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., scan: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., capture: _Optional[_Union[CaptureRequest, _Mapping]] = ..., gripper: _Optional[_Union[GripperRequest, _Mapping]] = ..., trajectory: _Optional[_Union[TrajectoryRequest, _Mapping]] = ..., differential_drive: _Optional[_Union[DifferentialDriveRequest, _Mapping]] = ..., rl_step: _Optional[_Union[ControlRequest, _Mapping]] = ..., cloth: _Optional[_Union[ClothRequest, _Mapping]] = ..., import_robot: _Optional[_Union[ImportRobotRequest, _Mapping]] = ..., newton: _Optional[_Union[NewtonRequest, _Mapping]] = ..., convert_asset: _Optional[_Union[ConvertAssetRequest, _Mapping]] = ..., export_scene: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., inspect_gains: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., ros2_status: _Optional[_Union[_empty_pb2.Empty, _Mapping]] = ..., randomize: _Optional[_Union[RandomizeRequest, _Mapping]] = ..., extension: _Optional[_Union[ExtensionRequest, _Mapping]] = ...) -> None: ...
 
 class JobRequest(_message.Message):
     __slots__ = ("job_id",)

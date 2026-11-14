@@ -53,7 +53,8 @@ SCOPES = {
     "ros2_status": "Inspect the bundled ROS 2 bridge and its topic/command counters",
     "import_robot": "Import uploaded URDF/MJCF into USD in an isolated simulator process",
     "newton": "Isolated XPBD or MuJoCo native-tensor numerical acceptance workflow",
-    "convert_asset": "Convert uploaded GLB to a reusable mesh asset; base color baked into vertex colors",
+    "convert_asset": "Convert GLB to linear vertex-baked base color, metallic and roughness; inspect warnings",
+    "randomize": "Seeded uniform body placement, linear color, metallic, roughness and mass randomization",
 }
 UNAVAILABLE_SCOPES = {
     "rtx.camera": (pb.UNSUPPORTED, "A100 has no RT Cores; the native RTX camera renderer is unsupported"),
@@ -210,7 +211,7 @@ class SimulatorBackend:
         for name, scope in SCOPES.items():
             if name in ("import_robot", "newton", "convert_asset"):
                 available = self.workflows.is_available(name)
-            elif name == "simulate":
+            elif name in ("simulate", "randomize"):
                 available = any(health.get(key, {}).get("status") == "ready" for key in ("resident", "generic"))
             elif name == "render_asset":
                 available = health.get("render", {}).get("status") == "ready"
@@ -225,6 +226,8 @@ class SimulatorBackend:
                 details.update(
                     {key: feature[key] for key in ("arm_count", "controls", "sensors", "scan_beams") if key in feature}
                 )
+            if name == "render_asset":
+                details.update({"loaded_kinds": health.get("render", {}).get("loaded_kinds", [])})
             capabilities.append(
                 pb.Capability(
                     name=name,
@@ -268,7 +271,8 @@ class SimulatorBackend:
                 raise ServiceError(grpc.StatusCode.UNAVAILABLE, "The ROS 2 data bridge is not ready")
             return {key: val for key, val in health.items() if key.startswith("ros2")}, {}
         payload = dict(task.arguments)
-        if task.operation == "simulate":
+        randomization = payload.pop("_randomization", None)
+        if task.operation in ("simulate", "randomize"):
             route = payload.pop("route", "auto")
             health = await self.health()
             backend = (
@@ -292,13 +296,17 @@ class SimulatorBackend:
             or not all(c in "0123456789abcdef" for c in upstream_id)
         ):
             raise ServiceError(grpc.StatusCode.INTERNAL, "Worker returned an invalid job identity")
+        # Resident workers support bounded waits in their original protocol. Other
+        # workers advertise the capability; older workers use read-only polling.
+        long_poll = backend == "resident" or (await self.health()).get(backend, {}).get("job_long_poll") is True
+        status_route = "/jobs/" + upstream_id + ("?wait_ms=30000" if long_poll else "")
         deadline = time.monotonic() + 900
         while time.monotonic() < deadline:
-            value = await self._request(
-                backend, "/jobs/" + upstream_id + ("?wait_ms=30000" if backend != "render" else "")
-            )
+            value = await self._request(backend, status_route)
             state = value.get("state")
             if state == "succeeded":
+                if randomization is not None:
+                    value["randomization"] = randomization
                 return value, {
                     "submit_seconds": submit_seconds,
                     "backend_wait_seconds": time.perf_counter() - started - submit_seconds,
@@ -307,7 +315,7 @@ class SimulatorBackend:
                 }
             if state in ("failed", "interrupted"):
                 raise ServiceError(grpc.StatusCode.INTERNAL, "Simulator job failed; inspect the simulator worker log")
-            if backend == "render":
+            if not long_poll:
                 await asyncio.sleep(0.02)
         raise ServiceError(
             grpc.StatusCode.DEADLINE_EXCEEDED, "Worker exceeded the execution limit; its work was not retried"

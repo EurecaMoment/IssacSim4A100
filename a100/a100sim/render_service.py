@@ -8,11 +8,15 @@ from __future__ import annotations
 import argparse
 import json
 import queue
+import socket
 import threading
 import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+
+from .network import require_loopback
+from .service_queue import finite, integer
 
 
 class RenderState:
@@ -32,10 +36,14 @@ class RenderState:
         from .renderer import Renderer
 
         self.output.mkdir(parents=True, exist_ok=True)
-        self.renderers = {
-            "mesh": Renderer(self.asset, "mesh", self.size, self.size),
-            "gaussian": Renderer(self.asset, "gaussian", self.size, self.size),
+        renderers = {
+            kind: Renderer(self.asset, kind, self.size, self.size)
+            for kind, filename in (("mesh", "mesh.npz"), ("gaussian", "object.ply"))
+            if (self.asset / filename).is_file()
         }
+        if not renderers:
+            raise ValueError("Preloaded asset requires mesh.npz or object.ply")
+        self.renderers = renderers
         while True:
             job = self.jobs.get()
             if job is None:
@@ -62,33 +70,39 @@ class RenderState:
                 self.jobs.task_done()
 
     def submit(self, value: dict) -> dict:
+        unknown = set(value) - {"kind", "spp", "seed", "azimuth", "elevation", "distance"}
+        if unknown:
+            raise ValueError("Unsupported preloaded render fields: " + ", ".join(sorted(unknown)))
         kind = value.get("kind", "mesh")
         if kind not in self.renderers:
             raise ValueError("kind must be mesh or gaussian")
         job = {
             "id": uuid.uuid4().hex,
             "kind": kind,
-            "spp": max(1, min(int(value.get("spp", 8)), 256)),
-            "seed": int(value.get("seed", 42)),
-            "azimuth": float(value.get("azimuth", 0)),
-            "elevation": max(-80.0, min(float(value.get("elevation", 12)), 80.0)),
-            "distance": max(.2, min(float(value.get("distance", 2.15)), 20.0)),
+            "spp": integer(value.get("spp", 8), "spp", 1, 256),
+            "seed": integer(value.get("seed", 42), "seed", 0, 2147483647),
+            "azimuth": finite(value.get("azimuth", 0), "azimuth", -36000, 36000),
+            "elevation": finite(value.get("elevation", 12), "elevation", -80, 80),
+            "distance": finite(value.get("distance", 2.15), "distance", .2, 20),
         }
-        self.jobs.put_nowait(job)
         with self.lock:
+            self.jobs.put_nowait(job)
             self.results[job["id"]] = {"id": job["id"], "state": "queued",
                                         "kind": kind, "queued_at": time.time()}
-        return self.results[job["id"]]
+            return self.results[job["id"]].copy()
 
     def snapshot(self) -> dict:
         with self.lock:
-            return {"status": "ready", "uptime_seconds": round(time.time() - self.started, 1),
+            return {"status": "ready" if self.renderers else "initializing", "uptime_seconds": round(time.time() - self.started, 1),
                     "queue_depth": self.jobs.qsize(), "queue_capacity": self.jobs.maxsize,
                     "completed": self.completed, "failed": self.failed,
-                    "loaded_kinds": sorted(self.renderers), "cuda_required": True}
+                    "loaded_kinds": sorted(self.renderers), "cuda_required": True,
+                    "cpu_fallback": False, "native_rtx": False}
 
 
 def serve(state: RenderState, host: str, port: int) -> None:
+    host = require_loopback(host)
+
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *_args):
             return
@@ -129,7 +143,10 @@ def serve(state: RenderState, host: str, port: int) -> None:
             except (ValueError, TypeError, json.JSONDecodeError) as exc:
                 self.reply({"error": str(exc)}, 400)
 
-    ThreadingHTTPServer((host, port), Handler).serve_forever()
+    class Server(ThreadingHTTPServer):
+        address_family = socket.AF_INET6 if ":" in host else socket.AF_INET
+
+    Server((host, port), Handler).serve_forever()
 
 
 def main():
@@ -138,7 +155,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--size", type=int, default=256)
     parser.add_argument("--queue-size", type=int, default=64)
-    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--host", type=require_loopback, default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8320)
     args = parser.parse_args()
     state = RenderState(args.asset, args.output, args.size, args.queue_size)

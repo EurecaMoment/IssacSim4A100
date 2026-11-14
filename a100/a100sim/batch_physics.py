@@ -80,8 +80,11 @@ class ResidentPhysics:
                      and request.get('ground', True)
                      and len(request['bodies']) <= 64
                      and all(b['shape'] == 'cube' and all(abs(v - .2) < 1e-9 for v in b['size'])
+                             and not b.get('material') and not b.get('semantic_label')
                              and all(abs(v) <= 90 for v in b['position'])
                              for b in request['bodies']))
+        if capture and capture.get('annotations'):
+            return False
         if not supported or capture is None:
             return supported
         import math

@@ -8,8 +8,8 @@
   "files": [
     {
       "path": ".env.example",
-      "sha256": "7e445aac6bb05c9feb609d8d68ff130884ed88e2215a9c43156a3c3c899f8515",
-      "bytes": 2876
+      "sha256": "99e743b4f6be531c38a5e431cfa72bb7ce3846d31308898dea738e9fdff4e4db",
+      "bytes": 3090
     },
     {
       "path": ".gitattributes",
@@ -38,8 +38,8 @@
     },
     {
       "path": "a100sim/batch_physics.py",
-      "sha256": "b87c05797911643243b78beda84d8cbf7cf5133870589ee917164de8a6b504b4",
-      "bytes": 10720
+      "sha256": "1d8d4c9064b1a9c98bc5b0a135d2445ca4694f25489f6c72ae5bc8cc04739c78",
+      "bytes": 10883
     },
     {
       "path": "a100sim/batch_renderer.py",
@@ -53,8 +53,8 @@
     },
     {
       "path": "a100sim/feature_service.py",
-      "sha256": "f66d09a4d7d83fb04db5f9cddbd51062c91bc0777038903218c72db593e275b6",
-      "bytes": 17365
+      "sha256": "0e07931b5bf7996bad1ddb000199d9f6d8fb9a83b534576fd93f259664f25ba6",
+      "bytes": 17426
     },
     {
       "path": "a100sim/gaussian.py",
@@ -77,6 +77,16 @@
       "bytes": 5902
     },
     {
+      "path": "a100sim/materials.py",
+      "sha256": "0c7506ff3c1c4bcb98f1a4fe4a200780c1681b23767dcbd9e8e56e11aa53b34c",
+      "bytes": 8528
+    },
+    {
+      "path": "a100sim/network.py",
+      "sha256": "3876036ec9e405a28deb2d289995645a36358661fdf8706a1231a3229a8f0ee6",
+      "bytes": 1351
+    },
+    {
       "path": "a100sim/newton_cloth.py",
       "sha256": "365ef35943ea0bf4159e1bd472308ec660fcea1e7f72abb4d84529d96b5c13b1",
       "bytes": 5246
@@ -88,8 +98,8 @@
     },
     {
       "path": "a100sim/physics_service.py",
-      "sha256": "d59c46b003d8746dc5b009d7fb18b54555672f441777404b530b6bf1a6b79bcd",
-      "bytes": 18823
+      "sha256": "873a5abb19110dc8e957ac6e679e1831c4acd581b5834a7ed41e3fb6840c2907",
+      "bytes": 20159
     },
     {
       "path": "a100sim/probe_batch_render.py",
@@ -103,18 +113,18 @@
     },
     {
       "path": "a100sim/render_service.py",
-      "sha256": "3715103377ae8dc1e8cfbeaf0b0351c37fe7cad8e5ce64fecea5d64d429f4edd",
-      "bytes": 6247
+      "sha256": "ac9c1d22694f7688798287728008a4d908199337bfb6efc18fab4c71b741e552",
+      "bytes": 7072
     },
     {
       "path": "a100sim/renderer.py",
-      "sha256": "293e434b8ae15dc93c42e6b60e993d4d1ff42ab4a81c98ceb43188868aa72423",
-      "bytes": 5604
+      "sha256": "0f3a96e2a1b23bb1d4502d26c276556e9f53131f56307d97721842fccdafe77e",
+      "bytes": 5686
     },
     {
       "path": "a100sim/resident_service.py",
-      "sha256": "7fbfe8e88a5da02cec82b903716c4906ca880e166b8af9511b7af0e7cc4c1fcd",
-      "bytes": 30066
+      "sha256": "d6ea07c8cf18aabbb766bce0eaa0249e6f3cf16cab2f760917f7d0312758669b",
+      "bytes": 30189
     },
     {
       "path": "a100sim/robotics.py",
@@ -133,18 +143,23 @@
     },
     {
       "path": "a100sim/rpc/backend.py",
-      "sha256": "23a4872f31166467071ac13db921ecb11b1300634a6317df20c18c8f596db076",
-      "bytes": 15221
+      "sha256": "d9b608d62f87dab0cf507e9af41656d4cfb617b4ec839d06f9cbfe70b6a2a93a",
+      "bytes": 15934
+    },
+    {
+      "path": "a100sim/rpc/catalog.py",
+      "sha256": "c9b57ab2a4d3a23bbe1c1b49bbffee896a8c3ea7153b879e2c37ffdaf3ad59e8",
+      "bytes": 40194
     },
     {
       "path": "a100sim/rpc/codec.py",
-      "sha256": "c5ec76094b638456776eedfea255abb5390e5c57fb2611a8e7d8733b267a1831",
-      "bytes": 4881
+      "sha256": "58b4638f84cd6c6fa205b3f47414c846237e6bc66ddc830d2e7274fc5a095f5d",
+      "bytes": 7494
     },
     {
       "path": "a100sim/rpc/config.py",
-      "sha256": "742f7b9562648c2d4110979d739d28413caf60339c97a2c9e4d77c928c809e0d",
-      "bytes": 2869
+      "sha256": "18760d5f3d312a670ea1e43a0872faa056f92e479981e0cedb533be87a930dd5",
+      "bytes": 3004
     },
     {
       "path": "a100sim/rpc/errors.py",
@@ -153,13 +168,13 @@
     },
     {
       "path": "a100sim/rpc/jobs.py",
-      "sha256": "13cbf8d08e7d71b971a6aeec33922f248f0ea52c0731a1860323ef0c9600819b",
-      "bytes": 11011
+      "sha256": "b6cad2a23fa63cc0d2128b5dae6a0e21cd75bbef0df68f8f9bec37eba2682d31",
+      "bytes": 11079
     },
     {
       "path": "a100sim/rpc/server.py",
-      "sha256": "76accdfd916eefe566b2b66de5ef8311d29c6c9e18ac8a2401241aa8ff4dbb7d",
-      "bytes": 10805
+      "sha256": "84bcf15751ee73b54ab9f36134df83164295a0a7663b0e0f7641e72afa33d9b9",
+      "bytes": 11601
     },
     {
       "path": "a100sim/rpc/storage.py",
@@ -173,38 +188,38 @@
     },
     {
       "path": "a100sim/rpc/v1/simulator.proto",
-      "sha256": "450ee638604749a670e9e67f33650a84b2c484789e05029d0d6b01f28c150834",
-      "bytes": 7552
+      "sha256": "52c747faa33e1cfa910b73558b22128e923dc6551a6d66f816fa712e61dc7301",
+      "bytes": 9655
     },
     {
       "path": "a100sim/rpc/v1/simulator_pb2.py",
-      "sha256": "51bd09ba7885a0dc70a78a9444c11489112e70df9b696f3266253e617e513a59",
-      "bytes": 16135
+      "sha256": "b279173eb60798762f911b3fc356d45baa6f5ebeef4ee122a7f9a5d74bfeb289",
+      "bytes": 19027
     },
     {
       "path": "a100sim/rpc/v1/simulator_pb2.pyi",
-      "sha256": "ac8ced5135859f8a6bf60d489fc3c65cde4c8bebf73e3034f6a1b56e5bad8dba",
-      "bytes": 23253
+      "sha256": "d7f4675d240ae22fe54b48bea06a7f7f38b54ef6face22d8c250f780757c7672",
+      "bytes": 28882
     },
     {
       "path": "a100sim/rpc/v1/simulator_pb2_grpc.py",
-      "sha256": "0323f1b43474e6928bd885a2d57d73781aca4f1dcf03a724a56d838056f9af50",
-      "bytes": 18950
+      "sha256": "11f7c9be41bb0d4736fa78f723aa75f1b4b6c023c853a565f6a18d2f635d2346",
+      "bytes": 22729
     },
     {
       "path": "a100sim/rpc/workflows.py",
-      "sha256": "3fe6fca0354c84f814ce2ffda6bee0079ddd9bbcc2a99df3d3c33b5be8ca1a9e",
-      "bytes": 7323
+      "sha256": "7e2dca3b79326273dc7df65312f7d45a82296dc2fcccc5b69847a4cfeac13e95",
+      "bytes": 7453
     },
     {
       "path": "a100sim/service_queue.py",
-      "sha256": "639a7e6e7782879fd9a7a8cbb30da17139884930dde8f1ee9d2cf58b07efd4f3",
-      "bytes": 8736
+      "sha256": "359b91f5b038f3386431682197030f19ec73f79b5d3d716d6876c820ea2fafed",
+      "bytes": 8943
     },
     {
       "path": "a100sim/usd_renderer.py",
-      "sha256": "e11df189fda4eb60018ea4eebe7ff06a6c75df8cdf1dfb0e388904bf029d77d0",
-      "bytes": 11248
+      "sha256": "2b5446f61454191844d7b5f6d86bd35b174bb24148495e583af5ad796ee924ba",
+      "bytes": 10517
     },
     {
       "path": "a100sim/validate_batch_render.py",
@@ -218,8 +233,8 @@
     },
     {
       "path": "benchmarks/benchmark_grpc.py",
-      "sha256": "f930f7cb79be863704e29477d03105994927ef1fed1ecab0d9aba07f0faeb847",
-      "bytes": 12476
+      "sha256": "99d58ee3d41e7cea38b933aaf41ff47aa17526765a565033766aac06e284afac",
+      "bytes": 12706
     },
     {
       "path": "benchmarks/benchmark_http.py",
@@ -243,8 +258,8 @@
     },
     {
       "path": "benchmarks/validate_grpc.py",
-      "sha256": "d7c4e877d2df027b2bade63a2724771cadca0b161f0ed294842f893114d179f7",
-      "bytes": 12018
+      "sha256": "6b3aade981ec3fa13a29033989975e08c8dedc80024cf1b51dc520c531b130a5",
+      "bytes": 13754
     },
     {
       "path": "benchmarks/validate_http.py",
@@ -268,8 +283,8 @@
     },
     {
       "path": "deploy.sh",
-      "sha256": "7234f4c8bf45d672525241af9b3c3aab9114915c7a81d74f3ec88eababb79b9c",
-      "bytes": 10500
+      "sha256": "708c2a1de03653b2809ba9bcfde0828e4d568990565576f1a392eb3527b3b028",
+      "bytes": 11611
     },
     {
       "path": "doctor.sh",
@@ -307,6 +322,11 @@
       "bytes": 205649
     },
     {
+      "path": "examples/grpc_client.py",
+      "sha256": "df05f71183fe5b90bc403956d578c9e9ae6947a3446807970f3c60ed6c1adb71",
+      "bytes": 5752
+    },
+    {
       "path": "examples/import_robot.py",
       "sha256": "38eab3803e2b0d507d4a801b431fb5c99958b8287fffc6ec05fe5c93bd46cf69",
       "bytes": 5915
@@ -328,8 +348,8 @@
     },
     {
       "path": "examples/prepare_fasttrellis_assets.py",
-      "sha256": "9d22859532120a91ebbc0b2f181690dbccf36da2078840d347df10208635a624",
-      "bytes": 6189
+      "sha256": "8904093a63ad4794384d7ad1b81c664d5d647e67da12ffc9137599d557481b18",
+      "bytes": 10699
     },
     {
       "path": "examples/robots/two_link.urdf",
@@ -492,9 +512,14 @@
       "bytes": 1212
     },
     {
+      "path": "research/grpc-a100-benchmark.json",
+      "sha256": "628f9d69011a5ba487e01e086cdff68bce93b072aabfebf46316dfd87cf70d8c",
+      "bytes": 23107
+    },
+    {
       "path": "research/grpc-benchmark.json",
-      "sha256": "c60eb7cd949051e2608665163cbe6c99ecdf217ef788ebd1644eb473ab9c4cc1",
-      "bytes": 16076
+      "sha256": "6a584d96ee956b279c1f0bd2023bb54f949fb946f3d2ba09cb0b31237f22ee63",
+      "bytes": 14093
     },
     {
       "path": "research/hybrid_probe.py",
@@ -598,8 +623,8 @@
     },
     {
       "path": "scripts/convert_rpc_asset.py",
-      "sha256": "fa0a71b09396b1ea2656c80e4ec29d76e89961bfe6e0ab815296f199983c1808",
-      "bytes": 1316
+      "sha256": "5c8222ae51afd4f947c1b67a879b2d81cf90d1758bfa2f9a6eaa902d3a40ebb6",
+      "bytes": 1420
     },
     {
       "path": "scripts/doctor.py",
@@ -623,8 +648,8 @@
     },
     {
       "path": "scripts/wait_ready.py",
-      "sha256": "a47d54e51428f108e5deb6ce6ca8e0f78a40f100cb48b943e12d96945f8911e9",
-      "bytes": 1502
+      "sha256": "e037972173dc09fc0e0aa71b479fd8ba98a7087c2bdd4fae0fa6753b1bead23e",
+      "bytes": 3672
     },
     {
       "path": "serve-features.sh",
@@ -703,8 +728,8 @@
     },
     {
       "path": "tests/test_contract.py",
-      "sha256": "f2b49e826dd98b6acad332c3526a02f91bc57b6a6ab1b6c949023ecd3748156b",
-      "bytes": 3608
+      "sha256": "bbc6f8aea3921da6540542fb0b5a73462d51344626e7258783bbb3a5c49398e2",
+      "bytes": 4686
     },
     {
       "path": "tests/test_features.py",
@@ -713,13 +738,18 @@
     },
     {
       "path": "tests/test_grpc.py",
-      "sha256": "c748de6dbd2de6f3e741935bf16f0d3238488cc7fe8520410c1f9a39475b9a1a",
-      "bytes": 19591
+      "sha256": "4898f77a6c1cc05f58028022034eb6c68efcac40b981900d6e451ca1b4e21457",
+      "bytes": 30682
+    },
+    {
+      "path": "tests/test_materials.py",
+      "sha256": "1f717bca32d7bbff66d308f5c1f535aed010a99bf7dc8195533cd302a1f6e325",
+      "bytes": 11355
     },
     {
       "path": "tests/test_portability.py",
-      "sha256": "5ff50c757b9fab5c765526716ae0b3fc6137da3a93d97717cb6d668fa75d2b34",
-      "bytes": 1497
+      "sha256": "204916600abb08a01364822ea899f95619aeb62e2ddb1ac89147d8f98e6eb00e",
+      "bytes": 3019
     }
   ]
 }

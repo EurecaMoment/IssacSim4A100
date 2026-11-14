@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from .service_queue import JobQueue, finite, integer, persist, start_http
+from .network import require_loopback
 
 
 def json_value(value: Any) -> Any:
@@ -295,7 +296,7 @@ def main() -> None:
     """Start one persistent world, a bounded loopback queue, and optional ROS 2."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--host", type=require_loopback, default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8322)
     parser.add_argument("--arms", type=int, default=4, choices=range(1, 17))
     parser.add_argument("--ros2", action="store_true")

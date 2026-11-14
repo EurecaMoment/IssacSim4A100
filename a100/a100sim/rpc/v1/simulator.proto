@@ -9,6 +9,11 @@ import "google/protobuf/struct.proto";
 // backend addresses are part of the caller's runtime requirements.
 service Simulator {
   rpc GetCapabilities(google.protobuf.Empty) returns (Capabilities);
+  // The complete 30-domain audit, including explicit integration and hardware gaps.
+  rpc GetApiCatalog(google.protobuf.Empty) returns (ApiCatalog);
+  // Invoke a catalog feature using its discoverable, typed task argument schema.
+  // Unsupported features fail before queue admission; no placeholder jobs run.
+  rpc InvokeFeature(FeatureRequest) returns (Job);
   // request_id is required. Reusing it with the same task returns the same job;
   // a different task with that ID fails with ALREADY_EXISTS. Never retry a
   // mutating request with a newly generated ID after an ambiguous timeout.
@@ -35,6 +40,33 @@ enum Availability {
   UNAVAILABLE = 2;
   UNSUPPORTED = 3;
   UNVERIFIED = 4;
+  PARTIAL = 5;
+}
+
+message Feature {
+  string id = 1;
+  string title = 2;
+  // Implementation scope, independent of whether its worker is running now.
+  Availability support = 3;
+  Availability availability = 4;
+  string reason = 5;
+  string task_field = 6;
+  string request_type = 7;
+  google.protobuf.Struct request_schema = 8;
+  google.protobuf.Struct fixed_arguments = 9;
+  repeated string evidence = 10;
+}
+message ApiDomain { uint32 number = 1; string id = 2; string title = 3; repeated Feature features = 4; }
+message ApiCatalog {
+  string api_version = 1;
+  string simulator_version = 2;
+  repeated ApiDomain domains = 3;
+  string validation_scope = 4;
+}
+message FeatureRequest {
+  string request_id = 1;
+  string feature_id = 2;
+  google.protobuf.Struct arguments = 3;
 }
 
 message Capability {
@@ -63,6 +95,13 @@ enum NewtonSolver { XPBD = 0; MUJOCO_NATIVE = 1; }
 
 // Positions, lengths and depths use meters; rotations use radians except
 // explicitly named camera azimuth/elevation, which use degrees.
+// Linear RGB and metallic/roughness factors, all in [0, 1]. Omitted channels
+// preserve a mesh asset's baked PBR channels, or the primitive defaults.
+message PbrMaterial {
+  repeated double base_color = 1;
+  optional double metallic = 2;
+  optional double roughness = 3;
+}
 message Body {
   string id = 1;
   Shape shape = 2;
@@ -73,6 +112,8 @@ message Body {
   optional double mass = 7;
   string asset_id = 8;
   repeated double color = 9;
+  PbrMaterial material = 10;
+  string semantic_label = 11;
 }
 
 message Light {
@@ -96,6 +137,8 @@ message RenderSettings {
   repeated double target = 8;
   Lighting lighting = 9;
   optional double gaussian_gain = 10;
+  // Mesh primary rays only. Produces metric depth/range, normals, IDs and mask.
+  optional bool annotations = 11;
 }
 message SimulateRequest {
   repeated Body bodies = 1;
@@ -147,6 +190,19 @@ message ConvertAssetRequest {
   string relative_path = 2;
   string source_up = 3;
   optional double max_size = 4;
+  // Reject source material channels which cannot be represented by this adapter.
+  bool strict_materials = 5;
+}
+message RandomizeRequest {
+  SimulateRequest scene = 1;
+  optional uint32 seed = 2;
+  repeated double position_min = 3;
+  repeated double position_max = 4;
+  // Independent uniform sampling for each selected channel and body.
+  bool randomize_color = 5;
+  repeated double metallic_range = 6;
+  repeated double roughness_range = 7;
+  repeated double mass_range = 8;
 }
 // Operator-installed plugins declare named operations and a parameter schema.
 // Clients cannot load extensions, select a Python function or submit code.
@@ -174,6 +230,7 @@ message SubmitTaskRequest {
     google.protobuf.Empty export_scene = 26;
     google.protobuf.Empty inspect_gains = 27;
     google.protobuf.Empty ros2_status = 28;
+    RandomizeRequest randomize = 29;
     ExtensionRequest extension = 50;
   }
 }

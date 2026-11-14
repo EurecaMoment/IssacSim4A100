@@ -174,7 +174,9 @@ class JobManager:
         while True:
             async with self.changed:
                 record = self.get_record(identity)
-                await self.changed.wait_for(lambda: record["revision"] > revision or record["state"] in TERMINAL)
+                await self.changed.wait_for(
+                    lambda current=record, after=revision: current["revision"] > after or current["state"] in TERMINAL
+                )
                 snapshot = self.encode(record)
             if snapshot.revision > revision:
                 yield snapshot

@@ -135,6 +135,9 @@ async def measure(
                 if workload == "capabilities":
                     await client.GetCapabilities(Empty(), metadata=metadata, timeout=timeout)
                     admission.append(time.perf_counter() - started)
+                elif workload == "catalog":
+                    await client.GetApiCatalog(Empty(), metadata=metadata, timeout=timeout)
+                    admission.append(time.perf_counter() - started)
                 else:
                     request = make_request(workload)
                     job = await client.SubmitTask(request, metadata=metadata, timeout=timeout)
@@ -188,8 +191,8 @@ async def main_async(arguments: argparse.Namespace) -> dict[str, Any]:
     metadata = (("authorization", "Bearer " + token),) if token else ()
     try:
         if arguments.loopback_fixture:
-            if any(item not in ("capabilities", "simulate", "render") for item in arguments.workloads):
-                raise ValueError("The fixture supports only capabilities, simulate and render transport workloads")
+            if any(item not in ("capabilities", "catalog", "simulate", "render") for item in arguments.workloads):
+                raise ValueError("The fixture supports capabilities, catalog, simulate and render transport workloads")
             output = root / "results"
             output.mkdir()
             fixture = LoopbackFixture(output)
@@ -270,7 +273,7 @@ def main() -> None:
         "--workloads",
         nargs="+",
         default=["capabilities", "simulate"],
-        choices=("capabilities", "simulate", "render", "snapshot", "step", "capture"),
+        choices=("capabilities", "catalog", "simulate", "render", "snapshot", "step", "capture"),
     )
     parser.add_argument("--timeout", type=float, default=120)
     parser.add_argument("--report", type=Path, required=True)

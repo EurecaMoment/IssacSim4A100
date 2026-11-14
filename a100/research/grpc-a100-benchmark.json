@@ -1,0 +1,796 @@
+{
+  "scope": "Live gRPC gateway to existing A100 CUDA workers; gateway source updated, worker source unchanged",
+  "simulator_execution_verified": true,
+  "platform": "Linux",
+  "python": "3.12.7",
+  "grpcio": "1.85.1",
+  "timestamp_unix": 1794636745.4735823,
+  "warmup_requests_per_workload": 5,
+  "api_version": "a100sim.v1",
+  "measurements": [
+    {
+      "workload": "capabilities",
+      "concurrency": 1,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.02734929323196411,
+      "completed_per_second": 1096.9204851311445,
+      "admission": {
+        "p50_ms": 0.7277131080627441,
+        "p95_ms": 1.3180598616600037,
+        "p99_ms": 1.4028921723365784,
+        "mean_ms": 0.8891291916370392
+      },
+      "end_to_end": {
+        "p50_ms": 0.7280930876731873,
+        "p95_ms": 1.3187527656555176,
+        "p99_ms": 1.4034584164619446,
+        "mean_ms": 0.889577716588974
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 1
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 1,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.019149579107761383,
+      "completed_per_second": 1566.6140666162687,
+      "admission": {
+        "p50_ms": 0.6093457341194153,
+        "p95_ms": 0.7576420903205872,
+        "p99_ms": 0.8113980293273926,
+        "mean_ms": 0.6242558360099792
+      },
+      "end_to_end": {
+        "p50_ms": 0.6096214056015015,
+        "p95_ms": 0.7579922676086426,
+        "p99_ms": 0.811748206615448,
+        "mean_ms": 0.6245563427607219
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 2
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 8,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.017528802156448364,
+      "completed_per_second": 1711.4689145466693,
+      "admission": {
+        "p50_ms": 4.563227295875549,
+        "p95_ms": 4.788637161254883,
+        "p99_ms": 5.354620516300201,
+        "mean_ms": 4.188702255487442
+      },
+      "end_to_end": {
+        "p50_ms": 4.5635998249053955,
+        "p95_ms": 4.788972437381744,
+        "p99_ms": 5.35496324300766,
+        "mean_ms": 4.189066092173259
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 1
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 8,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.01756778359413147,
+      "completed_per_second": 1707.6713086346033,
+      "admission": {
+        "p50_ms": 4.4746845960617065,
+        "p95_ms": 4.871591925621033,
+        "p99_ms": 5.219168961048126,
+        "mean_ms": 4.157927632331848
+      },
+      "end_to_end": {
+        "p50_ms": 4.475019872188568,
+        "p95_ms": 4.871934652328491,
+        "p99_ms": 5.219466984272003,
+        "mean_ms": 4.158278554677963
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 2
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 32,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.015958264470100403,
+      "completed_per_second": 1879.9036734983533,
+      "admission": {
+        "p50_ms": 8.702792227268219,
+        "p95_ms": 14.751128852367401,
+        "p99_ms": 15.096716582775116,
+        "mean_ms": 8.907590806484222
+      },
+      "end_to_end": {
+        "p50_ms": 8.703120052814484,
+        "p95_ms": 14.75147157907486,
+        "p99_ms": 15.097014605998993,
+        "mean_ms": 8.90793080131213
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 1
+    },
+    {
+      "workload": "capabilities",
+      "concurrency": 32,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.0156276673078537,
+      "completed_per_second": 1919.6722971523377,
+      "admission": {
+        "p50_ms": 8.398614823818207,
+        "p95_ms": 14.519408345222473,
+        "p99_ms": 14.860928058624268,
+        "mean_ms": 8.630900830030441
+      },
+      "end_to_end": {
+        "p50_ms": 8.398950099945068,
+        "p95_ms": 14.51972872018814,
+        "p99_ms": 14.861248433589935,
+        "mean_ms": 8.631244053443272
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 2
+    },
+    {
+      "workload": "catalog",
+      "concurrency": 1,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.0797821432352066,
+      "completed_per_second": 376.0239921301271,
+      "admission": {
+        "p50_ms": 2.626962959766388,
+        "p95_ms": 2.7196556329727173,
+        "p99_ms": 2.7373433113098145,
+        "mean_ms": 2.6389372845490775
+      },
+      "end_to_end": {
+        "p50_ms": 2.627357840538025,
+        "p95_ms": 2.720087766647339,
+        "p99_ms": 2.737678587436676,
+        "mean_ms": 2.639327694972356
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 1
+    },
+    {
+      "workload": "catalog",
+      "concurrency": 1,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.08999008685350418,
+      "completed_per_second": 333.37005273522317,
+      "admission": {
+        "p50_ms": 2.6096701622009277,
+        "p95_ms": 5.741149187088013,
+        "p99_ms": 5.971454083919525,
+        "mean_ms": 2.9707543551921844
+      },
+      "end_to_end": {
+        "p50_ms": 2.61002779006958,
+        "p95_ms": 5.742035806179047,
+        "p99_ms": 5.972273647785187,
+        "mean_ms": 2.9712344209353128
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 2
+    },
+    {
+      "workload": "catalog",
+      "concurrency": 8,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.04813229292631149,
+      "completed_per_second": 623.2821703700826,
+      "admission": {
+        "p50_ms": 11.858083307743073,
+        "p95_ms": 13.644985854625702,
+        "p99_ms": 13.666726648807526,
+        "mean_ms": 11.184109499057133
+      },
+      "end_to_end": {
+        "p50_ms": 11.858567595481873,
+        "p95_ms": 13.645254075527191,
+        "p99_ms": 13.666994869709015,
+        "mean_ms": 11.184401313463846
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 1
+    },
+    {
+      "workload": "catalog",
+      "concurrency": 8,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.047934144735336304,
+      "completed_per_second": 625.8586685053435,
+      "admission": {
+        "p50_ms": 12.00169324874878,
+        "p95_ms": 13.044945895671844,
+        "p99_ms": 13.074629008769989,
+        "mean_ms": 11.05229655901591
+      },
+      "end_to_end": {
+        "p50_ms": 12.002140283584595,
+        "p95_ms": 13.045229017734528,
+        "p99_ms": 13.074927031993866,
+        "mean_ms": 11.052605509757996
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 2
+    },
+    {
+      "workload": "catalog",
+      "concurrency": 32,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.04777806997299194,
+      "completed_per_second": 627.9031366683175,
+      "admission": {
+        "p50_ms": 25.046415627002716,
+        "p95_ms": 45.85219919681549,
+        "p99_ms": 47.245196998119354,
+        "mean_ms": 26.127246518929798
+      },
+      "end_to_end": {
+        "p50_ms": 25.046586990356445,
+        "p95_ms": 45.85246741771698,
+        "p99_ms": 47.24548012018204,
+        "mean_ms": 26.12753709157308
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 1
+    },
+    {
+      "workload": "catalog",
+      "concurrency": 32,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 0,
+      "errors": {},
+      "elapsed_seconds": 0.04634213447570801,
+      "completed_per_second": 647.3590467811888,
+      "admission": {
+        "p50_ms": 23.649804294109344,
+        "p95_ms": 44.41169649362564,
+        "p99_ms": 45.81843316555023,
+        "mean_ms": 24.70831200480461
+      },
+      "end_to_end": {
+        "p50_ms": 23.650094866752625,
+        "p95_ms": 44.41196471452713,
+        "p99_ms": 45.818738639354706,
+        "mean_ms": 24.708602825800575
+      },
+      "queue": {},
+      "upstream_execution": {},
+      "trial": 2
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 1,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 7.714341841638088,
+      "completed_per_second": 3.888860594441807,
+      "admission": {
+        "p50_ms": 26.434287428855896,
+        "p95_ms": 28.458692133426666,
+        "p99_ms": 33.479221165180206,
+        "mean_ms": 25.17795090874036
+      },
+      "end_to_end": {
+        "p50_ms": 256.73598051071167,
+        "p95_ms": 268.99227499961853,
+        "p99_ms": 271.0103318095207,
+        "mean_ms": 257.090263068676
+      },
+      "queue": {
+        "p50_ms": 64.26191329956055,
+        "p95_ms": 65.51313400268555,
+        "p99_ms": 65.62542915344238,
+        "mean_ms": 63.55783144632974
+      },
+      "upstream_execution": {
+        "p50_ms": 158.46848487854004,
+        "p95_ms": 163.28668594360352,
+        "p99_ms": 164.1404628753662,
+        "mean_ms": 158.72292518615723
+      },
+      "trial": 1
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 1,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 7.6365253403782845,
+      "completed_per_second": 3.928488240767615,
+      "admission": {
+        "p50_ms": 26.865459978580475,
+        "p95_ms": 29.260724782943726,
+        "p99_ms": 30.232101678848267,
+        "mean_ms": 23.824367175499596
+      },
+      "end_to_end": {
+        "p50_ms": 259.0833082795143,
+        "p95_ms": 267.64725148677826,
+        "p99_ms": 281.0943275690079,
+        "mean_ms": 254.49530755480131
+      },
+      "queue": {
+        "p50_ms": 64.5899772644043,
+        "p95_ms": 65.5519962310791,
+        "p99_ms": 66.91384315490723,
+        "mean_ms": 63.15422852834065
+      },
+      "upstream_execution": {
+        "p50_ms": 158.36286544799805,
+        "p95_ms": 163.32054138183594,
+        "p99_ms": 164.97063636779785,
+        "mean_ms": 157.31402238210043
+      },
+      "trial": 2
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 8,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 1.4224497377872467,
+      "completed_per_second": 21.090376132845158,
+      "admission": {
+        "p50_ms": 41.4847806096077,
+        "p95_ms": 78.87070626020432,
+        "p99_ms": 79.5065388083458,
+        "mean_ms": 44.01543239752451
+      },
+      "end_to_end": {
+        "p50_ms": 364.3592670559883,
+        "p95_ms": 369.42053586244583,
+        "p99_ms": 370.34863233566284,
+        "mean_ms": 356.7522930602233
+      },
+      "queue": {
+        "p50_ms": 81.70080184936523,
+        "p95_ms": 124.24182891845703,
+        "p99_ms": 125.12922286987305,
+        "mean_ms": 84.48507785797119
+      },
+      "upstream_execution": {
+        "p50_ms": 161.46588325500488,
+        "p95_ms": 166.41831398010254,
+        "p99_ms": 167.2072410583496,
+        "mean_ms": 161.16944154103595
+      },
+      "trial": 1
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 8,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 1.4316591024398804,
+      "completed_per_second": 20.95470908463685,
+      "admission": {
+        "p50_ms": 42.43183881044388,
+        "p95_ms": 79.70587909221649,
+        "p99_ms": 83.8930681347847,
+        "mean_ms": 44.65031077464422
+      },
+      "end_to_end": {
+        "p50_ms": 366.4301112294197,
+        "p95_ms": 371.82654440402985,
+        "p99_ms": 373.3268156647682,
+        "mean_ms": 358.86183455586433
+      },
+      "queue": {
+        "p50_ms": 85.88933944702148,
+        "p95_ms": 124.16386604309082,
+        "p99_ms": 124.82190132141113,
+        "mean_ms": 87.1919552485148
+      },
+      "upstream_execution": {
+        "p50_ms": 163.5603904724121,
+        "p95_ms": 173.44999313354492,
+        "p99_ms": 174.5431423187256,
+        "mean_ms": 164.64192867279053
+      },
+      "trial": 2
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 32,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 0.7559228464961052,
+      "completed_per_second": 39.68658989347608,
+      "admission": {
+        "p50_ms": 158.27566385269165,
+        "p95_ms": 350.11378675699234,
+        "p99_ms": 360.15868932008743,
+        "mean_ms": 175.01337950428328
+      },
+      "end_to_end": {
+        "p50_ms": 706.3606232404709,
+        "p95_ms": 752.5730058550835,
+        "p99_ms": 752.6268661022186,
+        "mean_ms": 713.7459024786949
+      },
+      "queue": {
+        "p50_ms": 154.64115142822266,
+        "p95_ms": 295.8822250366211,
+        "p99_ms": 305.45902252197266,
+        "mean_ms": 159.28242206573486
+      },
+      "upstream_execution": {
+        "p50_ms": 179.86202239990234,
+        "p95_ms": 188.05170059204102,
+        "p99_ms": 188.6160373687744,
+        "mean_ms": 178.06387742360434
+      },
+      "trial": 1
+    },
+    {
+      "workload": "simulate",
+      "concurrency": 32,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 0.7575093433260918,
+      "completed_per_second": 39.6034719100298,
+      "admission": {
+        "p50_ms": 158.71429443359375,
+        "p95_ms": 310.52032113075256,
+        "p99_ms": 321.0267126560211,
+        "mean_ms": 166.58119559288025
+      },
+      "end_to_end": {
+        "p50_ms": 745.8084374666214,
+        "p95_ms": 747.9919195175171,
+        "p99_ms": 753.235712647438,
+        "mean_ms": 745.5838975807031
+      },
+      "queue": {
+        "p50_ms": 163.06638717651367,
+        "p95_ms": 297.35875129699707,
+        "p99_ms": 306.86378479003906,
+        "mean_ms": 162.78189818064374
+      },
+      "upstream_execution": {
+        "p50_ms": 189.45789337158203,
+        "p95_ms": 197.3106861114502,
+        "p99_ms": 197.8323459625244,
+        "mean_ms": 188.39352130889893
+      },
+      "trial": 2
+    },
+    {
+      "workload": "render",
+      "concurrency": 1,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 8.573017567396164,
+      "completed_per_second": 3.499351280241426,
+      "admission": {
+        "p50_ms": 10.069034993648529,
+        "p95_ms": 12.84201443195343,
+        "p99_ms": 13.177148997783661,
+        "mean_ms": 10.354351252317429
+      },
+      "end_to_end": {
+        "p50_ms": 287.09036856889725,
+        "p95_ms": 296.9009801745415,
+        "p99_ms": 299.0940883755684,
+        "mean_ms": 285.71259255210555
+      },
+      "queue": {
+        "p50_ms": 56.12540245056152,
+        "p95_ms": 57.456254959106445,
+        "p99_ms": 59.00883674621582,
+        "mean_ms": 56.16890589396159
+      },
+      "upstream_execution": {
+        "p50_ms": 211.39216423034668,
+        "p95_ms": 218.8708782196045,
+        "p99_ms": 219.28906440734863,
+        "mean_ms": 209.27117665608725
+      },
+      "trial": 1
+    },
+    {
+      "workload": "render",
+      "concurrency": 1,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 8.7936737164855,
+      "completed_per_second": 3.411543453535125,
+      "admission": {
+        "p50_ms": 9.87505167722702,
+        "p95_ms": 45.17398774623871,
+        "p99_ms": 52.71231383085251,
+        "mean_ms": 12.698687116305033
+      },
+      "end_to_end": {
+        "p50_ms": 289.8533344268799,
+        "p95_ms": 328.3916935324669,
+        "p99_ms": 332.2739079594612,
+        "mean_ms": 293.0681387583415
+      },
+      "queue": {
+        "p50_ms": 56.47993087768555,
+        "p95_ms": 57.000160217285156,
+        "p99_ms": 96.34923934936523,
+        "mean_ms": 57.724507649739586
+      },
+      "upstream_execution": {
+        "p50_ms": 212.92543411254883,
+        "p95_ms": 219.81120109558105,
+        "p99_ms": 220.7028865814209,
+        "mean_ms": 212.80985673268634
+      },
+      "trial": 2
+    },
+    {
+      "workload": "render",
+      "concurrency": 8,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 1.6703815460205078,
+      "completed_per_second": 17.959968530226853,
+      "admission": {
+        "p50_ms": 40.59399664402008,
+        "p95_ms": 78.9305716753006,
+        "p99_ms": 79.51796054840088,
+        "mean_ms": 42.532579104105636
+      },
+      "end_to_end": {
+        "p50_ms": 428.8195073604584,
+        "p95_ms": 430.6723326444626,
+        "p99_ms": 432.1061000227928,
+        "mean_ms": 418.9659744501114
+      },
+      "queue": {
+        "p50_ms": 85.55889129638672,
+        "p95_ms": 119.32182312011719,
+        "p99_ms": 124.46427345275879,
+        "mean_ms": 85.69625218709311
+      },
+      "upstream_execution": {
+        "p50_ms": 224.6565818786621,
+        "p95_ms": 229.13742065429688,
+        "p99_ms": 229.7983169555664,
+        "mean_ms": 223.88805548350015
+      },
+      "trial": 1
+    },
+    {
+      "workload": "render",
+      "concurrency": 8,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 1.6542396694421768,
+      "completed_per_second": 18.135219795639557,
+      "admission": {
+        "p50_ms": 37.74380683898926,
+        "p95_ms": 70.47459483146667,
+        "p99_ms": 79.54671233892441,
+        "mean_ms": 40.70057322581609
+      },
+      "end_to_end": {
+        "p50_ms": 401.63660049438477,
+        "p95_ms": 476.8707975745201,
+        "p99_ms": 476.92760080099106,
+        "mean_ms": 411.713678141435
+      },
+      "queue": {
+        "p50_ms": 79.9872875213623,
+        "p95_ms": 126.02567672729492,
+        "p99_ms": 161.84425354003906,
+        "mean_ms": 88.67324988047281
+      },
+      "upstream_execution": {
+        "p50_ms": 224.9469757080078,
+        "p95_ms": 231.40501976013184,
+        "p99_ms": 232.31005668640137,
+        "mean_ms": 224.20392831166586
+      },
+      "trial": 2
+    },
+    {
+      "workload": "render",
+      "concurrency": 32,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 0.8199272826313972,
+      "completed_per_second": 36.588610521314564,
+      "admission": {
+        "p50_ms": 162.06227242946625,
+        "p95_ms": 304.1618689894676,
+        "p99_ms": 313.6153370141983,
+        "mean_ms": 166.2868119776249
+      },
+      "end_to_end": {
+        "p50_ms": 805.3712323307991,
+        "p95_ms": 806.3830435276031,
+        "p99_ms": 816.4426907896996,
+        "mean_ms": 799.0622113148371
+      },
+      "queue": {
+        "p50_ms": 156.84890747070312,
+        "p95_ms": 296.3724136352539,
+        "p99_ms": 305.78136444091797,
+        "mean_ms": 162.28233178456625
+      },
+      "upstream_execution": {
+        "p50_ms": 261.93785667419434,
+        "p95_ms": 276.7672538757324,
+        "p99_ms": 277.6145935058594,
+        "mean_ms": 260.85206667582196
+      },
+      "trial": 1
+    },
+    {
+      "workload": "render",
+      "concurrency": 32,
+      "requests": 30,
+      "completed": 30,
+      "cuda_jobs": 30,
+      "errors": {},
+      "elapsed_seconds": 0.8457806780934334,
+      "completed_per_second": 35.47018840348337,
+      "admission": {
+        "p50_ms": 163.1292849779129,
+        "p95_ms": 311.33683770895004,
+        "p99_ms": 321.81204855442047,
+        "mean_ms": 168.20091605186462
+      },
+      "end_to_end": {
+        "p50_ms": 842.6091372966766,
+        "p95_ms": 843.7919020652771,
+        "p99_ms": 844.1133499145508,
+        "mean_ms": 825.5684981743495
+      },
+      "queue": {
+        "p50_ms": 166.7935848236084,
+        "p95_ms": 302.1714687347412,
+        "p99_ms": 306.3347339630127,
+        "mean_ms": 171.0179328918457
+      },
+      "upstream_execution": {
+        "p50_ms": 263.90719413757324,
+        "p95_ms": 277.4701118469238,
+        "p99_ms": 278.0017852783203,
+        "mean_ms": 262.1814568837484
+      },
+      "trial": 2
+    }
+  ],
+  "success": true,
+  "hardware": {
+    "gpu_family": "NVIDIA A100",
+    "exclusive_gpu": false
+  },
+  "acceptance_checks": {
+    "resident_drop": {
+      "success": true,
+      "timings": {
+        "gateway_queue_seconds": 0.02498650550842285,
+        "backend_wait_seconds": 0.3606187030673027,
+        "upstream_queue_seconds": 0.05166959762573242,
+        "upstream_execution_seconds": 0.30857324600219727,
+        "total_seconds": 0.4264824911952019,
+        "submit_seconds": 0.0024872347712516785
+      },
+      "physics_device": "cuda:0",
+      "cpu_fallback": false,
+      "initial_height_m": 2,
+      "final_height_m": 0.10000000149011612
+    },
+    "generic_drop": {
+      "success": true,
+      "timings": {
+        "gateway_queue_seconds": 0.011609554290771484,
+        "backend_wait_seconds": 0.32679834216833115,
+        "upstream_queue_seconds": 0.006313800811767578,
+        "upstream_execution_seconds": 0.3233654499053955,
+        "total_seconds": 0.36088867485523224,
+        "submit_seconds": 0.00909557193517685
+      },
+      "physics_device": "cuda:0",
+      "cpu_fallback": false,
+      "initial_height_m": 2,
+      "final_height_m": 0.10000000149011612
+    },
+    "preloaded_mesh_render": {
+      "success": true,
+      "timings": {
+        "gateway_queue_seconds": 0.011965751647949219,
+        "backend_wait_seconds": 0.5171912834048271,
+        "total_seconds": 0.5693234205245972,
+        "submit_seconds": 0.027618244290351868
+      },
+      "backend": "cuda_ad_rgb",
+      "cpu_fallback": false
+    }
+  },
+  "artifact_transfer_verified": false,
+  "new_worker_code_verified": false,
+  "limitations": [
+    "Existing worker artifacts are not readable by this validation account; file-transfer and artifact collection are excluded.",
+    "New PBR overrides, randomized materials and custom-scene annotations were not tested on the A100.",
+    "Robot feature worker was not running; control, sensors, ROS 2, cloth and independent workflows were not measured."
+  ],
+  "gateway_source_sha256": {
+    "a100sim/rpc/server.py": "84bcf15751ee73b54ab9f36134df83164295a0a7663b0e0f7641e72afa33d9b9",
+    "a100sim/rpc/catalog.py": "c9b57ab2a4d3a23bbe1c1b49bbffee896a8c3ea7153b879e2c37ffdaf3ad59e8",
+    "a100sim/rpc/codec.py": "58b4638f84cd6c6fa205b3f47414c846237e6bc66ddc830d2e7274fc5a095f5d",
+    "a100sim/rpc/v1/simulator.proto": "52c747faa33e1cfa910b73558b22128e923dc6551a6d66f816fa712e61dc7301",
+    "a100sim/rpc/backend.py": "d9b608d62f87dab0cf507e9af41656d4cfb617b4ec839d06f9cbfe70b6a2a93a",
+    "a100sim/rpc/jobs.py": "b6cad2a23fa63cc0d2128b5dae6a0e21cd75bbef0df68f8f9bec37eba2682d31",
+    "a100sim/service_queue.py": "359b91f5b038f3386431682197030f19ec73f79b5d3d716d6876c820ea2fafed"
+  }
+}

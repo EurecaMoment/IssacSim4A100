@@ -14,47 +14,20 @@ from pathlib import Path
 import drjit as dr
 import mitsuba as mi
 import numpy as np
-from pxr import Usd, UsdGeom, UsdLux, UsdShade
+from pxr import Usd, UsdGeom, UsdLux
 
 mi.set_variant("cuda_ad_rgb")
 from . import hybrid_integrator
 from .gaussian import load_gaussians, shape_dict
+from .materials import MATERIAL_CHANNELS, read_usd_material, read_mesh_channels
 
 
 def world_matrix(prim, cache):
     return np.asarray(cache.GetLocalToWorldTransform(prim), dtype=np.float64).T.copy()
 
 
-def surface_material(prim, default=(0.32, 0.34, 0.37), vertex_color=False):
-    display = UsdGeom.Gprim(prim).GetDisplayColorAttr().Get() if prim.IsA(UsdGeom.Gprim) else None
-    if display and not vertex_color:
-        default = tuple(display[0])
-    color = (
-        {"type": "mesh_attribute", "name": "vertex_color"} if vertex_color else {"type": "rgb", "value": list(default)}
-    )
-    roughness, metallic = 0.85, 0.0
-    material, _ = UsdShade.MaterialBindingAPI(prim).ComputeBoundMaterial()
-    if material:
-        shader = material.ComputeSurfaceSource()[0]
-        if not shader or shader.GetIdAttr().Get() != "UsdPreviewSurface":
-            raise ValueError(f"Unsupported USD material on {prim.GetPath()}")
-        for name in ("diffuseColor", "roughness", "metallic"):
-            value = shader.GetInput(name)
-            if value and value.HasConnectedSource():
-                raise ValueError(f"USD texture network is not yet supported: {prim.GetPath()}/{name}")
-            if value and value.Get() is not None:
-                if name == "diffuseColor":
-                    color = {"type": "rgb", "value": list(value.Get())}
-                elif name == "roughness":
-                    roughness = float(value.Get())
-                elif name == "metallic":
-                    metallic = float(value.Get())
-    return mi.load_dict(
-        {
-            "type": "twosided",
-            "material": {"type": "principled", "roughness": roughness, "metallic": metallic, "base_color": color},
-        }
-    )
+def surface_material(prim, vertex_color=False, channels=()):
+    return mi.load_dict(read_usd_material(prim, vertex_color=vertex_color, channels=channels))
 
 
 def mesh_shape(prim, matrix):
@@ -77,8 +50,16 @@ def mesh_shape(prim, matrix):
             rgb = np.repeat(rgb, len(points), axis=0)
         else:
             raise ValueError(f"USD displayColor must have vertex interpolation: {prim.GetPath()}")
+    values = {}
+    for name in MATERIAL_CHANNELS:
+        attribute = UsdGeom.PrimvarsAPI(prim).GetPrimvar("a100sim:" + name)
+        if attribute and attribute.HasValue():
+            if attribute.GetInterpolation() != "vertex":
+                raise ValueError(f"USD {name} primvar must use vertex interpolation: {prim.GetPath()}")
+            values[name] = attribute.ComputeFlattened()
+    channels = read_mesh_channels(values, len(points))
     props = mi.Properties()
-    props["bsdf"] = surface_material(prim, vertex_color=rgb is not None)
+    props["bsdf"] = surface_material(prim, vertex_color=rgb is not None, channels=tuple(channels))
     shape = mi.Mesh(
         str(prim.GetPath()),
         vertex_count=len(points),
@@ -88,6 +69,8 @@ def mesh_shape(prim, matrix):
     )
     if rgb is not None:
         shape.add_attribute("vertex_color", 3, rgb.reshape(-1))
+    for name, values in channels.items():
+        shape.add_attribute("vertex_" + name, 1, values)
     params = mi.traverse(shape)
     params["vertex_positions"] = (points @ matrix[:3, :3].T + matrix[:3, 3]).astype(np.float32).reshape(-1)
     params["faces"] = indices.reshape(-1)

@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import math
+import random
 from dataclasses import dataclass
 from typing import Any
 
 from google.protobuf.json_format import MessageToDict
 from google.protobuf.message import Message
 
+from a100sim.materials import validate_material
 from a100sim.rpc.storage import AssetStore
 from a100sim.rpc.v1 import simulator_pb2 as pb
 
@@ -58,7 +60,12 @@ def decode(request: pb.SubmitTaskRequest, assets: AssetStore) -> Task:
     validate_numbers(message)
     payload = MessageToDict(message, preserving_proto_field_name=True)
     require_finite(payload)
-    if operation == "simulate":
+    if operation == "randomize":
+        if not message.HasField("scene") or not 1 <= len(message.scene.bodies) <= 256:
+            raise ValueError("randomize.scene requires 1–256 explicit bodies")
+        scene = decode(pb.SubmitTaskRequest(request_id=request.request_id, simulate=message.scene), assets)
+        payload = randomize_scene(scene.arguments, payload)
+    elif operation == "simulate":
         if message.route not in (pb.AUTO, pb.GENERIC):
             raise ValueError("Unknown physics route")
         payload["route"] = "generic" if message.route == pb.GENERIC else "auto"
@@ -68,6 +75,8 @@ def decode(request: pb.SubmitTaskRequest, assets: AssetStore) -> Task:
                 body["asset"] = str(assets.resolve(body.pop("asset_id", "")))
             elif body.pop("asset_id", ""):
                 raise ValueError("Only mesh bodies accept asset_id")
+            if "material" in body:
+                body["material"] = validate_material(body["material"])
             if "id" not in body and message.bodies[index].id:
                 body["id"] = message.bodies[index].id
         if message.HasField("render"):
@@ -104,3 +113,45 @@ def decode(request: pb.SubmitTaskRequest, assets: AssetStore) -> Task:
         payload = MessageToDict(message.arguments, preserving_proto_field_name=True)
         require_finite(payload)
     return Task(operation, payload)
+
+
+def randomize_scene(scene: dict[str, Any], settings: dict[str, Any]) -> dict[str, Any]:
+    """Deterministically randomize explicit scene bodies using bounded uniform ranges."""
+    generator = random.Random(int(settings.get("seed", 42)))
+
+    def bounds(name: str, count: int, low: float, high: float) -> list[float] | None:
+        values = settings.get(name)
+        if values is None:
+            return None
+        if len(values) != count or any(not low <= value <= high for value in values):
+            raise ValueError(f"{name} requires {count} finite values between {low} and {high}")
+        return values
+
+    lower = bounds("position_min", 3, -10000, 10000)
+    upper = bounds("position_max", 3, -10000, 10000)
+    if (lower is None) != (upper is None) or (lower and any(a > b for a, b in zip(lower, upper, strict=True))):
+        raise ValueError("position_min and position_max must both be supplied in increasing order")
+    ranges = {
+        "metallic": bounds("metallic_range", 2, 0, 1),
+        "roughness": bounds("roughness_range", 2, 0, 1),
+        "mass": bounds("mass_range", 2, 0.0001, 100000),
+    }
+    if any(value and value[0] > value[1] for value in ranges.values()):
+        raise ValueError("Randomization ranges must be in increasing order")
+    for body in scene["bodies"]:
+        if lower:
+            body["position"] = [generator.uniform(a, b) for a, b in zip(lower, upper, strict=True)]
+        if settings.get("randomize_color"):
+            body.setdefault("material", {})["base_color"] = [generator.random() for _ in range(3)]
+        for name, values in ranges.items():
+            if values:
+                target = body if name == "mass" else body.setdefault("material", {})
+                target[name] = generator.uniform(*values)
+    scene["_randomization"] = {
+        "seed": int(settings.get("seed", 42)),
+        "distribution": "independent uniform",
+        "initial_bodies": [
+            {name: value for name, value in body.items() if name != "asset"} for body in scene["bodies"]
+        ],
+    }
+    return scene

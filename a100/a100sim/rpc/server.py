@@ -19,6 +19,7 @@ from grpc_health.v1 import health, health_pb2, health_pb2_grpc
 from grpc_reflection.v1alpha import reflection
 
 from a100sim.rpc.backend import SimulatorBackend
+from a100sim.rpc.catalog import API_VERSION, SIMULATOR_VERSION, build_catalog, resolve_feature
 from a100sim.rpc.config import Settings
 from a100sim.rpc.errors import ServiceError
 from a100sim.rpc.jobs import JobManager
@@ -90,13 +91,23 @@ class SimulatorService(rpc.SimulatorServicer):
         async with handle_errors(context):
             capabilities = await self.manager.backend.describe()
             return pb.Capabilities(
-                api_version="a100sim.v1",
-                simulator_version="6.2.0.0",
+                api_version=API_VERSION,
+                simulator_version=SIMULATOR_VERSION,
                 capabilities=capabilities,
                 queue_capacity=self.manager.settings.capacity,
                 queued_jobs=self.manager.queue.qsize(),
                 running_jobs=sum(r["state"] == "RUNNING" for r in self.manager.records.values()),
             )
+
+    async def GetApiCatalog(self, request: Empty, context: grpc.aio.ServicerContext) -> pb.ApiCatalog:
+        """Return all 30 domains, argument schemas, implementation gaps and live readiness."""
+        async with handle_errors(context):
+            return build_catalog(await self.manager.backend.describe())
+
+    async def InvokeFeature(self, request: pb.FeatureRequest, context: grpc.aio.ServicerContext) -> pb.Job:
+        """Resolve a catalog ID to a real typed task or reject an unimplemented feature."""
+        async with handle_errors(context):
+            return await self.manager.submit(resolve_feature(request))
 
     async def SubmitTask(self, request: pb.SubmitTaskRequest, context: grpc.aio.ServicerContext) -> pb.Job:
         """Accept a durable task once; caller deadlines do not revoke accepted work."""
@@ -125,10 +136,11 @@ class SimulatorService(rpc.SimulatorServicer):
         """Execute an ordered control stream with one task in flight per stream."""
         async with handle_errors(context):
             async for request in requests:
-                job = await self.manager.submit(request)
-                async for job in self.manager.observe(job.job_id):
-                    pass
-                yield job
+                accepted = await self.manager.submit(request)
+                latest = accepted
+                async for snapshot in self.manager.observe(accepted.job_id):
+                    latest = snapshot
+                yield latest
 
     async def ListAssets(self, request: Empty, context: grpc.aio.ServicerContext) -> pb.AssetList:
         """List handles that can be referenced by simulation or import requests."""

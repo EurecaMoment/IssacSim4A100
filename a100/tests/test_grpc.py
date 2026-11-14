@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import json
+import os
+import sys
 import tempfile
 import threading
 import time
@@ -20,7 +23,9 @@ try:
 except ModuleNotFoundError as error:
     raise unittest.SkipTest("Install requirements-grpc.txt to run the optional gRPC tests") from error
 
-from a100sim.rpc.backend import RegisteredOperation, SimulatorBackend
+from a100sim.physics_service import PhysicsQueue
+from a100sim.rpc.backend import SCOPES, RegisteredOperation, SimulatorBackend
+from a100sim.rpc.catalog import DOMAINS, build_catalog
 from a100sim.rpc.codec import Task, decode
 from a100sim.rpc.config import Settings
 from a100sim.rpc.jobs import JobManager
@@ -81,7 +86,8 @@ class GrpcContractTests(unittest.IsolatedAsyncioTestCase):
         await self.manager.start()
         self.server, port = build_server(self.manager, "127.0.0.1:0", token="test-token")
         await self.server.start()
-        self.channel = grpc.aio.insecure_channel(f"127.0.0.1:{port}")
+        self.target = f"127.0.0.1:{port}"
+        self.channel = grpc.aio.insecure_channel(self.target)
         self.client = rpc.SimulatorStub(self.channel)
         self.metadata = (("authorization", "Bearer test-token"),)
 
@@ -132,6 +138,100 @@ class GrpcContractTests(unittest.IsolatedAsyncioTestCase):
             reply async for reply in inspector.ServerReflectionInfo(list_services(), metadata=self.metadata, timeout=2)
         ]
         self.assertIn("a100sim.v1.Simulator", [item.name for item in replies[0].list_services_response.service])
+
+    async def test_portable_cli_uploads_invokes_downloads_and_probes_health(self) -> None:
+        adapter = Path(__file__).resolve().parents[1]
+        environment = {**os.environ, "A100SIM_GRPC_TOKEN": "test-token", "PYTHONIOENCODING": "utf-8"}
+        for name in ("A100SIM_GRPC_PROBE_TARGET", "A100SIM_GRPC_TLS_CERT", "A100SIM_GRPC_TLS_CA"):
+            environment.pop(name, None)
+
+        async def command(script: Path, *arguments: str) -> str:
+            process = await asyncio.create_subprocess_exec(
+                sys.executable,
+                str(script),
+                *arguments,
+                env=environment,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            try:
+                output, error = await asyncio.wait_for(process.communicate(), timeout=20)
+            except TimeoutError:
+                process.kill()
+                await process.wait()
+                raise
+            self.assertEqual(process.returncode, 0, error.decode(errors="replace"))
+            return output.decode()
+
+        client = adapter / "examples/grpc_client.py"
+        catalog = json.loads(await command(client, "--target", self.target, "catalog"))
+        self.assertEqual(len(catalog["domains"]), 30)
+        source = self.root / "source.glb"
+        source.write_bytes(b"upload transport fixture; no asset conversion")
+        uploaded = json.loads(await command(client, "--target", self.target, "upload", str(source)))
+        self.assertEqual(uploaded["size_bytes"], str(source.stat().st_size))
+        self.backend.artifact = self.root / "results/observation.json"
+        self.backend.artifact.parent.mkdir()
+        self.backend.artifact.write_bytes(b'{"fixture":true}')
+        downloaded = self.root / "downloads"
+        result = await command(client, "--target", self.target, "invoke", "joints.state", "--output", str(downloaded))
+        request_id, final = result.split("\n", 1)
+        self.assertEqual(json.loads(request_id)["request_id"], json.loads(final)["request_id"])
+        self.assertEqual(json.loads(final)["state"], "SUCCEEDED")
+        self.assertEqual([item.read_bytes() for item in downloaded.iterdir()], [b'{"fixture":true}'])
+        health = await command(adapter / "scripts/wait_ready.py", "--grpc", "--timeout", "5", self.target)
+        self.assertIn("Ready: simulator gRPC gateway", health)
+
+    async def test_catalog_exposes_every_domain_and_rejects_gaps_before_admission(self) -> None:
+        with self.assertRaises(grpc.aio.AioRpcError) as failure:
+            await self.client.GetApiCatalog(Empty(), timeout=2)
+        self.assertEqual(failure.exception.code(), grpc.StatusCode.UNAUTHENTICATED)
+        catalog = await self.client.GetApiCatalog(Empty(), metadata=self.metadata, timeout=3)
+        self.assertEqual(catalog.simulator_version, "6.2.0.0")
+        self.assertEqual([domain.number for domain in catalog.domains], list(range(1, 31)))
+        self.assertEqual(sum(len(domain.features) for domain in catalog.domains), 138)
+        before = len(self.manager.records)
+        for feature_id, code in [
+            ("range_sensors.rtx_lidar", grpc.StatusCode.UNIMPLEMENTED),
+            ("learning.reset_training", grpc.StatusCode.UNIMPLEMENTED),
+            ("does.not.exist", grpc.StatusCode.NOT_FOUND),
+        ]:
+            with self.subTest(feature_id=feature_id), self.assertRaises(grpc.aio.AioRpcError) as failure:
+                await self.client.InvokeFeature(
+                    pb.FeatureRequest(request_id="gap", feature_id=feature_id), metadata=self.metadata, timeout=2
+                )
+            self.assertEqual(failure.exception.code(), code)
+        self.assertEqual(len(self.manager.records), before)
+
+    async def test_feature_invocation_preserves_typed_validation_and_idempotency(self) -> None:
+        with self.assertRaises(grpc.aio.AioRpcError) as failure:
+            await self.client.InvokeFeature(pb.FeatureRequest(feature_id="joints.state"), timeout=2)
+        self.assertEqual(failure.exception.code(), grpc.StatusCode.UNAUTHENTICATED)
+        feature = pb.FeatureRequest(
+            request_id="same-operation",
+            feature_id="joints.velocity",
+            arguments={"targets": [{"values": [0.2, -0.1]}], "steps": 2},
+        )
+        invoked = await self.client.InvokeFeature(feature, metadata=self.metadata, timeout=2)
+        direct = await self.submit(
+            "same-operation",
+            control=pb.ControlRequest(mode=pb.VELOCITY, targets=[pb.JointTargets(values=[0.2, -0.1])], steps=2),
+        )
+        self.assertEqual(invoked.job_id, direct.job_id)
+        self.assertEqual((await self.finish(invoked)).state, pb.SUCCEEDED)
+        self.assertEqual(self.backend.executions, 1)
+        for arguments in ({"unknown": True}, {"mode": "EFFORT"}, {"steps": -1}, {"steps": "not-an-integer"}):
+            with self.subTest(arguments=arguments), self.assertRaises(grpc.aio.AioRpcError) as failure:
+                await self.client.InvokeFeature(
+                    pb.FeatureRequest(request_id="invalid", feature_id="joints.velocity", arguments=arguments),
+                    metadata=self.metadata,
+                    timeout=2,
+                )
+            self.assertEqual(failure.exception.code(), grpc.StatusCode.INVALID_ARGUMENT)
+        snapshot = await self.client.InvokeFeature(
+            pb.FeatureRequest(request_id="empty-message", feature_id="joints.state"), metadata=self.metadata, timeout=2
+        )
+        self.assertEqual((await self.finish(snapshot)).operation, "snapshot")
 
     async def test_idempotency_executes_once_and_rejects_changed_payload(self) -> None:
         requests = [self.submit("same-id", step=pb.StepRequest(steps=3)) for _ in range(12)]
@@ -269,6 +369,51 @@ class GrpcContractTests(unittest.IsolatedAsyncioTestCase):
 class RoutingTests(unittest.IsolatedAsyncioTestCase):
     """Check typed operation coverage and actual internal HTTP job observation."""
 
+    async def test_legacy_worker_is_observed_without_queries_or_resubmitting_work(self) -> None:
+        from aiohttp import web
+
+        submissions = 0
+        observations = 0
+
+        async def health(request: web.Request) -> web.Response:
+            return web.json_response({"status": "ready", "engine": "legacy transport fixture; no GPU"})
+
+        async def submit(request: web.Request) -> web.Response:
+            nonlocal submissions
+            submissions += 1
+            return web.json_response({"id": "a" * 32, "state": "queued"}, status=202)
+
+        async def observe(request: web.Request) -> web.Response:
+            nonlocal observations
+            self.assertFalse(request.query)
+            observations += 1
+            return web.json_response({"state": "succeeded" if observations >= 3 else "running", "verified": True})
+
+        app = web.Application()
+        app.router.add_get("/health", health)
+        app.router.add_post("/simulate", submit)
+        app.router.add_get("/jobs/{identity}", observe)
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, "127.0.0.1", 0)
+        await site.start()
+        try:
+            with tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                url = "http://127.0.0.1:" + str(site._server.sockets[0].getsockname()[1])
+                settings = Settings(root / "state", root / "assets", (), {"generic": url}, root)
+                backend = SimulatorBackend(settings)
+                await backend.start()
+                try:
+                    result, _ = await backend.execute(Task("simulate", {}), root / "output")
+                finally:
+                    await backend.close()
+        finally:
+            await runner.cleanup()
+        self.assertTrue(result["verified"])
+        self.assertEqual(submissions, 1)
+        self.assertEqual(observations, 3)
+
     async def test_registered_operation_exposes_schema_and_job_scoped_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -333,6 +478,7 @@ class RoutingTests(unittest.IsolatedAsyncioTestCase):
                 "export_scene": Empty(),
                 "inspect_gains": Empty(),
                 "ros2_status": Empty(),
+                "randomize": pb.RandomizeRequest(scene=pb.SimulateRequest(bodies=[pb.Body(id="sample")])),
             }
             for name, message in requests.items():
                 with self.subTest(name=name):
@@ -347,6 +493,65 @@ class RoutingTests(unittest.IsolatedAsyncioTestCase):
                 decode(
                     pb.SubmitTaskRequest(request_id="nan", simulate=pb.SimulateRequest(gravity=float("nan"))), assets
                 )
+
+    async def test_catalog_covers_protocol_operations_and_keeps_scope_separate_from_readiness(self) -> None:
+        operations = set(SCOPES)
+        mapped = {feature.task for domain in DOMAINS for feature in domain.features if feature.task}
+        self.assertEqual(operations, mapped)
+        ready = [pb.Capability(name=name, availability=pb.AVAILABLE) for name in operations]
+        for capabilities, expected in (([], pb.UNAVAILABLE), (ready, pb.PARTIAL)):
+            catalog = build_catalog(capabilities)
+            item = next(
+                feature for domain in catalog.domains for feature in domain.features if feature.id == "rendering.pbr"
+            )
+            self.assertEqual(item.support, pb.PARTIAL)
+            self.assertEqual(item.availability, expected)
+            self.assertIn("material", item.request_schema["properties"]["bodies"]["items"]["properties"])
+        ids = [domain.name + "." + feature.name for domain in DOMAINS for feature in domain.features]
+        self.assertEqual(len(ids), len(set(ids)))
+
+    async def test_randomization_is_reproducible_and_routes_materials_to_generic(self) -> None:
+        from a100sim.batch_physics import ResidentPhysics
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            store = AssetStore(root / "assets", 1024)
+            message = pb.RandomizeRequest(
+                scene=pb.SimulateRequest(
+                    bodies=[pb.Body(id="a"), pb.Body(id="b")], render=pb.RenderSettings(size=256, spp=4)
+                ),
+                seed=0,
+                position_min=[-1, -2, 2],
+                position_max=[1, 2, 3],
+                randomize_color=True,
+                metallic_range=[0.1, 0.6],
+                roughness_range=[0.2, 0.8],
+                mass_range=[0.1, 2],
+            )
+            request = pb.SubmitTaskRequest(request_id="random", randomize=message)
+            first = decode(request, store)
+            self.assertEqual(first, decode(request, store))
+            self.assertEqual(first.arguments["_randomization"]["seed"], 0)
+            for body in first.arguments["bodies"]:
+                self.assertLessEqual(0.1, body["material"]["metallic"])
+                self.assertLessEqual(body["material"]["metallic"], 0.6)
+            queue = PhysicsQueue(root / "jobs")
+            arguments = {
+                key: value for key, value in first.arguments.items() if not key.startswith("_") and key != "route"
+            }
+            normalized = queue.prepare(arguments)
+            self.assertFalse(ResidentPhysics.accepts(normalized))
+            message.seed = 1
+            self.assertNotEqual(
+                first.arguments, decode(pb.SubmitTaskRequest(request_id="other", randomize=message), store).arguments
+            )
+            for patch in ({"position_min": [1, 2]}, {"roughness_range": [1, 0]}, {"mass_range": [0, 1]}):
+                invalid = pb.RandomizeRequest()
+                invalid.CopyFrom(message)
+                for key, values in patch.items():
+                    getattr(invalid, key)[:] = values
+                with self.subTest(patch=patch), self.assertRaises(ValueError):
+                    decode(pb.SubmitTaskRequest(request_id="invalid", randomize=invalid), store)
 
     async def test_real_internal_job_queue_supports_long_poll_and_artifacts(self) -> None:
         class Worker(JobQueue):

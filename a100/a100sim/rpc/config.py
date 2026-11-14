@@ -6,6 +6,8 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from a100sim.network import require_worker_url
+
 
 @dataclass(frozen=True)
 class Settings:
@@ -65,3 +67,5 @@ class Settings:
             raise ValueError("Gateway capacity must be 1–4096 and workers must be 1–128")
         if self.retained_jobs < self.capacity + self.workers:
             raise ValueError("Retained job limit must cover queued and running work")
+        for value in self.backend_urls.values():
+            require_worker_url(value)

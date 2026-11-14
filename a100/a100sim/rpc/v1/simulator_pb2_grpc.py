@@ -42,6 +42,16 @@ class SimulatorStub:
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=a100sim_dot_rpc_dot_v1_dot_simulator__pb2.Capabilities.FromString,
                 _registered_method=True)
+        self.GetApiCatalog = channel.unary_unary(
+                '/a100sim.v1.Simulator/GetApiCatalog',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=a100sim_dot_rpc_dot_v1_dot_simulator__pb2.ApiCatalog.FromString,
+                _registered_method=True)
+        self.InvokeFeature = channel.unary_unary(
+                '/a100sim.v1.Simulator/InvokeFeature',
+                request_serializer=a100sim_dot_rpc_dot_v1_dot_simulator__pb2.FeatureRequest.SerializeToString,
+                response_deserializer=a100sim_dot_rpc_dot_v1_dot_simulator__pb2.Job.FromString,
+                _registered_method=True)
         self.SubmitTask = channel.unary_unary(
                 '/a100sim.v1.Simulator/SubmitTask',
                 request_serializer=a100sim_dot_rpc_dot_v1_dot_simulator__pb2.SubmitTaskRequest.SerializeToString,
@@ -91,6 +101,21 @@ class SimulatorServicer:
 
     def GetCapabilities(self, request, context):
         """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetApiCatalog(self, request, context):
+        """The complete 30-domain audit, including explicit integration and hardware gaps.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def InvokeFeature(self, request, context):
+        """Invoke a catalog feature using its discoverable, typed task argument schema.
+        Unsupported features fail before queue admission; no placeholder jobs run.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -160,6 +185,16 @@ def add_SimulatorServicer_to_server(servicer, server):
                     servicer.GetCapabilities,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=a100sim_dot_rpc_dot_v1_dot_simulator__pb2.Capabilities.SerializeToString,
+            ),
+            'GetApiCatalog': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetApiCatalog,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=a100sim_dot_rpc_dot_v1_dot_simulator__pb2.ApiCatalog.SerializeToString,
+            ),
+            'InvokeFeature': grpc.unary_unary_rpc_method_handler(
+                    servicer.InvokeFeature,
+                    request_deserializer=a100sim_dot_rpc_dot_v1_dot_simulator__pb2.FeatureRequest.FromString,
+                    response_serializer=a100sim_dot_rpc_dot_v1_dot_simulator__pb2.Job.SerializeToString,
             ),
             'SubmitTask': grpc.unary_unary_rpc_method_handler(
                     servicer.SubmitTask,
@@ -231,6 +266,60 @@ class Simulator:
             '/a100sim.v1.Simulator/GetCapabilities',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             a100sim_dot_rpc_dot_v1_dot_simulator__pb2.Capabilities.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetApiCatalog(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/a100sim.v1.Simulator/GetApiCatalog',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            a100sim_dot_rpc_dot_v1_dot_simulator__pb2.ApiCatalog.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def InvokeFeature(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/a100sim.v1.Simulator/InvokeFeature',
+            a100sim_dot_rpc_dot_v1_dot_simulator__pb2.FeatureRequest.SerializeToString,
+            a100sim_dot_rpc_dot_v1_dot_simulator__pb2.Job.FromString,
             options,
             channel_credentials,
             insecure,

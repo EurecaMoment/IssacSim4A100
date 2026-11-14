@@ -11,6 +11,8 @@ import time
 from pathlib import Path
 
 from .service_queue import JobQueue, asset_directory, finite, integer, persist, start_http
+from .materials import author_material, read_mesh_channels, read_mesh_colors, validate_material
+from .network import require_loopback
 
 
 def vector(value, name, length=3, low=-10000, high=10000):
@@ -36,7 +38,7 @@ class PhysicsQueue(JobQueue):
             if not isinstance(body, dict):
                 raise ValueError("each body must be an object")
             extra = set(body) - {"id", "shape", "position", "orientation_xyzw",
-                                 "size", "radius", "mass", "asset", "color"}
+                                 "size", "radius", "mass", "asset", "color", "material", "semantic_label"}
             if extra:
                 raise ValueError("Unsupported body fields: " + ", ".join(sorted(extra)))
             shape = body.get("shape", "cube")
@@ -57,6 +59,13 @@ class PhysicsQueue(JobQueue):
             if norm < 1e-6:
                 raise ValueError("orientation_xyzw must be a nonzero quaternion")
             item["orientation_xyzw"] = [x / norm for x in q]
+            if "material" in body:
+                item["material"] = validate_material(body["material"])
+            if "semantic_label" in body:
+                label = body["semantic_label"]
+                if not isinstance(label, str) or not 1 <= len(label) <= 128:
+                    raise ValueError("semantic_label must contain 1 to 128 characters")
+                item["semantic_label"] = label
             if shape == "mesh":
                 asset = asset_directory(body["asset"])
                 if not (asset / "mesh.npz").is_file():
@@ -75,11 +84,15 @@ class PhysicsQueue(JobQueue):
             if not isinstance(render, dict):
                 raise ValueError("render must be an object")
             extra = set(render) - {"kind", "size", "spp", "seed", "azimuth",
-                                  "elevation", "distance", "target", "lighting", "gaussian_gain"}
+                                  "elevation", "distance", "target", "lighting", "gaussian_gain", "annotations"}
             if extra:
                 raise ValueError("Unsupported render fields: " + ", ".join(sorted(extra)))
             if render.get("kind", "mesh") not in {"mesh", "gaussian"}:
                 raise ValueError("render.kind must be mesh or gaussian")
+            if not isinstance(render.get("annotations", False), bool):
+                raise ValueError("render.annotations must be boolean")
+            if render.get("annotations") and render.get("kind", "mesh") != "mesh":
+                raise ValueError("Primary-surface annotations require mesh rendering")
             lighting = render.get("lighting")
             if lighting is not None:
                 if not isinstance(lighting, dict):
@@ -131,7 +144,8 @@ class PhysicsQueue(JobQueue):
                       "distance": finite(render.get("distance", 5), "distance", .1, 1000),
                       "target": vector(render.get("target", [0, 0, .5]), "target"),
                       "gaussian_gain": finite(render.get("gaussian_gain", 1.0),
-                                              "gaussian_gain", 0, 10)}
+                                              "gaussian_gain", 0, 10),
+                      "annotations": render.get("annotations", False)}
             if lighting is not None:
                 render["lighting"] = lighting
         if not isinstance(value.get("ground", True), bool):
@@ -171,17 +185,20 @@ class PhysicsQueue(JobQueue):
             root.AddTranslateOp().Set(Gf.Vec3d(*body["position"]))
             qx, qy, qz, qw = body["orientation_xyzw"]
             root.AddOrientOp().Set(Gf.Quatf(qw, Gf.Vec3f(qx, qy, qz)))
+            if "semantic_label" in body:
+                root.GetPrim().CreateAttribute("a100sim:semanticLabel", Sdf.ValueTypeNames.String).Set(
+                    body["semantic_label"])
             UsdPhysics.RigidBodyAPI.Apply(root.GetPrim())
             UsdPhysics.MassAPI.Apply(root.GetPrim()).CreateMassAttr(body["mass"])
             visual_path = path + "/Visual"
+            channels = {}
             if body["shape"] == "mesh":
                 asset = Path(body["asset"])
                 with np.load(asset / "mesh.npz", allow_pickle=False) as data:
                     vertices, faces = data["vertices"], data["faces"]
-                    normals, colors = data["normals"], data["colors"]
-                    if "colors_linear" not in data:
-                        colors = np.where(colors <= .04045, colors / 12.92,
-                                          ((colors + .055) / 1.055) ** 2.4)
+                    normals = data["normals"]
+                    colors = read_mesh_colors(data, len(vertices))
+                    channels = read_mesh_channels(data, len(vertices))
                 visual = UsdGeom.Mesh.Define(stage, visual_path)
                 visual.CreatePointsAttr(Vt.Vec3fArray.FromNumpy(vertices.astype(np.float32)))
                 visual.CreateFaceVertexCountsAttr(Vt.IntArray.FromNumpy(np.full(len(faces), 3, np.int32)))
@@ -203,6 +220,8 @@ class PhysicsQueue(JobQueue):
                 visual.CreateSizeAttr(1)
                 visual.AddScaleOp().Set(Gf.Vec3f(*body["size"]))
                 visual.CreateDisplayColorAttr([Gf.Vec3f(*body["color"])])
+            if channels or body.get("material"):
+                author_material(visual, body.get("material", {}), channels)
             UsdPhysics.CollisionAPI.Apply(visual.GetPrim())
         physics = None
         try:
@@ -285,7 +304,8 @@ class PhysicsQueue(JobQueue):
                 image = directory / "render.png"
                 result["render"] = render_stage(stage, "/World/Camera", capture["kind"], image,
                                                 size=capture["size"], spp=capture["spp"], seed=capture["seed"],
-                                                gaussian_gain=float(capture.get("gaussian_gain", 1.0)))
+                                                gaussian_gain=float(capture.get("gaussian_gain", 1.0)),
+                                                annotations=capture.get("annotations", False))
                 result["image"] = str(image)
             stage.GetRootLayer().Export(str(directory / "scene.usdc"))
             persist(directory / "simulation.json", result)
@@ -300,7 +320,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--queue-size", type=int, default=64)
-    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--host", type=require_loopback, default="127.0.0.1")
     parser.add_argument("--port", type=int, default=18323)
     args = parser.parse_args()
     state = PhysicsQueue(args.output, args.queue_size, "Isaac Sim 6.2 GPU PhysX")

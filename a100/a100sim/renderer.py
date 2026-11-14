@@ -10,6 +10,7 @@ import mitsuba as mi
 mi.set_variant("cuda_ad_rgb")
 from . import hybrid_integrator  # Registers mixed mesh / Gaussian path tracing.
 from .gaussian import load_gaussians, shape_dict
+from .materials import principled_material, read_mesh_channels, read_mesh_colors
 
 
 def linear_rgb(value):
@@ -21,15 +22,16 @@ def linear_rgb(value):
 def load_mesh(path, matrix=None):
     with np.load(path, allow_pickle=False) as data:
         vertices, faces = data["vertices"], data["faces"]
-        normals, colors = data["normals"], data["colors"]
-        colors = colors if "colors_linear" in data else linear_rgb(colors)
+        normals = data["normals"]
+        colors = read_mesh_colors(data, len(vertices))
+        channels = read_mesh_channels(data, len(vertices))
     props = mi.Properties()
-    props["bsdf"] = mi.load_dict({"type": "twosided", "material": {
-        "type": "principled", "roughness": .85,
-        "base_color": {"type": "mesh_attribute", "name": "vertex_color"}}})
+    props["bsdf"] = mi.load_dict(principled_material(channels=tuple(channels)))
     mesh = mi.Mesh("sam3d_mesh", vertex_count=len(vertices), face_count=len(faces),
                    props=props, has_vertex_normals=True)
     mesh.add_attribute("vertex_color", 3, colors.reshape(-1))
+    for name, values in channels.items():
+        mesh.add_attribute("vertex_" + name, 1, values)
     if matrix is not None:
         vertices = vertices @ np.asarray(matrix[:3, :3]).T + matrix[:3, 3]
         normals = normals @ np.linalg.inv(matrix[:3, :3])

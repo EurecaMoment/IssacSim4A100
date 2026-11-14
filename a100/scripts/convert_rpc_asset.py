@@ -19,10 +19,13 @@ def main() -> None:
     parser.add_argument("--report", required=True, type=Path)
     parser.add_argument("--source-up", choices=("y", "z"), default="y")
     parser.add_argument("--max-size", type=float, default=1.2)
+    parser.add_argument("--strict-materials", action="store_true")
     args = parser.parse_args()
     if args.source.suffix.lower() != ".glb" or not 0 < args.max_size <= 100:
         parser.error("Provide a GLB and max-size between 0 and 100 meters")
-    result = convert_asset(args.source, args.destination, args.source_up, args.max_size, args.destination.name)
+    result = convert_asset(
+        args.source, args.destination, args.source_up, args.max_size, args.destination.name, args.strict_materials
+    )
     result.pop("source", None)
     result.pop("asset_directory", None)
     result.update(success=True, asset_id=args.destination.name)

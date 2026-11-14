@@ -73,7 +73,7 @@ class Workflows:
                 )
             destination = self.settings.asset_root / ("converted-" + uuid.uuid4().hex)
             report = output / "conversion-report.json"
-            return [
+            command = [
                 str(self.asset_python()),
                 str(root / "scripts/convert_rpc_asset.py"),
                 str(source),
@@ -84,7 +84,10 @@ class Workflows:
                 source_up,
                 "--max-size",
                 str(max_size),
-            ], report
+            ]
+            if values.get("strict_materials"):
+                command.append("--strict-materials")
+            return command, report
         if task.operation == "import_robot":
             source = Path(values["source"])
             if source.suffix.lower() not in (".urdf", ".xml", ".mjcf"):
